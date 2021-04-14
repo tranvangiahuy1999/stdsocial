@@ -1,0 +1,127 @@
+.img-bg{
+  background-image: url(../resources/background.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  position: relative;
+  top: 0;
+  width: 100%;
+  height: 700px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.form-container img {
+  width: 28%;
+  height: 22%;
+}
+
+.form-container{
+  background-color: rgba(255,255,255);
+  border-radius: 5px;
+}
+
+.containerr {
+  background-color: rgba(241,242,246,255);
+}
+
+.navbar img {
+  border-radius: 50%;
+}
+
+.containerr .navbar text {
+  color: white;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 3em;
+}
+
+.sidebar .link {
+  text-decoration: none;
+  font-size: 16px;
+  color: white;
+}
+
+.sidebar .link:hover {
+  color: whitesmoke;
+}
+
+.sidebar img {
+  border-radius: 50%;
+}
+
+.stp-container img {
+  border-radius: 50%;
+}
+
+.stp-container input {
+  border-radius: 20px;
+  padding: 2px;
+  padding-left: 15px;
+  border: none;
+  outline: none;
+  width: 100%;
+  background-color: rgb(235, 235, 235);
+}
+
+.stp-contain {
+  border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.stp-container button {
+  background-color: white;
+  width: 100%;
+  border: none;
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.stp-container button:hover {
+  background-color: rgb(235, 235, 235);
+}
+
+.stc-header img {
+  border-radius: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50%;
+}
+
+.clickable-icon:hover{
+  background-color: gray;
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.post-data{
+  justify-content: center;
+}
+
+.clickable-icon-dark:hover {
+  background-color: rgb(235, 235, 235);
+  border-radius: 20%;
+  cursor: pointer;
+}
+
+.stc-contain img {
+  width: 100%; 
+}
+
+.stc-interact button {
+  width: 50%;
+  background-color: white;
+  border: none;
+  padding: 2px;
+  border-top: 1px solid rgb(235, 235, 235);
+  border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.stc-interact button:hover {
+  background-color: rgba(241,242,246,255);
+}
