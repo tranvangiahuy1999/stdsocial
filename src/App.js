@@ -11,8 +11,8 @@ import Homepage from './views/homepage'
 function App() {
   return (
     <Router>
-        <Route path="/login" component={LoginView}/>
-        <Route path="/home" component={Homepage}/>
+        <Route exact path="/login" component={LoginView}/>
+        <Route exact path="/home" component={Homepage}/>
     </Router>
   );
 }

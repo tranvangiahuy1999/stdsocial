@@ -30,6 +30,7 @@ export default class StatusCard extends React.Component {
         this.setState({
             like: !this.state.like
         })
+        this.props.likeHandle()
     }
 
     render(){
@@ -74,7 +75,7 @@ export default class StatusCard extends React.Component {
                 </div>
                 <div className='stc-interact pb-1'>
                     <div className='ml-2 mr-2 row'>
-                        <button onClick={this.likeHandle, this.props.likeHandle} style={{color: (this.state.like)?"rgb(0,138,216)":"gray"}}>{(this.state.like)?<AiFillLike style={{margin:'auto', marginRight:'10px'}} color='rgb(0,138,216)' size='20px'></AiFillLike>:<AiOutlineLike style={{margin:'auto', marginRight:'10px'}} color='gray' size='20px'></AiOutlineLike>}Like</button>
+                        <button onClick={this.likeHandle} style={{color: (this.state.like)?"rgb(0,138,216)":"gray"}}>{(this.state.like)?<AiFillLike style={{margin:'auto', marginRight:'10px'}} color='rgb(0,138,216)' size='20px'></AiFillLike>:<AiOutlineLike style={{margin:'auto', marginRight:'10px'}} color='gray' size='20px'></AiOutlineLike>}Like</button>
                         <button onClick={this.props.cmtHandle} style={{color: "gray"}}><BiComment style={{margin:'auto', marginRight:'10px'}} color='gray' size='20px'></BiComment>Comment</button>
                     </div>
                 </div>

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import StatusPost from '../statuspost'
 import StatusCard from '../statuscard'
-import { MdTransferWithinAStation } from 'react-icons/md'
 
 const HomePage = (props) =>  {
     const [data, setData] = useState(null)
@@ -11,10 +10,12 @@ const HomePage = (props) =>  {
     })
 
     function cmtHandle(){
+        console.log('cmt')
         //post {statusId, token} retrive cmt of status
     }
 
     function likeHandle(){
+        console.log('like')
         //like handle
     }
     return(
@@ -37,8 +38,6 @@ const HomePage = (props) =>  {
                             cmt={value.cmt}
                             likeHandle={likeHandle}
                             cmtHandle={cmtHandle}
-                            // likeStyle= {}
-                            // likeIcon= {}
                         ></StatusCard>)):<div style={{height:'500px', paddingTop:'4px'}}>
                         <div style={{color:'gray', textAlign:'center'}}>No content to show</div>
                     </div>}
