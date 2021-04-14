@@ -18,7 +18,7 @@ const LoginView = () => {
     
     function submitHandle(e) {
         e.preventDefault();
-        axios.post(`http://192.168.1.59:3000/account/login`, {
+        axios.post(`http://${process.env.REACT_APP_IP}/account/login`, {
             user: user,
             password: password
         })
@@ -33,11 +33,7 @@ const LoginView = () => {
     }
     
     function googleLogin(){
-        // window.open(`http://192.168.1.59:3000/auth/google`)
-        // axios.get(`http://192.168.1.59:3000/auth/google/callback`)
-        // .then(async res => {
-        //     console.res(res)
-        // })
+
     }
         return(
             <div className="col-md-12" style={{flex: 1}}>

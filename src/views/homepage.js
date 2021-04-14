@@ -6,13 +6,12 @@ import {
     Link,
     useRouteMatch
 } from 'react-router-dom'
-
-import {homepageResTrue} from '../data/data'
-
 import NavBar from '../components/navbar'
 import Sidebar from "react-sidebar";
 import SideBar from "../components/sidebar"
-import HomePage from '../components/admin/homepage'
+import HomePage from '../components/admin/newfeed'
+
+import {homepageResTrue} from '../data/data'
 
 export default class Homepage extends React.Component {
     constructor(){

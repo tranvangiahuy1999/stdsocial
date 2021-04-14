@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router,
     Link
 } from 'react-router-dom'
-import { AiFillNotification, AiOutlineNotification, AiOutlineUserAdd } from "react-icons/ai";
+import { AiFillNotification, AiOutlineUserAdd } from "react-icons/ai";
 
 export default class SideBar extends React.Component {
     constructor(){
