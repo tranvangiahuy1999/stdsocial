@@ -26,15 +26,15 @@ const NotiPage = (props) => {
                     <div className='row col-md-12 col-sm-12 p-2'>
                         <div class="form-group col-md-5 col-sm-5">
                             <label>Search by Notificate tittle</label>
-                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='notificate tittle' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
+                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='green summer .etc' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
                         </div>
                         <div class="form-group col-md-5 col-sm-5">
                             <label>Search by Notificate content</label>
-                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='notificate content' value={searchNotiContent} onChange={v => setSearchNotiContent(v.target.value)}></input>    
+                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='hello, today i feel so good .etc' value={searchNotiContent} onChange={v => setSearchNotiContent(v.target.value)}></input>    
                         </div>
                         <div class="form-group col-md-2 col-sm-2">
                             <label>Search by Falcuty</label>
-                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='falcuty' value={searchFalcuty} onChange={v => setSearchFalcuty(v.target.value)}></input>
+                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='CTHSSV, TDT Creative Language Center, .etc' value={searchFalcuty} onChange={v => setSearchFalcuty(v.target.value)}></input>
                         </div>
                     </div>
                     <div className=' row col-md-12 col-sm-12 p-2'>
@@ -64,7 +64,7 @@ const NotiPage = (props) => {
                         </div> 
                     </div>
                 <div className='noti-list'>
-
+                    
                 </div>
             </div>
             </div>

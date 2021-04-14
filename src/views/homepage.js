@@ -4,7 +4,8 @@ import {
     Switch,
     Route,
     Link,
-    useRouteMatch
+    useRouteMatch,
+    useLocation
 } from 'react-router-dom'
 import NavBar from '../components/navbar'
 import Sidebar from "react-sidebar";
@@ -16,6 +17,7 @@ import {homepageResTrue, loginResTrue} from '../data/data'
 
 const Homepage = (props) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [choose, setChoose] = useState(0)
     let { path, url } = useRouteMatch();
 
     function onSetSidebarOpen(open) {
@@ -53,9 +55,10 @@ const Homepage = (props) => {
                             <SideBar
                                 avatar={loginResTrue.data[0].avatar}
                                 username ={loginResTrue.data[0].username}
-                                homeLink={<Link className="link pl-2" to={url}>Home Page</Link>}
-                                notiLink={<Link className="link pl-2" to={`${url}/notificates`}>All Notification</Link>}
-                                createAccLink={<Link className="link pl-2" to={`${url}/createaccount`}>Create Account</Link>}
+                                homeLink={<Link className="link pl-2" onClick={() => setChoose(0)} to={url}>Home Page</Link>}
+                                notiLink={<Link className="link pl-2" onClick={() => setChoose(1)} to={`${url}/notificates`}>All Notification</Link>}
+                                createAccLink={<Link className="link pl-2" onClick={() => setChoose(2)} to={`${url}/createaccount`}>Create Account</Link>}
+                                choose={choose}
                                 ></SideBar>}
                             open={sidebarOpen}
                             onSetOpen={onSetSidebarOpen}
@@ -65,7 +68,7 @@ const Homepage = (props) => {
                         avatar={loginResTrue.data[0].avatar}
                         username={loginResTrue.data[0].username}
                         // logOutHandle={}
-                        ></NavBar>
+                    ></NavBar>
                     <Switch>
                     {routes.map((route, index) => (
                         <Route
