@@ -3,7 +3,7 @@ import React from 'react'
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillClockCircle, AiFillLike, AiOutlineLike} from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
-import { FaDivide } from 'react-icons/fa';
+import Slideshow from './sildeshow.component'
 
 export default class StatusCard extends React.Component {
     constructor(){
@@ -35,19 +35,19 @@ export default class StatusCard extends React.Component {
 
     render(){
         return(
-            <div className='stc-container bg-white col-md-12 col-sm-12 mt-2'>
-                <div className='stc-header row col-md-13 col-sm-14'>
-                    <div className='col-md-1 col-sm-1'>
+            <div className='stc-container bg-white col-12 mt-2'>
+                <div className='stc-header row col-14'>
+                    <div className='col-1' style={{margin:'auto'}}>
                         <img src={this.props.avatar} width='30px' height='30px'></img>
                     </div>
-                    <div className='col-md-10 col-sm-9'>
+                    <div className='col-10' style={{margin:'auto'}}>
                         <div style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>
                         <div className='row ml-0'>
                             <text style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</text>
                             <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
                         </div>
                     </div>
-                    <div className='col-md-1 col-sm-1'>
+                    <div className='col-1' style={{margin:'auto'}}>
                         <BsThreeDots onClick={this.props.stcOption} className='clickable-icon-dark' size='22px' color='gray'></BsThreeDots>
                     </div>
                 </div>
@@ -60,8 +60,11 @@ export default class StatusCard extends React.Component {
                     }
                     {
                         (this.state.pic)?
-                        <div>
-                            <img style={{paddingTop: '2px'}} src={this.props.imgcontent}></img>
+                        <div className='p-0'>
+                            <Slideshow
+                                input={this.props.imgcontent}
+                                ratio={`4:2`}
+                                mode={`manual`}></Slideshow>
                         </div>:<div></div>
                     }
                     <div className='row m-2'>

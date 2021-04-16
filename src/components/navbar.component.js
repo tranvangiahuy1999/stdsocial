@@ -9,7 +9,7 @@ export default class NavBar extends React.Component {
 
     render(){
         return(
-                <div className="navbar bg-primary">
+                <div className="navbar">
                     <div>
                         <FiMenu className='clickable-icon' onClick={this.props.sideBarHandle} size="22px" color="white"></FiMenu>
                     </div>

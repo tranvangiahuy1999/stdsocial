@@ -1,8 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import DatePicker from "react-datepicker";
+import NotiCard from '../notificatecard.component'
 import "react-datepicker/dist/react-datepicker.css";
 import { AiFillNotification } from "react-icons/ai";
 import { BiCalendar } from "react-icons/bi";
+
+//fake data import
+import {notiRes} from '../../data/data'
 
 const mm = require('micromatch');
 
@@ -10,14 +14,24 @@ const NotiPage = (props) => {
     const [searchNotiTitle, setSearchNotiTitle] = useState('')
     const [searchNotiContent, setSearchNotiContent] = useState('')
     const [searchFalcuty, setSearchFalcuty] = useState('')
+    const [notiData, setNotiData] = useState(null)
     const [startDate, setStartDate] = useState(new Date());
+
+    useEffect(()=> {
+        //check status code
+        setNotiData(notiRes)
+    })
 
     function FalcutyFilter(){
         
     }
 
+    function notiClickHandle(){
+        
+    }
+
     return(
-        <div style={{justifyContent:'center', padding:'15px'}}>
+        <div style={{justifyContent:'center', padding:'15px', height:'600px'}}>
             <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
                 NOTIFICATON<AiFillNotification style={{marginLeft:'5px'}} size="23px" color="gray"/>
             </h5>
@@ -64,7 +78,21 @@ const NotiPage = (props) => {
                         </div> 
                     </div>
                 <div className='noti-list'>
-                    
+                    {
+                        (notiData && notiData.data.length > 0)?
+                            notiData.data.map((value, index) => (
+                                <NotiCard
+                                    borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
+                                    backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}
+                                    notiClickHandle={notiClickHandle}
+                                    falcutyname={value.falcuty}
+                                    date={value.date}
+                                    title={value.title}
+                                    subtitle={value.subtitle}
+                                    >                                
+                                </NotiCard>))
+                            : <div></div>
+                    }
                 </div>
             </div>
             </div>

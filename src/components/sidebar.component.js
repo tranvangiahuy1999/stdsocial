@@ -19,9 +19,7 @@ export default class SideBar extends React.Component {
     render(){
         return(    
                 <div className="sidebar">
-                    <div style={{height:"3em", backgroundColor: "rgba(48,67,84,255)"}}>
-                        <h5 className="text-white text-center align-self-center">Notificates</h5>
-                    </div>
+                    <div style={{height:"42px", backgroundColor: "rgba(48,67,84,255)"}}></div>
                     <div>
                         <div className="usercard p-2">
                             <div>

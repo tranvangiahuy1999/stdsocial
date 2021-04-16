@@ -25,7 +25,7 @@ export const loginResFail = {
 //success
 export const homepageResTrue = {
     status: 0,
-    totalpage: 100,
+    totalpage: 10,
     currentpage: 1,
     data: [
         {
@@ -36,7 +36,10 @@ export const homepageResTrue = {
 
             //textcontent or imgcontenturl value must be '' or '...something in here' (cannot be null or undified)
             textcontent: "",
-            imgcontenturl: "https://www.tdtu.edu.vn/sites/www/files/About/Co%20so%20vat%20chat/To%C3%A0n%20c%E1%BA%A3nh%20TDTU.png",
+            imgcontenturl: [
+                {src: "https://www.tdtu.edu.vn/sites/www/files/About/Co%20so%20vat%20chat/To%C3%A0n%20c%E1%BA%A3nh%20TDTU.png"},
+                {src: "https://s.yimg.jp/images/tbv/img/news/201910/TDTU_Seminar_2019_02.jpg"}
+            ],
             like: 32, //like quantity
             cmt: 14 //cmt quantity
         },
@@ -48,7 +51,7 @@ export const homepageResTrue = {
 
             //textcontent or imgurl value must be '' or '...something in here'
             textcontent: "Trường Đại học Tôn Đức Thắng là một trường đại học nghiên cứu tại Việt Nam. Trường trực thuộc Tổng Liên đoàn Lao động Việt Nam. Trường hoạt động theo cơ chế tự chủ việc thu chi học phí. Trường hiện có tổng cộng bốn cơ sở tại ba thành phố khác nhau, trong đó có các cơ sở tại Nha Trang, Bảo Lộc và Cà Mau.",
-            imgcontenturl: "",
+            imgcontenturl: [],
             like: 12, //like quantity
             cmt: 5 //cmt quantity
         }
@@ -87,7 +90,7 @@ const likeRes = {
 
 //failed (this status have been deleted)
 const likeResFail = {
-    status: 1,
+    status: 2,
     data: [
         {
             msg:'post have been delete'
@@ -97,3 +100,28 @@ const likeResFail = {
 
 //Comment
 //post {statusId, token} to get cmt list
+
+//Notificate
+export const notiRes = {
+    status: 0,
+    totalpage: 10,
+    currentpage: 1,
+    data:[
+        {
+            _id:0,
+            falcuty: 'Phong dai hoc',
+            date: '4/16/2021',
+            title: 'Phong dai hoc xin thong bao',
+            subtitle:'Tu ngay xx den ngay xx, phong dai hoc xin phep duoc tam ngung hoc tap...',
+            content: ''
+        },
+        {
+            _id:1,
+            falcuty: 'CTHSSV',
+            date: '3/12/2020',
+            title: 'Ve viec thi lai mon',
+            subtitle:'Ban to chuc cuoc thi se to chuc thi lai mon XXX vao ngay xx...',
+            content: ''
+        }
+    ]
+}

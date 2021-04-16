@@ -7,33 +7,41 @@ import {
     useRouteMatch,
     useLocation
 } from 'react-router-dom'
-import NavBar from '../components/navbar'
-import Sidebar from "react-sidebar";
-import SideBar from "../components/sidebar"
-import HomePage from '../components/admin/newfeed'
-import NotiPage from '../components/admin/notificate-all'
 
-import {homepageResTrue, loginResTrue} from '../data/data'
+import Sidebar from "react-sidebar";
+import NavBar from '../components/navbar.component'
+import SideBar from "../components/sidebar.component"
+import Newfeed from '../components/childviews/newfeed.child'
+import NotiPage from '../components/childviews/notificate.child'
+
+//Fake data import
+import {loginResTrue} from '../data/data'
 
 const Homepage = (props) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [choose, setChoose] = useState(0)
+    const [userData, setUserData] = useState(null)
+    const [chooseSideBar, setChooseSideBar] = useState(0)
+
     let { path, url } = useRouteMatch();
+
+    useEffect(() => {
+        //check status code
+        setUserData(loginResTrue)
+    })
 
     function onSetSidebarOpen(open) {
         setSidebarOpen(open)
+    }
+
+    function logOutHandle(){
+
     }
 
     const routes = [
         {
           path: path,
           exact: true,
-          main: () => 
-            <HomePage
-                avatar={loginResTrue.data[0].avatar}
-                username={loginResTrue.data[0].username}
-                data={homepageResTrue}>
-            </HomePage>
+          main: () => <Newfeed></Newfeed>
         },
         {
           path: `${path}/notificates`,
@@ -53,21 +61,21 @@ const Homepage = (props) => {
                     <Sidebar
                         sidebar={
                             <SideBar
-                                avatar={loginResTrue.data[0].avatar}
-                                username ={loginResTrue.data[0].username}
-                                homeLink={<Link className="link pl-2" onClick={() => setChoose(0)} to={url}>Home Page</Link>}
-                                notiLink={<Link className="link pl-2" onClick={() => setChoose(1)} to={`${url}/notificates`}>All Notification</Link>}
-                                createAccLink={<Link className="link pl-2" onClick={() => setChoose(2)} to={`${url}/createaccount`}>Create Account</Link>}
-                                choose={choose}
+                                avatar={userData?userData.data[0].avatar:''}
+                                username ={userData?userData.data[0].username:''}
+                                homeLink={<Link className="link pl-2" onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
+                                notiLink={<Link className="link pl-2" onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>All Notification</Link>}
+                                createAccLink={<Link className="link pl-2" onClick={() => setChooseSideBar(2)} to={`${url}/createaccount`}>Create Account</Link>}
+                                choose={chooseSideBar}
                                 ></SideBar>}
                             open={sidebarOpen}
                             onSetOpen={onSetSidebarOpen}
                             styles={{ sidebar: { background: "rgba(51,72,93,255)", width: "180px"}}}/>
                     <NavBar
                         sideBarHandle = {() => onSetSidebarOpen(true)}
-                        avatar={loginResTrue.data[0].avatar}
-                        username={loginResTrue.data[0].username}
-                        // logOutHandle={}
+                        avatar={userData?userData.data[0].avatar:''}
+                        username={userData?userData.data[0].username:''}
+                        logOutHandle={logOutHandle}
                     ></NavBar>
                     <Switch>
                     {routes.map((route, index) => (
