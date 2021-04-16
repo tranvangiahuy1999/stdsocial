@@ -13,6 +13,7 @@ import NavBar from '../components/navbar.component'
 import SideBar from "../components/sidebar.component"
 import Newfeed from '../components/childviews/newfeed.child'
 import NotiPage from '../components/childviews/notificate.child'
+import CreateAccountPage from '../components/childviews/create-account.child'
 
 //Fake data import
 import {loginResTrue} from '../data/data'
@@ -51,7 +52,7 @@ const Homepage = (props) => {
         {
           path: `${path}/createaccount`,
           exact: true,
-          main: () => <h2>createaccount</h2>
+          main: () => <CreateAccountPage></CreateAccountPage>
         }
       ];
 

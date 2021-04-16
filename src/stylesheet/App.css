@@ -161,8 +161,8 @@
 
 .lp-slideshow>.container>.slide>.number-text {
   color: #fff;
-  font-size: 1rem;
-  padding: 8px 12px;
+  font-size: 14px;
+  padding: 6px 10px;
   position: absolute;
   top: 0;
 }
@@ -219,12 +219,12 @@
 
 .lp-slideshow>.dot-container {
   text-align: center;
-  margin: 2px auto;
+  margin: 1px auto;
 }
 
 .lp-slideshow>.dot-container>.dot {
-  height: 10px;
-  width: 10px;
+  height: 5px;
+  width: 5px;
   margin: 0 0.4rem;
   background-color: #bbb;
   border-radius: 50%;

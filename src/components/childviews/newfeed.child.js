@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
-import NotiZone from '../notificate-zone'
+import NotiZone from '../notificate-zone.component'
 
 //Fake data import
 import {homepageResTrue, loginResTrue} from '../../data/data'
@@ -9,7 +9,6 @@ import {homepageResTrue, loginResTrue} from '../../data/data'
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null)
-    const [notiData, setNotiData] = useState(null)
 
     useEffect(() => {
         //check status code

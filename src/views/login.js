@@ -28,6 +28,7 @@ const LoginView = () => {
             }
             else {
                 setAlert(res.data.message)
+                setTimeout(() => {setAlert('')}, 3000)
             }
         })
     }
