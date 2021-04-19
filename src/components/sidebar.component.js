@@ -1,48 +1,50 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { FaHome } from "react-icons/fa";
-import {
-    BrowserRouter as Router,
-    Link
-} from 'react-router-dom'
-import { AiFillNotification, AiOutlineUserAdd } from "react-icons/ai";
+import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
+import { IoPersonAdd } from "react-icons/io5";
+import useWindowDimensions from './useWindowDimensions'
 
-export default class SideBar extends React.Component {
-    constructor(){
-        super();
-        this.chooseOption = this.chooseOption.bind(this)
-    }
+const SideBar = (props) => {
+    const {width, height} = useWindowDimensions()
+    const [color, setColor] = useState({textcolor: '', bgcolor:''})
 
-    chooseOption(){
+    useEffect(() => {
+        if(width < 768){
+            setColor({textcolor: 'white', bgcolor: 'orange'})
+        } else {
+            setColor({textcolor: 'black', bgcolor: 'lightgray'})
+        }
+    }, [])
 
-    }
-
-    render(){
         return(    
-                <div className="sidebar">
-                    <div style={{height:"42px", backgroundColor: "rgba(48,67,84,255)"}}></div>
-                    <div>
+                <div className="sidebar" style={{position: 'fixed', top: 0}}>
+                    <div style={{height:"46px"}}/>                                    
+                    <div style={{borderRight:'1px solid lightgray'}}>
                         <div className="usercard p-2">
-                            <div>
-                                <img className="ml-2 align-self-center" src={this.props.avatar} alt="avatar" height="32px" width="32px"></img>
-                            </div>
-                            <div>
-                                <div className="text-white align-self-center ml-2 pr-3">{this.props.username}</div>
+                            <div className='row' style={{margin:'auto'}}>
+                                <img className="ml-2 align-self-center" src={props.avatar} alt="avatar" height="30px" width="30px"></img>
+                                <div className="align-self-center ml-2 pr-3" style={{color: color.textcolor}}>{props.username}</div>
                             </div>
                         </div>
-                        <div className="p-2" style={{backgroundColor: this.props.choose===0?'orange': ''}}>
-                            <FaHome size="20px" color="white"/>
-                            {this.props.homeLink}
+                        <div className="p-2" style={{backgroundColor: props.choose===0?color.bgcolor: '', margin:'16px', borderRadius:'10px'}}>
+                            <FaHome size="20px" color={color.textcolor}/>
+                            {props.homeLink}
                         </div>
-                        <div className="p-2" style={{backgroundColor: this.props.choose===1?'orange': ''}}>
-                            <AiFillNotification size="20px" color="white"/>
-                            {this.props.notiLink}
+                        <div className="p-2" style={{backgroundColor: props.choose===1?color.bgcolor: '', margin:'16px', borderRadius:'10px'}}>
+                            <RiNotificationBadgeFill size="20px" color={color.textcolor}/>
+                            {props.notiLink}
                         </div>
-                        <div className="p-2" style={{backgroundColor: this.props.choose===2?'orange': ''}}>
-                            <AiOutlineUserAdd size="20px" color="white"/>
-                            {this.props.createAccLink}
+                        <div className="p-2" style={{backgroundColor: props.choose===2?color.bgcolor: '', margin:'16px', borderRadius:'10px'}}>
+                            <RiNotificationBadgeLine size="20px" color={color.textcolor}/>
+                            {props.notiWrite}
+                        </div>
+                        <div className="p-2" style={{backgroundColor: props.choose===3?color.bgcolor: '', margin:'16px', borderRadius:'10px'}}>
+                            <IoPersonAdd size="20px" color={color.textcolor}/>
+                            {props.createAccLink}
                         </div>
                     </div>
                 </div>
         )
-    }
 }
+
+export default SideBar

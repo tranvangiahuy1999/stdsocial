@@ -19,7 +19,7 @@ const NotiZone = (props) => {
     useEffect(()=> {
         //check status code
         setNotiData(notiRes)
-    })
+    }, [])
 
     function notiClickHandle(){
 
@@ -35,6 +35,7 @@ const NotiZone = (props) => {
                     notiData && notiData.data.length > 0?
                     notiData.data.map((value, index) => (
                         <NotiCard
+                            key={index} //id noti
                             borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
                             backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}                    
                             notiClickHandle={notiClickHandle}

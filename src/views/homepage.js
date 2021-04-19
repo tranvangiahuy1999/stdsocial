@@ -13,7 +13,9 @@ import NavBar from '../components/navbar.component'
 import SideBar from "../components/sidebar.component"
 import Newfeed from '../components/childviews/newfeed.child'
 import NotiPage from '../components/childviews/notificate.child'
+import CreateNoti from '../components/childviews/create-noti.child'
 import CreateAccountPage from '../components/childviews/create-account.child'
+import useWindowDimensions from '../components/useWindowDimensions'
 
 //Fake data import
 import {loginResTrue} from '../data/data'
@@ -22,13 +24,14 @@ const Homepage = (props) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [userData, setUserData] = useState(null)
     const [chooseSideBar, setChooseSideBar] = useState(0)
+    const {width, height} = useWindowDimensions()
 
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
         //check status code
         setUserData(loginResTrue)
-    })
+    }, [])
 
     function onSetSidebarOpen(open) {
         setSidebarOpen(open)
@@ -50,44 +53,73 @@ const Homepage = (props) => {
           main: () => <NotiPage></NotiPage>
         },
         {
-          path: `${path}/createaccount`,
+          path: `${path}/writenotificate`,
           exact: true,
-          main: () => <CreateAccountPage></CreateAccountPage>
+          main: () => <CreateNoti></CreateNoti>
+        },
+        {
+            path: `${path}/createaccount`,
+            exact: true,
+            main: () => <CreateAccountPage></CreateAccountPage>
         }
       ];
 
         return(
-            <Router>
-                <div className="containerr" style={{flex: 1}}>
-                    <Sidebar
-                        sidebar={
-                            <SideBar
-                                avatar={userData?userData.data[0].avatar:''}
-                                username ={userData?userData.data[0].username:''}
-                                homeLink={<Link className="link pl-2" onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
-                                notiLink={<Link className="link pl-2" onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>All Notification</Link>}
-                                createAccLink={<Link className="link pl-2" onClick={() => setChooseSideBar(2)} to={`${url}/createaccount`}>Create Account</Link>}
-                                choose={chooseSideBar}
-                                ></SideBar>}
-                            open={sidebarOpen}
-                            onSetOpen={onSetSidebarOpen}
-                            styles={{ sidebar: { background: "rgba(51,72,93,255)", width: "180px"}}}/>
+                //Mobile render
+                <Router>
+                <div className="containerr" style={{height: height}}>
                     <NavBar
                         sideBarHandle = {() => onSetSidebarOpen(true)}
                         avatar={userData?userData.data[0].avatar:''}
                         username={userData?userData.data[0].username:''}
                         logOutHandle={logOutHandle}
                     ></NavBar>
-                    <Switch>
-                    {routes.map((route, index) => (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            exact={route.exact}
-                            children={route.main}
-                        />
-                        ))}
-                    </Switch>
+                    <div className={width < 768?'':'row'}>
+                    {
+                        width < 768?(
+                            <div>
+                            <Sidebar
+                                sidebar={
+                                    <SideBar
+                                        avatar={userData?userData.data[0].avatar:''}
+                                        username ={userData?userData.data[0].username:''}
+                                        homeLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
+                                        notiLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Write Noti</Link>}
+                                        createAccLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
+                                        choose={chooseSideBar}
+                                        ></SideBar>}
+                                    open={sidebarOpen}
+                                    onSetOpen={onSetSidebarOpen}
+                                    styles={{ sidebar: { background: "rgba(51,72,93,255)", width: "180px" ,position: 'fixed', top: 0}}}/>                    
+                            </div>
+                        ):(
+                                <div className='col-2'>
+                                    <SideBar
+                                        avatar={userData?userData.data[0].avatar:''}
+                                        username ={userData?userData.data[0].username:''}
+                                        homeLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
+                                        notiLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Write Noti</Link>}
+                                        createAccLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
+                                        choose={chooseSideBar}
+                                    ></SideBar>
+                                </div>
+                        )
+                    }
+                    <div className={width < 768?'':'col-10'}>
+                        <Switch>
+                            {routes.map((route, index) => (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    exact={route.exact}
+                                    children={route.main}
+                                />
+                            ))}
+                        </Switch>
+                    </div>
+                    </div>
                 </div>
             </Router>
         )

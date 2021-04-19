@@ -16,21 +16,21 @@ const LoginView = () => {
         setChecked(!checked)
     }
     
-    function submitHandle(e) {
+    async function submitHandle(e) {
         e.preventDefault();
-        axios.post(`http://${process.env.REACT_APP_IP}/account/login`, {
+        const res = await axios.post(`http://${process.env.REACT_APP_IP}:3000/account/login`, {
             user: user,
             password: password
         })
-        .then(async res => {
-            if(res.data.code === 0){
-                history.push('/home')
-            }
-            else {
-                setAlert(res.data.message)
-                setTimeout(() => {setAlert('')}, 3000)
-            }
-        })
+
+        if(res && res.data.code === 0){
+            await localStorage.setItem('token', res.data.token)
+            history.push('/home')
+        }
+        else {
+            setAlert(res.data.message)
+            setTimeout(() => {setAlert('')}, 3000)
+        }
     }
     
     function googleLogin(){
@@ -53,12 +53,10 @@ const LoginView = () => {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Check defaultChecked={checked} onChange={checkHandle} custom label={`Remember me`}/>
-                            </Form.Group>
-                            {
-                                (alert && alert.length > 0)?<div className="alert alert-danger">{alert}</div>:<div></div>
-                            }
+                            </Form.Group>                                                        
                             <Button className="btn col-md-12 mt-3" type="submit" variant="primary">Login</Button>{' '}
-                            <Button onClick={googleLogin} className="btn col-md-12 mt-2" type="button" variant="danger"><FaGooglePlus color="white" size="22px"/> Login with Google Account</Button>{' '}
+                            <Button onClick={googleLogin} className="btn col-md-12 mt-2" type="button" variant="danger"><FaGooglePlus color="white" size="22px"/> Login with Google Account</Button>
+                            <div className={(alert && alert.length > 0)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'}>{alert}</div>
                         </Form>
                     </div>
                 </div>

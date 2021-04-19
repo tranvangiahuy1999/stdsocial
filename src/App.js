@@ -1,5 +1,6 @@
 import './stylesheet/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-dropdown/style.css';
 import {
   BrowserRouter as Router,
   Switch,

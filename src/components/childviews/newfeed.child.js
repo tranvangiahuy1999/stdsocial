@@ -26,14 +26,13 @@ const Newfeed = (props) =>  {
         //like handle
     }
     return(
-        <div className='hp-container col-md-15 col-sm-15 row'>
-            <div className='hp-left col-md-3 col-sm-0'></div>
-            <div className='hp-post col-md-6 col-sm-8 p-0'>
+        <div className='hp-container col-md-15 col-sm-15 row' style={{paddingTop: '42px'}}>
+            <div className='hp-post col-8 p-0'>
                 <StatusPost                
                     avatar={userData?userData.data[0].avatar:''}
                     username={userData?userData.data[0].username:''}
                     ></StatusPost>                    
-                <div className='post-data col-md-12 col-sm-12'>
+                <div className='post-data col-12'>
                     {(newfeedData && newfeedData.data.length > 0)?
                         newfeedData.data.map((value, index) => (
                         <StatusCard
@@ -48,12 +47,12 @@ const Newfeed = (props) =>  {
                             likeHandle={likeHandle}
                             cmtHandle={cmtHandle}
                         ></StatusCard>))
-                        :<div style={{height:'600px', paddingTop:'4px'}}>
+                        :<div style={{paddingTop:'4px'}}>
                             <div style={{color:'gray', textAlign:'center'}}>No content to show</div>
                         </div>}
                 </div>
             </div>
-            <div className='hp-noti col-md-3 col-sm-4' style={{justifyContent:'center'}}>
+            <div className='hp-noti col-4' style={{justifyContent:'center'}}>
                 <NotiZone></NotiZone>
             </div>
         </div>
