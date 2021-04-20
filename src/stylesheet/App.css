@@ -5,8 +5,8 @@
 
   position: relative;
   top: 0;
-  width: 100%;
-  height: 700px;
+  width: 100vw;
+  height: 100vh;
   overflow-y: scroll;
   scroll-behavior: smooth;
 }
@@ -23,6 +23,8 @@
 
 .containerr {
   background-color: rgba(241,242,246,255);
+  width: 100vw;
+  height: 100vh;
 }
 
 .containerr .navbar text {
@@ -37,7 +39,8 @@
 }
 
 .notizone-container {
-  position: fixed;
+  position: sticky;
+  top: 50px;
   box-sizing: border-box;
 }
 
@@ -252,10 +255,16 @@
 
 .fadeOut{
   opacity:0;
-  transition: width 1s 1s, height 1s 1s, opacity 1s;
+  transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.5s;
 
 }
+
 .fadeIn{
   opacity:1;
-  transition: width 1s, height 1s, opacity 1s 1s;
+  transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
+}
+
+.fragment-body {
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.16);
 }

@@ -8,7 +8,10 @@ const LoginView = () => {
     const axios = require('axios');
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
-    const [alert, setAlert] = useState('')
+
+    const [err, setErr] = useState(null)
+    const [alert, setAlert] = useState(false)
+    
     const [checked, setChecked] = useState(false)
     let history = useHistory()
 
@@ -28,8 +31,9 @@ const LoginView = () => {
             history.push('/home')
         }
         else {
-            setAlert(res.data.message)
-            setTimeout(() => {setAlert('')}, 3000)
+            setErr(res.data.message)
+            setAlert(true)
+            setTimeout(() => {setAlert(false)}, 3000)
         }
     }
     
@@ -56,7 +60,14 @@ const LoginView = () => {
                             </Form.Group>                                                        
                             <Button className="btn col-md-12 mt-3" type="submit" variant="primary">Login</Button>{' '}
                             <Button onClick={googleLogin} className="btn col-md-12 mt-2" type="button" variant="danger"><FaGooglePlus color="white" size="22px"/> Login with Google Account</Button>
-                            <div className={(alert && alert.length > 0)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'}>{alert}</div>
+                            {
+                                (alert)?(
+                                    <div className={(alert)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'}>{err}</div>
+                                ):(
+                                    <div></div>
+                                )
+                            }
+                            
                         </Form>
                     </div>
                 </div>

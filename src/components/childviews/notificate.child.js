@@ -6,6 +6,7 @@ import { AiFillNotification } from "react-icons/ai";
 import { BiCalendar } from "react-icons/bi";
 import axios from 'axios'
 import { RiDeleteBin6Line, RiSendPlaneFill } from "react-icons/ri";
+import Dropdown from 'react-dropdown';
 
 //fake data import
 import {notiRes} from '../../data/data'
@@ -16,12 +17,16 @@ const NotiPage = (props) => {
     const [searchNotiTitle, setSearchNotiTitle] = useState('')
     const [searchNotiContent, setSearchNotiContent] = useState('')
     const [searchFalcuty, setSearchFalcuty] = useState('')
-    const [falcutyList, setFalcutyList] = useState(null)
     const [notiData, setNotiData] = useState(null)
+    const [falcuty, setFalcuty] = useState([])    
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPage, setTotalPage] = useState(null)
     const [startDate, setStartDate] = useState(new Date());
 
+    const [selectedOption, setSelectedOption] = useState(null)
+
+    const [succAlert, setSuccAlert] = useState(false)
+    const [errAlert, setErrAlert] = useState(false)
     const [succ, setSucc] = useState(null)
     const [err, setErr] = useState(null)
 
@@ -36,6 +41,25 @@ const NotiPage = (props) => {
             }
         })
 
+        if(resRole && resRole.status === 200){
+            if(resRole.data.code === 0){
+                await setFalcuty(resRole.data.data)
+            } else {
+                if(resRole) {
+                    setErr(resRole.data.message)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
+                }
+            }
+        }
+        else{
+            if(resRole){
+                setErr(resRole.data.message)
+                setErrAlert(true)
+                setTimeout(() => {setErrAlert(false)}, 3000)
+            }
+        }
+
         const resNoti = await axios.get(`http://${process.env.REACT_APP_IP}:3000/notification/${currentPage}`,{
             headers: {
                 'Authorization' : 'Bearer ' + token
@@ -48,7 +72,8 @@ const NotiPage = (props) => {
         else {
             if(resNoti) {
                 setErr(resNoti.data.message)
-                setTimeout(() => {setErr('')}, 3000)
+                setErrAlert(true)
+                setTimeout(() => {setErrAlert(false)}, 3000)
             }
         }
 
@@ -57,6 +82,10 @@ const NotiPage = (props) => {
     function submitFilter(e){
         e.preventDefault();
 
+    }
+
+    function handleChange(selectedOption) {
+        setSelectedOption(selectedOption)
     }
 
     function CleanAll(){
@@ -71,25 +100,22 @@ const NotiPage = (props) => {
     }
 
     return(
-        <div style={{justifyContent:'center', padding:'15px', paddingTop:'46px'}}>
+        <div>
             <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
-                NOTIFICATON<AiFillNotification style={{marginLeft:'5px'}} size="23px" color="gray"/>
+                NOTIFICATON<AiFillNotification style={{marginLeft:'5px'}} size="22px" color="gray"/>
             </h5>
-            <div className='noti-filter' style={{backgroundColor:'white', margin: '2px', padding:'4px'}}>
+            <div className='fragment-body' style={{backgroundColor:'white', margin: '2px', padding:'4px'}}>
                 <div>
                     <form onSubmit={submitFilter}>
                         <div className='row col-12 pl-2'>
-                            <div class="form-group col-4">
-                                <label>Search by tittle</label>
-                                <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='green summer .etc' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
+                            <div class="form-group col-4">                                
+                                <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='Search by tittle' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
                             </div>
-                            <div class="form-group col-5">
-                                <label>Search by content</label>
-                                <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='hello, today i feel so good .etc' value={searchNotiContent} onChange={v => setSearchNotiContent(v.target.value)}></input>    
+                            <div class="form-group col-5">                                
+                                <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='Search by content' value={searchNotiContent} onChange={v => setSearchNotiContent(v.target.value)}></input>    
                             </div>
-                            <div class="form-group col-3">
-                                <label>Search by falcuty</label>
-                                <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='CTHSSV, TDT Creative Language Center, .etc' value={searchFalcuty} onChange={v => setSearchFalcuty(v.target.value)}></input>
+                            <div class="form-group col-3">                            
+                                <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Search by falcuty" />                 
                             </div>
                         </div>
                         <div className=' row col-12 pl-2'>
@@ -112,10 +138,10 @@ const NotiPage = (props) => {
                                 </div>
                             </div>                        
                             <div class="col-2">
-                                <button type='button' className='btn btn-danger m-2' onClick={CleanAll}><RiDeleteBin6Line size='18px' color='white'></RiDeleteBin6Line> Clean</button>            
+                                <button type='button' className='btn btn-danger m-2' style={{fontSize: '16px'}} onClick={CleanAll}><RiDeleteBin6Line size='16px' color='white'></RiDeleteBin6Line> Clean</button>            
                             </div> 
                             <div class="col-2">
-                                <button className='btn btn-primary m-2'><RiSendPlaneFill size='18px' color='white'></RiSendPlaneFill> Search</button>
+                                <button type='submit' className='btn btn-primary m-2' style={{fontSize: '16px'}}><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Search</button>
                             </div>
                         </div>
                     </form>

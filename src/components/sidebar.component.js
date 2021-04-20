@@ -17,8 +17,7 @@ const SideBar = (props) => {
     }, [])
 
         return(    
-                <div className="sidebar" style={{position: 'fixed', top: 0}}>
-                    <div style={{height:"46px"}}/>                                    
+                <div className="sidebar" style={{position: 'sticky', top: '100px'}}>                           
                     <div style={{borderRight:'1px solid lightgray'}}>
                         <div className="usercard p-2">
                             <div className='row' style={{margin:'auto'}}>

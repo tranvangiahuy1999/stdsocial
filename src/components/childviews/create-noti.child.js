@@ -9,6 +9,9 @@ const CreateNoti = (props) => {
     const [desc, setDesc] = useState('')
     const [content, setContent] = useState('')
     const [falcuty, setFalcuty] = useState([])
+
+    const [succAlert, setSuccAlert] = useState(false)
+    const [errAlert, setErrAlert] = useState(false)
     const [succ, setSucc] = useState(null)
     const [err, setErr] = useState(null)
 
@@ -28,14 +31,16 @@ const CreateNoti = (props) => {
             } else {
                 if(res) {
                     setErr(res.data.message)
-                    setTimeout(() => {setErr('')}, 3000)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
         }
         else {
             if(res){
                 setErr(res.data.message)
-                setTimeout(()=>{setErr('')}, 3000)
+                setErrAlert(true)
+                setTimeout(() => {setErrAlert(false)}, 3000)
             }
         }
 
@@ -64,25 +69,29 @@ const CreateNoti = (props) => {
         if(res && res.status === 200){
             if(res.data.code === 0){
                 setSucc(res.data.message)
-                setTimeout(()=>{setSucc('')}, 3000)
+                setSuccAlert(true)
+                setTimeout(() => {setSuccAlert(false)}, 3000)
             } else {
                 if(res){
                     setErr(res.data.message)
-                    setTimeout(()=>{setErr('')}, 3000)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
         }
         else if(res.status === 401){
             setErr(res.data.message)
-            setTimeout(()=>{setErr('')}, 3000)
+            setErrAlert(true)
+            setTimeout(() => {setErrAlert(false)}, 3000)
         }
     }
+
     return(
-        <div style={{paddingTop:'46px', justifyContent:'center', padding:'15px'}}>
+        <div style={{margin:'auto'}}>
             <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
-                CREATE NOTIFICATON<RiNotificationBadgeLine style={{marginLeft:'5px'}} size="23px" color="gray"/>
+                CREATE NOTIFICATON<RiNotificationBadgeLine style={{marginLeft:'5px'}} size="22px" color="gray"/>
             </h5>
-            <div style={{backgroundColor:'white', margin: '2px', padding:'16px'}}>
+            <div className='fragment-body' style={{backgroundColor:'white', margin: '2px', padding:'16px'}}>
                 <form onSubmit={onSubmit}>
                     <div className='form-group'>
                         <input className='form-control' value={title} style={{fontWeight:'bold'}} onChange={e => setTitle(e.target.value)} placeholder='Title'></input>
@@ -91,16 +100,14 @@ const CreateNoti = (props) => {
                         <input className='form-control' value={desc} onChange={e => setDesc(e.target.value)} placeholder='Description'></input>
                     </div>
                     <div className='form-group'>
-                        <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Select an option" /> 
-                    </div>                             
+                        <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Search by falcuty" /> 
+                    </div>
                     <div className='form-group'>
                         <textarea className='form-control' value={content} onChange={e => setContent(e.target.value)} placeholder='Write something here'></textarea>
                     </div>
                     <button className="btn btn-primary"><RiSendPlaneFill size='20px' color='white'></RiSendPlaneFill> Create</button>
-                    <div className='pt-2'>
-                        <div className={(succ && succ.length > 0)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center'}}>{succ}</div>
-                        <div className={(err && err.length > 0)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center'}}>{err}</div>
-                    </div>
+                    <div className={(succAlert)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center'}}>{succ}</div>
+                    <div className={(errAlert)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center'}}>{err}</div>                            
                 </form>
             </div>
         </div>

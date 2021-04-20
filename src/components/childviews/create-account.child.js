@@ -10,10 +10,13 @@ const CreateAccountPage = (props) => {
     const [repwd, setRePwd] = useState('')
     const [falcuty, setFalcuty] = useState(null)
     const [falcutyChoose, setFalcutyChoose] = useState([])
-    const [err, setErr] = useState(null)
+
+    const [succAlert, setSuccAlert] = useState(false)
+    const [errAlert, setErrAlert] = useState(false)
     const [succ, setSucc] = useState(null)
+    const [err, setErr] = useState(null)
+
     const token = localStorage.getItem('token')
-    let history = useHistory()
 
     useEffect( async () => {
         //check status code
@@ -23,22 +26,22 @@ const CreateAccountPage = (props) => {
             }
         })
 
-        console.log(res)
-
         if(res && res.status === 200){
             if(res.data.code === 0){
                 await setFalcuty(res.data.data)
             } else {
                 if(res) {
                     setErr(res.data.message)
-                    setTimeout(() => {setErr('')}, 3000)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
         }
         else{
             if(res){
                 setErr(res.data.message)
-                setTimeout(()=>{setErr('')}, 3000)
+                setErrAlert(true)
+                setTimeout(() => {setErrAlert(false)}, 3000)
             }
         }
     }, [])
@@ -46,11 +49,15 @@ const CreateAccountPage = (props) => {
     async function createAccount (e){
         e.preventDefault();
         if(pwd !== repwd){
+
             setErr(`Password and Re-password doesn't match!`)
-            setTimeout(() => {setErr('')}, 3000)
+            setErrAlert(true)
+            setTimeout(() => {setErrAlert(false)}, 3000)
+
         } else if(falcutyChoose.length === 0) {
             setErr(`Choose on of the falcuty!`)
-            setTimeout(() => {setErr('')}, 3000)
+            setErrAlert(true)
+            setTimeout(() => {setErrAlert(false)}, 3000)
         } else {
             const res = await axios.post(`http://${process.env.REACT_APP_IP}:3000/account/adduser`,
             {'user': username, 'password': pwd, 'role': falcutyChoose},
@@ -63,16 +70,19 @@ const CreateAccountPage = (props) => {
             if(res && res.status === 200){
                 if(res.data.code === 0){
                     setSucc('Created Successfully!')
-                    setTimeout(() => {setSucc('')}, 3000)
+                    setSuccAlert(true)
+                    setTimeout(() => {setSuccAlert(false)}, 3000)
                 } else {
                     setErr(res.data.message)
-                    setTimeout(() => {setErr('')}, 3000)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
             else {
                 if(res){
                     setErr(res.data.message)
-                    setTimeout(()=>{setErr('')}, 3000)
+                    setErrAlert(true)
+                    setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
         }
@@ -95,13 +105,13 @@ const CreateAccountPage = (props) => {
     }
 
     return(
-            <div style={{justifyContent:'center', padding:'15px', paddingTop:'46px'}}>
+            <div>
                 <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
-                    Create Account<TiUserAdd style={{marginLeft:'5px'}} size="23px" color="gray"/>
+                    CREATE ACCOUNT<TiUserAdd style={{marginLeft:'5px'}} size="22px" color="gray"/>
                 </h5>
-                <div>
+                <div className='fragment-body' style={{backgroundColor:'white', margin: '2px', padding:'4px'}}>
                     <div className='col-12' style={{margin:'auto'}}>
-                        <form className='row' onSubmit={createAccount} style={{padding: '10px', backgroundColor:'white'}}>
+                        <form className='row' onSubmit={createAccount}>
                             <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
                                 <h6>Create Falcuty account</h6>
                                 <div className='form-group'>
@@ -122,11 +132,9 @@ const CreateAccountPage = (props) => {
                                         Accept to create account
                                     </label>
                                 </div>
-                                <button className="btn btn-primary"><RiSendPlaneFill size='20px' color='white'></RiSendPlaneFill> Create</button>
-                                <div className='pt-2'>
-                                    <div className={(succ && succ.length > 0)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center'}}>{succ}</div>
-                                    <div className={(err && err.length > 0)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center'}}>{err}</div>
-                                </div>                             
+                                <button className="btn btn-primary"><RiSendPlaneFill size='20px' color='white'></RiSendPlaneFill> Create</button>                                                            
+                                <div className={(succAlert)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center'}}>{succ}</div>
+                                <div className={(errAlert)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center'}}>{err}</div>                                                                                            
                             </div>
                             <div className='col-6'>
                                 <h6>Choose falcuty you want to add</h6>

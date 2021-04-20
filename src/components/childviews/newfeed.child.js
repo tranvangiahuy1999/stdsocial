@@ -25,8 +25,9 @@ const Newfeed = (props) =>  {
         console.log('like')
         //like handle
     }
+    
     return(
-        <div className='hp-container col-md-15 col-sm-15 row' style={{paddingTop: '42px'}}>
+        <div className='col-15 row'>
             <div className='hp-post col-8 p-0'>
                 <StatusPost                
                     avatar={userData?userData.data[0].avatar:''}

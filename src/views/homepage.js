@@ -67,9 +67,9 @@ const Homepage = (props) => {
         return(
                 //Mobile render
                 <Router>
-                <div className="containerr" style={{height: height}}>
+                <div className="containerr">
                     <NavBar
-                        sideBarHandle = {() => onSetSidebarOpen(true)}
+                        sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}
                         avatar={userData?userData.data[0].avatar:''}
                         username={userData?userData.data[0].username:''}
                         logOutHandle={logOutHandle}
@@ -85,7 +85,7 @@ const Homepage = (props) => {
                                         username ={userData?userData.data[0].username:''}
                                         homeLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
                                         notiLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
-                                        notiWrite={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Write Noti</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Post Notificate</Link>}
                                         createAccLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
                                         choose={chooseSideBar}
                                         ></SideBar>}
@@ -100,14 +100,14 @@ const Homepage = (props) => {
                                         username ={userData?userData.data[0].username:''}
                                         homeLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
                                         notiLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
-                                        notiWrite={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Write Noti</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Post Notificate</Link>}
                                         createAccLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
                                         choose={chooseSideBar}
                                     ></SideBar>
                                 </div>
                         )
                     }
-                    <div className={width < 768?'':'col-10'}>
+                    <div className={width < 768?'':'col-10'} style={{justifyContent:'center', padding:'15px', paddingTop:'46px'}}>
                         <Switch>
                             {routes.map((route, index) => (
                                 <Route

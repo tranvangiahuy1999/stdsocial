@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-const NotiReader = (props) => {
+const RegisterPage = (props) => {
     return(
         <div>
 
@@ -8,4 +8,4 @@ const NotiReader = (props) => {
     )
 }
 
-export default NotiReader
+export default RegisterPage
