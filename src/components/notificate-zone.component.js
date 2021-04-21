@@ -9,16 +9,27 @@ import {
     useLocation
 } from 'react-router-dom'
 import NotiCard from './notificatecard.component'
+import axios from 'axios'
 
-//import fake data
-import {notiRes} from '../data/data'
+const token = localStorage.getItem('token')
 
 const NotiZone = (props) => {
     const [notiData, setNotiData] = useState(null)
 
-    useEffect(()=> {
-        //check status code
-        setNotiData(notiRes)
+    useEffect(async ()=> {
+        const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/notification/page/${1}`,{
+            headers: {
+                'Authorization' : 'Bearer ' + token
+            }
+        })
+        .catch()
+
+        if(res) {
+            if(res.status === 200){
+                await setNotiData(res.data.data)    
+                console.log(notiData)            
+            }
+        }
     }, [])
 
     function notiClickHandle(){
@@ -32,17 +43,17 @@ const NotiZone = (props) => {
             </div>
             <div className='notizone-body mt-1 bg-white'>
                 {
-                    notiData && notiData.data.length > 0?
-                    notiData.data.map((value, index) => (
+                    notiData && notiData.length > 0?
+                    notiData.map((value, index) => (
                         <NotiCard
                             key={index} //id noti
                             borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
                             backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}                    
                             notiClickHandle={notiClickHandle}
-                            falcutyname={value.falcuty}
-                            date={value.date}
+                            falcutyname={value.role}
+                            date={value.date.split('T')[0]}
                             title={value.title}
-                            subtitle={value.subtitle}
+                            subtitle={value.description}
                             >                                
                         </NotiCard>
                     )):<div></div>

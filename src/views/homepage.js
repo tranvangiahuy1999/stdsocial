@@ -3,9 +3,9 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
     useRouteMatch,
-    useLocation
+    useHistory,
+    Link
 } from 'react-router-dom'
 
 import Sidebar from "react-sidebar";
@@ -16,53 +16,46 @@ import NotiPage from '../components/childviews/notificate.child'
 import CreateNoti from '../components/childviews/create-noti.child'
 import CreateAccountPage from '../components/childviews/create-account.child'
 import useWindowDimensions from '../components/useWindowDimensions'
+import axios from 'axios'
 
-//Fake data import
-import {loginResTrue} from '../data/data'
+const token = localStorage.getItem('token')
 
 const Homepage = (props) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [userData, setUserData] = useState(null)
+    const [userData, setUserData] = useState()
+    const [userrole, setUserRole] = useState()
+
     const [chooseSideBar, setChooseSideBar] = useState(0)
     const {width, height} = useWindowDimensions()
 
+    let history = useHistory();
     let { path, url } = useRouteMatch();
 
-    useEffect(() => {
-        //check status code
-        setUserData(loginResTrue)
+    useEffect(async () => {
+        const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/account/current`, {
+            headers: {
+                'Authorization' : 'Bearer ' + token
+            }
+        }).catch()
+
+        if(res){
+            if(res.status === 200){
+                if(res.data.code === 0){
+                    await setUserData(res.data.data)
+                }
+            }
+        }
+
     }, [])
 
     function onSetSidebarOpen(open) {
         setSidebarOpen(open)
     }
-
-    function logOutHandle(){
-
-    }
-
-    const routes = [
-        {
-          path: path,
-          exact: true,
-          main: () => <Newfeed></Newfeed>
-        },
-        {
-          path: `${path}/notificates`,
-          exact: true,
-          main: () => <NotiPage></NotiPage>
-        },
-        {
-          path: `${path}/writenotificate`,
-          exact: true,
-          main: () => <CreateNoti></CreateNoti>
-        },
-        {
-            path: `${path}/createaccount`,
-            exact: true,
-            main: () => <CreateAccountPage></CreateAccountPage>
-        }
-      ];
+ 
+    async function logOutHandle(){
+        await localStorage.setItem('token','')
+        history.push('/login')
+    }    
 
         return(
                 //Mobile render
@@ -70,8 +63,8 @@ const Homepage = (props) => {
                 <div className="containerr">
                     <NavBar
                         sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}
-                        avatar={userData?userData.data[0].avatar:''}
-                        username={userData?userData.data[0].username:''}
+                        avatar={''}
+                        username={userData?userData.user:''}
                         logOutHandle={logOutHandle}
                     ></NavBar>
                     <div className={width < 768?'':'row'}>
@@ -81,47 +74,56 @@ const Homepage = (props) => {
                             <Sidebar
                                 sidebar={
                                     <SideBar
-                                        avatar={userData?userData.data[0].avatar:''}
-                                        username ={userData?userData.data[0].username:''}
-                                        homeLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
-                                        notiLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
-                                        notiWrite={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Post Notificate</Link>}
-                                        createAccLink={<Link className="link pl-2" style={{color:'white'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
+                                        avatar={''}
+                                        username={userData?userData.user:''}
+                                        homeLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(0)} to={url}>Homepage</Link>}
+                                        notiLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(1)} to={`${url}/notification`}>Notification</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/postnotification`}>Post notification</Link>}
+                                        createAccLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create account</Link>}
                                         choose={chooseSideBar}
-                                        ></SideBar>}
+                                    ></SideBar>}
                                     open={sidebarOpen}
                                     onSetOpen={onSetSidebarOpen}
                                     styles={{ sidebar: { background: "rgba(51,72,93,255)", width: "180px" ,position: 'fixed', top: 0}}}/>                    
                             </div>
                         ):(
-                                <div className='col-2'>
-                                    <SideBar
-                                        avatar={userData?userData.data[0].avatar:''}
-                                        username ={userData?userData.data[0].username:''}
-                                        homeLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(0)} to={url}>Home Page</Link>}
-                                        notiLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(1)} to={`${url}/notificates`}>Notification</Link>}
-                                        notiWrite={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(2)} to={`${url}/writenotificate`}>Post Notificate</Link>}
-                                        createAccLink={<Link className="link pl-2" style={{color:'black'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create Account</Link>}
+                                <div className='col-3'>
+                                <SideBar
+                                        avatar={''}
+                                        username={userData?userData.user:''}
+                                        homeLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(0)} to={url}>Homepage</Link>}
+                                        notiLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(1)} to={`${url}/notification`}>Notification</Link>}
+                                        notiWrite={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(2)} to={`${url}/postnotification`}>Post notification</Link>}
+                                        createAccLink={<Link className="link pl-2" style={{color:width>768?'black':'white'}} onClick={() => setChooseSideBar(3)} to={`${url}/createaccount`}>Create account</Link>}
                                         choose={chooseSideBar}
                                     ></SideBar>
                                 </div>
                         )
                     }
-                    <div className={width < 768?'':'col-10'} style={{justifyContent:'center', padding:'15px', paddingTop:'46px'}}>
-                        <Switch>
-                            {routes.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    exact={route.exact}
-                                    children={route.main}
-                                />
-                            ))}
-                        </Switch>
+                    <div className={width < 768?'':'col-9'} style={{justifyContent:'center', padding:'15px', paddingTop:'48px'}}>                
+                        <Switch>                            
+                            <Route                            
+                                path={`${path}`}                    
+                                exact={true}
+                                component={Newfeed}
+                            />                                                   
+                            <Route                            
+                                path={`${path}/notification`}                                    
+                                component={NotiPage}
+                            />                                                 
+                            <Route                            
+                                path={`${path}/postnotification`}                            
+                                component={CreateNoti}
+                            />                                                 
+                            <Route                            
+                                path={`${path}/createaccount`}                                
+                                component={CreateAccountPage}
+                            />
+                        </Switch>                    
                     </div>
                     </div>
                 </div>
-            </Router>
+                </Router>
         )
 }
 

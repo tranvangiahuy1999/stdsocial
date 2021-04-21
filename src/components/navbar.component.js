@@ -16,7 +16,7 @@ const NavBar = (props) =>  {
                                 <div></div>
                             )
                         }                        
-                    </div>
+                    </div>                    
                     <div>
                         <img className="align-self-center" src={props.avatar} alt="avatar" height="28px" width="28px"></img>
                         <text className="align-self-center pl-2 pr-3">{props.username}</text>

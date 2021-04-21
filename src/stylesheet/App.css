@@ -23,8 +23,11 @@
 
 .containerr {
   background-color: rgba(241,242,246,255);
-  width: 100vw;
-  height: 100vh;
+  overflow-x: hidden;
+  padding:0;
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .containerr .navbar text {
@@ -33,7 +36,7 @@
 
 .navbar {
   background-color: rgba(60,137,187,255);
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 4px 16px 0 rgba(0, 0, 0, 0.16);
   width: 100%;
   height: 42px;
 }
@@ -43,6 +46,12 @@
   top: 50px;
   box-sizing: border-box;
 }
+
+.sidebar {
+  position: sticky;
+  top: 75px;
+}
+
 
 .sidebar .link {
   text-decoration: none;
@@ -104,6 +113,12 @@
   justify-content: center;
 }
 
+.notizone-body {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .clickable-icon-dark:hover {
   background-color: rgb(235, 235, 235);
   border-radius: 20%;
@@ -154,6 +169,11 @@
   -webkit-transition: opacity 0.6s ease;
   -moz-transition: opacity 0.6s ease;
   -o-transition: opacity 0.6s ease;
+}
+
+.noti-card:hover {
+  cursor: pointer;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.16);
 }
 
 .lp-slideshow>.container>.slide.active {
@@ -248,7 +268,7 @@
   background-color: #717171;
 }
 
-.lp-slideshow>.dot-container>.dot:not(.active):hover, .noti-card {
+.lp-slideshow>.dot-container>.dot:not(.active):hover {
   cursor: pointer;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.16);
 }
@@ -264,7 +284,85 @@
   transition: width 0.5s, height 0.5s, opacity 0.5s 0.5s;
 }
 
-.fragment-body {
+.child-body {
   border-radius: 5px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.16);
+  background-color: white;
+  margin: 2px;
+  padding: 10px;
+}
+
+.child-header {
+  padding: 6px;
+  color: gray;
+  background-color: white;
+  text-align: center;
+  margin: auto;
+}
+
+.paging button {  
+  color:	black;
+  background-color: white;
+  padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-width: 0;
+}
+
+.paging button:hover {  
+  color: rgb(2, 117, 216);
+}
+
+.paging-wrapper {
+  justify-content: center;
+}
+
+.paging-wrapper .paging-text{
+  text-align: center;
+  padding: 4px;
+  border: 1px solid gray;
+  border-radius: 6px;
+}
+
+.paging-text span {
+  color: rgb(2, 117, 216);
+}
+
+.selectboxmap {
+  height: 500px;
+  overflow-y: scroll;
+}
+.reading-title{
+  color: blue;
+  text-align: center;
+  padding: 10px;
+}
+
+.reading-date {
+  text-align: end;
+  color: blue;
+  font-style: italic;
+  padding: 14px;
+  border-bottom: 1px solid lightblue;
+  text-decoration: underline;
+}
+
+.reading-content {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 16px;
+}
+
+.reading-link {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.reading-link:hover {
+  color: rgb(113, 113, 255);
+  cursor: pointer;
+  text-decoration: underline;
 }

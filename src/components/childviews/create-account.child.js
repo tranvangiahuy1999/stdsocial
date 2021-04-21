@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react'
 import { TiUserAdd } from "react-icons/ti";
 import axios from 'axios'
 import { RiSendPlaneFill } from "react-icons/ri";
-import {useHistory} from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
 const CreateAccountPage = (props) => {
     const [username, setUsername] = useState('')
@@ -24,24 +24,24 @@ const CreateAccountPage = (props) => {
             headers: {
                 'Authorization' : 'Bearer ' + token
             }
-        })
+        }).catch()
 
-        if(res && res.status === 200){
-            if(res.data.code === 0){
-                await setFalcuty(res.data.data)
-            } else {
-                if(res) {
-                    setErr(res.data.message)
-                    setErrAlert(true)
-                    setTimeout(() => {setErrAlert(false)}, 3000)
+        if(res) {
+            if(res.status === 200){
+                if(res.data.code === 0){
+                    await setFalcuty(res.data.data)
+                } else {
+                    if(res) {
+                        setErr(res.data.message)
+                        setErrAlert(true)
+                        setTimeout(() => {setErrAlert(false)}, 3000)
+                    }
                 }
             }
-        }
-        else{
-            if(res){
+            else{        
                 setErr(res.data.message)
                 setErrAlert(true)
-                setTimeout(() => {setErrAlert(false)}, 3000)
+                setTimeout(() => {setErrAlert(false)}, 3000)        
             }
         }
     }, [])
@@ -49,7 +49,6 @@ const CreateAccountPage = (props) => {
     async function createAccount (e){
         e.preventDefault();
         if(pwd !== repwd){
-
             setErr(`Password and Re-password doesn't match!`)
             setErrAlert(true)
             setTimeout(() => {setErrAlert(false)}, 3000)
@@ -65,7 +64,7 @@ const CreateAccountPage = (props) => {
                 headers: {
                     'Authorization' : 'Bearer ' + token
                 }
-            })
+            }).catch()
 
             if(res && res.status === 200){
                 if(res.data.code === 0){
@@ -105,11 +104,11 @@ const CreateAccountPage = (props) => {
     }
 
     return(
-            <div>
-                <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
+            <div className='child-page'>
+                <h5 className='child-header'>
                     CREATE ACCOUNT<TiUserAdd style={{marginLeft:'5px'}} size="22px" color="gray"/>
                 </h5>
-                <div className='fragment-body' style={{backgroundColor:'white', margin: '2px', padding:'4px'}}>
+                <div className='child-body'>
                     <div className='col-12' style={{margin:'auto'}}>
                         <form className='row' onSubmit={createAccount}>
                             <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
@@ -136,9 +135,11 @@ const CreateAccountPage = (props) => {
                                 <div className={(succAlert)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center'}}>{succ}</div>
                                 <div className={(errAlert)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center'}}>{err}</div>                                                                                            
                             </div>
-                            <div className='col-6'>
+                            <div className='selectboxmap col-6'>
                                 <h6>Choose falcuty you want to add</h6>
-                                <div className='p-2 ml-4' styles={{ height: '400px', overflowY: 'scroll', backgroundColor:'rgba(241,242,246,255)'}}>                        
+                                <div>
+
+                                <div className='p-2 ml-4' styles={{backgroundColor:'rgba(241,242,246,255)'}}>                   
                                     {
                                         (falcuty && falcuty.length > 0)?
                                         falcuty.map((value, index) => (
@@ -151,6 +152,7 @@ const CreateAccountPage = (props) => {
                                         )):
                                         <div>No falcuty has shown</div>
                                     }
+                                </div>
                                 </div>
                             </div>
                         </form>

@@ -23,27 +23,29 @@ const CreateNoti = (props) => {
             headers: {
                 'Authorization' : 'Bearer ' + token
             }
-        })
-        
-        if(res && res.status === 200){
-            if(res.data.code === 0){
-                await setFalcuty(res.data.data.role)
-            } else {
-                if(res) {
-                    setErr(res.data.message)
-                    setErrAlert(true)
-                    setTimeout(() => {setErrAlert(false)}, 3000)
+        }).catch()
+
+        console.log(res)
+
+        if(res) {
+            if(res.status === 200){
+                if(res.data.code === 0){
+                    await setFalcuty(res.data.data.role)
+                } else {
+                    if(res) {
+                        setErr(res.data.message)
+                        setErrAlert(true)
+                        setTimeout(() => {setErrAlert(false)}, 3000)
+                    }
                 }
             }
-        }
-        else {
-            if(res){
+            else {            
                 setErr(res.data.message)
                 setErrAlert(true)
-                setTimeout(() => {setErrAlert(false)}, 3000)
+                setTimeout(() => {setErrAlert(false)}, 3000)            
             }
         }
-
+        
     }, [])
 
     function handleChange(selectedOption) {
@@ -52,48 +54,48 @@ const CreateNoti = (props) => {
 
     async function onSubmit(e) {
         e.preventDefault()
-        const res = await axios.post(`http://${process.env.REACT_APP_IP}:3000/notification/add`,
-        {
-            'title': title,
-            'content': content,
-            'description': desc,
-            'role': selectedOption.value
-        },{
-            headers: {
-                'Authorization' : 'Bearer ' + token
-            }
-        })
+        if(selectedOption){
+            const res = await axios.post(`http://${process.env.REACT_APP_IP}:3000/notification/add`,
+            {
+                'title': title,
+                'content': content,
+                'description': desc,
+                'role': selectedOption.value
+            },{
+                headers: {
+                    'Authorization' : 'Bearer ' + token
+                }
+            }).catch()
 
-        console.log(res)
-
-        if(res && res.status === 200){
-            if(res.data.code === 0){
-                setSucc(res.data.message)
-                setSuccAlert(true)
-                setTimeout(() => {setSuccAlert(false)}, 3000)
-            } else {
-                if(res){
+            if(res){
+                if(res.status === 200){
+                    if(res.data.code === 0){
+                        setSucc(res.data.message)
+                        setSuccAlert(true)
+                        setTimeout(() => {setSuccAlert(false)}, 3000)
+                    } else {
+                        if(res){
+                            setErr(res.data.message)
+                            setErrAlert(true)
+                            setTimeout(() => {setErrAlert(false)}, 3000)
+                        }
+                    }
+                }
+                else if(res.status === 401){
                     setErr(res.data.message)
                     setErrAlert(true)
                     setTimeout(() => {setErrAlert(false)}, 3000)
                 }
             }
         }
-        else if(res.status === 401){
-            setErr(res.data.message)
-            setErrAlert(true)
-            setTimeout(() => {setErrAlert(false)}, 3000)
-        }
     }
 
-    //huy test
-
     return(
-        <div style={{margin:'auto'}}>
-            <h5 style={{color:'gray', backgroundColor:'white', textAlign:'center', padding:'5px'}}>
+        <div className='child-page'>
+            <h5 className='child-header'>
                 CREATE NOTIFICATON<RiNotificationBadgeLine style={{marginLeft:'5px'}} size="22px" color="gray"/>
             </h5>
-            <div className='fragment-body' style={{backgroundColor:'white', margin: '2px', padding:'16px'}}>
+            <div className='child-body'>
                 <form onSubmit={onSubmit}>
                     <div className='form-group'>
                         <input className='form-control' value={title} style={{fontWeight:'bold'}} onChange={e => setTitle(e.target.value)} placeholder='Title'></input>

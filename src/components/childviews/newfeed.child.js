@@ -2,19 +2,36 @@ import React, {useState, useEffect} from 'react'
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
 import NotiZone from '../notificate-zone.component'
+import axios from 'axios'
+// import socketIOClient from "socket.io-client";
 
 //Fake data import
 import {homepageResTrue, loginResTrue} from '../../data/data'
+
+const token = localStorage.getItem('token')
 
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null)
 
-    useEffect(() => {
+    useEffect(async () => {
         //check status code
-        setUserData(loginResTrue)
+        const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/account/current`, {
+            headers: {
+                'Authorization' : 'Bearer ' + token
+            }
+        }).catch()
+        
+        if(res){
+            if(res.status === 200){
+                if(res.data.code === 0){
+                    await setUserData(res.data.data)
+                }
+            }            
+        }
+
         setNewfeedData(homepageResTrue)
-    })
+    }, [])
 
     function cmtHandle(){
         console.log('cmt')
@@ -28,10 +45,11 @@ const Newfeed = (props) =>  {
     
     return(
         <div className='col-15 row'>
-            <div className='hp-post col-8 p-0'>
-                <StatusPost                
-                    avatar={userData?userData.data[0].avatar:''}
-                    username={userData?userData.data[0].username:''}
+            <div className='col-8 p-0'>
+                <StatusPost
+                    avatar={''}
+                    username={userData?userData.user:''}
+                    // openModal={}
                     ></StatusPost>                    
                 <div className='post-data col-12'>
                     {(newfeedData && newfeedData.data.length > 0)?
@@ -53,7 +71,7 @@ const Newfeed = (props) =>  {
                         </div>}
                 </div>
             </div>
-            <div className='hp-noti col-4' style={{justifyContent:'center'}}>
+            <div className='col-4' style={{justifyContent:'center'}}>
                 <NotiZone></NotiZone>
             </div>
         </div>
