@@ -3,24 +3,41 @@ import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
 import NotiZone from '../notificate-zone.component'
 import axios from 'axios'
+import Modal from 'react-modal';
 // import socketIOClient from "socket.io-client";
 
-//Fake data import
-import {homepageResTrue, loginResTrue} from '../../data/data'
-
 const token = localStorage.getItem('token')
+
+// const customStyles = {
+//     content : {
+//       top                   : '50%',
+//       left                  : '50%',
+//       right                 : 'auto',
+//       bottom                : 'auto',
+//       marginRight           : '-50%',
+//       transform             : 'translate(-40%, -40%)',
+//     }
+// };  
 
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null)
+    // const [img, setImg] = useState()
+    // const [modalIsOpen,setIsOpen] = useState(false)
 
     useEffect(async () => {
-        //check status code
+        await getUserData()
+        await getNewfeed()
+
+    }, [])
+
+    async function getUserData(){
         const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + token
             }
-        }).catch()
+        })
+        .catch()
         
         if(res){
             if(res.status === 200){
@@ -29,9 +46,36 @@ const Newfeed = (props) =>  {
                 }
             }            
         }
+    }
+    
+    // function openModal() {
+    //     setIsOpen(true);
+    // }
 
-        setNewfeedData(homepageResTrue)
-    }, [])
+    // function afterOpenModal() {
+        
+    // }
+    
+    // function closeModal(){
+    //     setIsOpen(false);
+    // }
+
+    async function getNewfeed(){
+        const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/newfeed`, {
+            headers: {
+                'Authorization' : 'Bearer ' + token
+            }
+        })
+        .catch()
+
+        console.log(res)
+        if(res){
+            if(res.data.code === 0 && res.data.data){
+                await setNewfeedData(res.data.data)
+            }
+        }
+    }
+    
 
     function cmtHandle(){
         console.log('cmt')
@@ -48,21 +92,45 @@ const Newfeed = (props) =>  {
             <div className='col-8 p-0'>
                 <StatusPost
                     avatar={''}
-                    username={userData?userData.user:''}
-                    // openModal={}
-                    ></StatusPost>                    
+                    username={userData?userData.user:''}                    
+                    ></StatusPost>     
+                {/* <Modal
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    ariaHideApp={false}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                    >
+                    <form className='modal-body'>
+                        <h4 className='modal-title'>Create post</h4>
+                        <div className='row modal-head'>
+                            <img src='' width='30px' height='30px' alt='avatar'></img>
+                            <div style={{textAlign: 'center', fontSize:'15px', fontWeight:'bold'}}>{userData?userData.user:''}Tran Van Gia Huy</div>                        
+                        </div>
+                        <textarea rows='4' className='modal-textarea' placeholder='What in your mind?'></textarea>
+                        {
+                            (img && img.length > 0)?<img src={img}></img>:<div></div>
+                        }
+                        <div className='modal-media'>Add to post <span>
+                            <input className='modal-upload-img' onChange={_onChange} type='image'/>
+                        </span>
+                        </div>
+                        <button className='btn btn-primary'>Post</button>
+                    </form>
+                </Modal>                */}
                 <div className='post-data col-12'>
-                    {(newfeedData && newfeedData.data.length > 0)?
-                        newfeedData.data.map((value, index) => (
+                    {(newfeedData && newfeedData.length > 0)?
+                        newfeedData.map((value, index) => (
                         <StatusCard
                             key={value._id}
-                            avatar={value.avatar}
-                            username={value.name}
-                            date={value.date}
-                            imgcontent= {value.imgcontenturl}
-                            textcontent={value.textcontent}
-                            like={value.like}
-                            cmt={value.cmt}
+                            avatar=''
+                            username={value.user[0]}
+                            date={value.date.split('T')[0]}
+                            imgcontent= {value.image}
+                            textcontent={value.content}
+                            like={value.likecount}
+                            cmt={value.commentcount}
                             likeHandle={likeHandle}
                             cmtHandle={cmtHandle}
                         ></StatusCard>))

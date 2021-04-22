@@ -16,6 +16,7 @@ import NotiPage from '../components/childviews/notificate.child'
 import CreateNoti from '../components/childviews/create-noti.child'
 import CreateAccountPage from '../components/childviews/create-account.child'
 import useWindowDimensions from '../components/useWindowDimensions'
+import Modal from 'react-modal';
 import axios from 'axios'
 
 const token = localStorage.getItem('token')

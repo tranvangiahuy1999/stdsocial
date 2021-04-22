@@ -67,7 +67,7 @@
   border-radius: 50%;
 }
 
-.stp-container input {
+.stp-container .post-text {
   border-radius: 20px;
   padding: 2px;
   padding-left: 15px;
@@ -104,9 +104,25 @@
 }
 
 .clickable-icon:hover{
-  background-color: gray;
-  border-radius: 20%;
+  background-color: rgb(225, 225, 225);
+  border-radius: 50%;
   cursor: pointer;
+}
+
+input::-webkit-file-upload-button {
+  outline: none;
+  border: 1px solid gray;
+  background-color: #fff;
+  font-weight: 500;
+  color: gray;
+  padding: 4px;
+  margin: 8px;
+  border-radius: 6px;
+
+}
+
+.stp-option {
+  justify-content: center;
 }
 
 .post-data{
@@ -365,4 +381,47 @@
   color: rgb(113, 113, 255);
   cursor: pointer;
   text-decoration: underline;
+}
+
+.modal-body {
+  width: 400px;
+  height: auto;
+}
+
+.modal-title { 
+  color: gray;
+  padding: 14px;
+  margin: auto;
+  text-align: center;
+  border-bottom: 1px solid lightgray;
+}
+
+.modal-head {
+  padding: 16px;
+  text-align: center;
+}
+
+.modal-textarea {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background-color: rgb(242, 242, 242);
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-media{
+  border-radius: 6px;
+  border: 1px solid black;
+  text-align: center;
+  padding: 6px;
+}
+
+.modal-body .btn {
+  width: 100%;
+  font-weight: 500;
+  margin-top: 14px;
 }
