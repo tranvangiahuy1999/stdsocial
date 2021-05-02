@@ -53,14 +53,14 @@ export default class StatusCard extends React.Component {
                     <div className='col-1' style={{margin:'auto'}}>
                         <img src={this.props.avatar} width='30px' height='30px'></img>
                     </div>
-                    <div className='col-10' style={{margin:'auto'}}>
-                        <div className='text-primary' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>
-                        <div className='row ml-0'>
+                    <div className='col-9' style={{margin:'auto'}}>
+                        <div className='text-primary ml-1' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>
+                        <div className='row ml-0 ml-1'>
                             <text style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</text>
                             <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
                         </div>
                     </div>
-                    <div className='col-1' style={{margin:'auto'}}>
+                    <div className='col-2' style={{margin:'auto'}}>
                         <BsThreeDots onClick={this.props.stcOption} className='clickable-icon-dark' size='22px' color='gray'></BsThreeDots>
                     </div>
                 </div>

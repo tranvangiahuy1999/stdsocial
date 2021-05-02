@@ -89,7 +89,7 @@ const Homepage = (props) => {
                         <NavBar
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}
                             avatar={userData?userData.avatar:''}
-                            username={userData?userData.user:''}
+                            username={userData?userData.user_name:''}
                             logOutHandle={logOutHandle}
                         ></NavBar>
                     </div>

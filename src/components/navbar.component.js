@@ -10,7 +10,7 @@ const NavBar = (props) =>  {
 
         return(
             <div className="navbar fixed-top">
-                <div className='row ml-1 col-6'>
+                <div className='row ml-1'>
                     {
                         width < 768?(
                             <FiMenu className='clickable-icon' onClick={props.sideBarHandle} size="24px" color="gray"></FiMenu>
