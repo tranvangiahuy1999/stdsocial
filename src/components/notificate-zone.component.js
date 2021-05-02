@@ -1,35 +1,29 @@
 import React, {useState, useEffect} from 'react'
-import { BiNotification } from "react-icons/bi";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useRouteMatch,
-    useLocation
+    BrowserRouter as Router,    
+    Link,    
 } from 'react-router-dom'
 import NotiCard from './notificatecard.component'
 import axios from 'axios'
-
-const token = localStorage.getItem('token')
+import {connect} from 'react-redux'
 
 const NotiZone = (props) => {
     const [notiData, setNotiData] = useState(null)
 
     useEffect(async ()=> {
-        const res = await axios.get(`http://${process.env.REACT_APP_IP}:3000/notification/page/${1}`,{
+        await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${1}`,{
             headers: {
-                'Authorization' : 'Bearer ' + token
+                'Authorization' : 'Bearer ' + props.token
             }
         })
-        .catch()
-
-        if(res) {
-            if(res.status === 200){
-                await setNotiData(res.data.data)    
-                console.log(notiData)            
+        .then(async res => {
+            if(res.data.code === 0){
+                await setNotiData(res.data.data)                
             }
-        }
+        })
+        .catch(e => {
+            console.error(e)
+        })
     }, [])
 
     function notiClickHandle(){
@@ -37,11 +31,11 @@ const NotiZone = (props) => {
     }
 
     return(
-        <div className='notizone-container' style={{height: '42px', margin:'5px'}}>
-            <div className='notizone-header p-1 bg-white'>
-                <h5 style={{textAlign:'center'}}> <BiNotification color='black' size='22px'></BiNotification> <Link style={{color:'black'}}>Notificate</Link></h5>
+        <div className='notizone-container bg-white'>
+            <div className='component-title'>
+                <div className='title'><Link style={{color:'black'}}>NOTIFICATION</Link></div>
             </div>
-            <div className='notizone-body mt-1 bg-white'>
+            <div className='notizone-body'>            
                 {
                     notiData && notiData.length > 0?
                     notiData.map((value, index) => (
@@ -56,11 +50,19 @@ const NotiZone = (props) => {
                             subtitle={value.description}
                             >                                
                         </NotiCard>
-                    )):<div></div>
+                    )):<div className='empty-data'>
+                            <div className='empty-text'>No content to show</div>
+                        </div>
                 }
             </div>
         </div>
     )
 }
 
-export default NotiZone
+function mapStateToProps(state) {
+    return {
+        token: state.token
+    };
+}
+
+export default connect(mapStateToProps)(NotiZone)

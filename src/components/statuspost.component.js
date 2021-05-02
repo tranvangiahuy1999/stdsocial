@@ -1,123 +1,170 @@
-import React from 'react'
+import React, {useState} from 'react'
 import axios from 'axios'
-const token = localStorage.getItem('token')
+import { AiFillYoutube } from "react-icons/ai";
+import { MdInsertPhoto } from "react-icons/md";
+import { ImBin } from "react-icons/im";
+import {connect} from 'react-redux'
+import { useAlert } from 'react-alert'
+import { Avatar } from 'antd';
 
-// import { AiFillYoutube } from "react-icons/ai";
-// import { MdInsertPhoto } from "react-icons/md";
-// import { FaLaughSquint } from "react-icons/fa";
+const StatusPost =(props) => {
+    const [text, setText] = useState('')
+    const [fileInput, setFileInput] = useState('')
+    const [previewFile, setPreviewFile] = useState(null)
+    const [postbtn, setPostbtn] = useState(false)
 
-export default class StatusPost extends React.Component{
-    constructor(){
-        super()
-        this.state = ({
-            text: '',
-            fileInput: '',
-            selectFile: '',
-            previewFile: null,
-            succAlert: false,
-            succ: null,
-            errAlert: false,
-            err: null
-        })
-        this._handleChange = this._handleChange.bind(this)
-        this._previewFile = this._previewFile.bind(this)   
-        this._handleSubmit = this._handleSubmit.bind(this)   
-        this.uploadText = this.uploadText.bind(this)     
-    }
+    var alert = useAlert()
 
-    _previewFile(file){
+    function _previewFile(file){
         const reader = new FileReader();
         reader.readAsDataURL(file)
         reader.onloadend = () => {
-            this.setState({previewFile:reader.result})
+            setPreviewFile(reader.result)            
         }
     }
 
-    _handleChange(e){
+    function _handleChange(e){
         const file = e.target.files[0]
-        this._previewFile(file)
+        setFileInput(file)        
+        _previewFile(file)
     }
 
-    async uploadText(){
-        if(this.state.text.length === 0) return;
-        const res = await axios.post(`http://${process.env.REACT_APP_IP}:3000/newfeed/add`, {
-            content: this.state.text
-        }, {
-            headers: {
-                'Authorization' : 'Bearer ' + token
-            }
-        })
-        .catch()
+    async function uploadImage(){        
+        var formData = new FormData();
+        setPostbtn(true)
 
-        console.log(res)
+        let api = `http://${process.env.REACT_APP_IP}/newfeed/add`
 
-        if(res){
-            if(res.data.code === 0){
-                this.setState({
-                    succ: res.data.message,
-                    succAlert: true
-                })                
-                setTimeout(() => {this.setState({succAlert: false})}, 3000)  
-            } else {
-                this.setState({
-                    err: res.data.message,
-                    errAlert: true
-                })                
-                setTimeout(() => {this.setState({errAlert: false})}, 3000)  
-            }
-        }
-    }
-
-    async uploadImage(base64EncodedImage){
-        try{
-            await axios.post(`http://${process.env.REACT_APP_IP}:3000/newfeed/api/upload`,{
-                data: JSON.stringify(base64EncodedImage)
-            }, {
-                headers:{
-                    'Content-type':'application/json',
-                    'Authorization' : 'Bearer ' + token
+        if(fileInput){
+            api = `http://${process.env.REACT_APP_IP}/newfeed/add/image`
+            await formData.append("image", fileInput);
+            await formData.append("content", text);
+            
+            await axios.post(api, formData, {
+                headers:{        
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization' : 'Bearer ' + props.token
                 }
             })
+            .then(res => {                
+                if(res.data.code === 0){
+                    setText('')
+                    setFileInput('')
+                    setPreviewFile(null)
+                                    
+                    alert.show('Posted!', {
+                        type: 'success'
+                    })
+                } else {                                        
+                    alert.show('Something wrong!', {
+                        type: 'error'
+                    })                    
+                }
+                setPostbtn(false)
+            })
+            .catch(e => {                             
+                alert.show('Something wrong!', {
+                    type: 'error'
+                }) 
+                setPostbtn(false)               
+            })
         }
-        catch(e){
-            console.log('upload failed!')
+        else {
+            await axios.post(api, {
+                content: text
+            }, {
+                headers:{                            
+                    'Authorization' : 'Bearer ' + props.token
+                }
+            })
+            .then(res => {                
+                if(res.data.code === 0){
+                    setText('')
+                    setFileInput('')
+                    setPreviewFile(null)                    
+                    
+                    alert.show('Posted', {
+                        type: 'success'
+                    })
+                } else {                    
+                    alert.show('Something wrong!', {
+                        type: 'error'
+                    })                      
+                }
+
+                setPostbtn(false)
+            })
+            .catch(e => {                
+                alert.show('Something wrong!', {
+                    type: 'error'
+                })
+                setPostbtn(false) 
+            })
         }
+        setPostbtn(false)
     }
 
-    _handleSubmit(e){
-        console.log('sbmit')
+    function _handleSubmit(e){
         e.preventDefault();
-        if(!this.state.previewFile) return;
-        this.uploadImage(this.state.previewFile)
+        if(previewFile || text.length > 0){            
+            uploadImage()
+        }
+        return
     }
 
-    render(){
-        return(
-            <form className='stp-container col-12 bg-white' onSubmit={this.uploadText}>
-                <div className='stp-contain row p-1 m-1 pt-2 pb-2'>
-                    <div className='col-1 col-1'>
-                        <img src={this.props.avatar} width='30px' height='30px' alt='avatar'></img>
-                    </div>
-                    <div className='col-md-11 col-sm-11'>
-                        <input className='post-text' onChange={e => this.setState({text: e.target.value})} value={this.state.text} placeholder={`What's on your mind, ${this.props.username}?`}></input>
-                    </div>
-                </div>
-                <div className='stp-preview'>
-                    {this.state.previewFile && (
-                        <img src={this.state.previewFile} alt='chosen' style={{height:'100px'}}></img>
-                    )}
-                </div>
-                <div className='stp-option row'>                    
-                    <div className='p-0 col-6'>
-                        <input type='file' name='image' onChange={this._handleChange} accept="image/png, image/jpeg" value={this.state.fileInput}/>
-                    </div>               
-                    <div className='col-6'>
-                        <button type='submit' className='btn' style={{fontWeight:'500'}}>Post</button>
-                    </div>     
-                </div>
-                <div className={(this.state.succAlert)?'alert alert-success fadeIn':'alert alert-success fadeOut'} style={{textAlign:'center', position: 'fixed', top: '60px'}}>{this.state.succ}</div>
-                <div className={(this.state.errAlert)?'alert alert-danger fadeIn':'alert alert-danger fadeOut'} style={{textAlign:'center', position: 'fixed', top: '60px'}}>{this.state.err}</div>
-            </form>
-        )
+    function _inputImageBtn(){
+        const input = document.getElementById('input-img')
+        if(input){
+            input.click()
+        }
     }
+
+    function _deleteImageBtn(){
+        setFileInput('')
+        setPreviewFile(null)
+    }
+    
+        return(
+            <form className='stp-container col-12 bg-white' onSubmit={_handleSubmit}>
+                <div className='stp-contain row p-2'>
+                    <div className={{}} style={{width:'10%'}}>
+                        <Avatar src={props.avatar} alt='avatar'></Avatar> 
+                        {/* <img className='avatar' src={props.avatar} style={{width: '30px' , height:'30px'}} alt='avatar'></img> */}
+                    </div>
+                    <div className='stp-post' style={{width:'90%'}}>
+                        <textarea className='post-text p-2' rows='3' onChange={e => setText(e.target.value)} value={text} placeholder={`What's on your mind, ${props.username}?`}></textarea>
+                        <div className='stp-preview row ml-2'>
+                            {previewFile && (
+                                <div>
+                                    <img className='ml-3' src={previewFile} alt='chosen' style={{height:'180px', borderRadius:'4px'}}/> 
+                                    <ImBin className='ml-2 clickable-icon' color='gray' size='22px' onClick={_deleteImageBtn}></ImBin>
+                                </div>
+                            )}
+                        </div>
+                        <div className='row stp-action'>
+                            <div>
+                                <MdInsertPhoto className='clickable-icon ml-3' color='rgba(79,78,75,255)' size='24px' onClick={_inputImageBtn}></MdInsertPhoto>
+                                <input id='input-img' type='file' name='image' style={{display:'none'}} onChange={_handleChange} accept="image/png, image/jpeg"/>
+                            </div>
+                            <div>
+                                <AiFillYoutube className='clickable-icon ml-3' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
+                            </div>
+                            <div>
+                                <button className='btn ml-3 mr-3' disabled={postbtn}>Post</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>                
+
+            </form>
+        )    
 }
+
+function mapStateToProps(state) {
+    return {
+        token: state.token
+    };
+}
+
+export default connect(mapStateToProps)(StatusPost)

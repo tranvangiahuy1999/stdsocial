@@ -1,7 +1,17 @@
 import React from 'react'
+import { Result, Button } from 'antd';
+import {Link, useHistory} from 'react-router-dom'
 
 const NotFoundComponent = props => {
-    return <div>URL Not Found</div>;
+    const history = useHistory()
+    return (
+        <Result
+            status="404"
+            title="404"
+            subTitle="Sorry, the page you visited does not exist."
+            extra={<Button type="primary" onClick={() => history.push('/home')}>Back Home</Button>}
+        />
+    )
 };
 
 export default NotFoundComponent

@@ -1,11 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 
 const PersonalPage = (props) => {
     return(
         <div>
-
+            
         </div>
     )
 }
-
-export default PersonalPage
