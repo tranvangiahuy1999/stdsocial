@@ -25,8 +25,8 @@ const MainRoute = (props) => {
             <Router>
                 <Switch>
                     <Route path="/login" component={LoginView}/>            
-                    {/* <PrivateRoute path="/home" component={Homepage} auth={props.token}/> */}
-                    <Route path="/home" component={Homepage}/>   
+                    <PrivateRoute path="/home" component={Homepage} auth={props.token}/>
+                    {/* <Route path="/home" component={Homepage}/>    */}
                     <Route exact component={NotFoundComponent}/>
                 </Switch>
             </Router>

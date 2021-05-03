@@ -22,6 +22,8 @@ const CreateAccountPage = (props) => {
     const [falcuty, setFalcuty] = useState(null)
     const [falcutyChoose, setFalcutyChoose] = useState([])
 
+    const [btnState, setBtnState] = useState(false)
+
     const {path, url} = useRouteMatch()
     const history = useHistory()
 
@@ -50,15 +52,21 @@ const CreateAccountPage = (props) => {
 
     async function createAccount (e){
         e.preventDefault();
+        setBtnState(true)
+
         if(pwd !== repwd){
             alert.show(`Password and Re-password doesn't match!`, {
                 type: 'error'
-            })  
+            })
+
+            setBtnState(false)
 
         } else if(falcutyChoose.length === 0) {
             alert.show(`Choose one of the falcuty!`, {
                 type: 'error'
             })
+
+            setBtnState(false)
             
         } else {
             await axios.post(`http://${process.env.REACT_APP_IP}/admin/adduser`,
@@ -72,18 +80,26 @@ const CreateAccountPage = (props) => {
                 if(res.data.code === 0){                    
                     alert.show('Create successfully!', {
                         type:'success'
-                    })                
+                    })
+                    
+                    setUsername('')
+                    setPwd('')
+                    setRePwd('')
+                    setFalcutyChoose([])
 
                 } else {
                     alert.show(res.data.message, {
                         type: 'error'
                     })
                 }
+                setBtnState(false)
             })
             .catch(e => {
                 console.error(e)
+                setBtnState(false)
             })
         }
+        setBtnState(false)
     }
 
     function checkHandle(e){
@@ -128,7 +144,7 @@ const CreateAccountPage = (props) => {
                                             <input type='password' value={repwd} onChange={v => setRePwd(v.target.value)} className='form-control' placeholder='Re-enter password' required></input>
                                         </div>
                                         <div className='form-group'>
-                                            <button className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
+                                            <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
                                         </div>
                                         <div className='form-group'>
                                             <div>Head to <Link className='link' to={`${url}/accountmanager`}>Account manager</Link></div>                                     

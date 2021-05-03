@@ -11,6 +11,8 @@ const CreateNoti = (props) => {
     const [content, setContent] = useState('')
     const [falcuty, setFalcuty] = useState([])
 
+    const [btnState, setBtnState] = useState(false)
+
     const alert = useAlert() 
 
     const [selectedOption, setSelectedOption] = useState(null)
@@ -45,6 +47,7 @@ const CreateNoti = (props) => {
 
     async function onSubmit(e) {
         e.preventDefault()
+        setBtnState(true)
         if(selectedOption){
             await axios.post(`http://${process.env.REACT_APP_IP}/notification/add`,
             {
@@ -59,6 +62,10 @@ const CreateNoti = (props) => {
             })
             .then(async res => {
                 if(res.data.code === 0){
+                    setTitle('')
+                    setDesc('')
+                    setContent('')
+                    
                     alert.show(res.data.message, {
                         type:'success'
                     })                    
@@ -69,10 +76,13 @@ const CreateNoti = (props) => {
                     })
 
                 }
+                setBtnState(false)
             })
             .catch(e => {
                 console.error(e)
+                setBtnState(false)
             })
+            setBtnState(false)
         }
         else {
             alert.show(`Please pick one of the faculty`, {
@@ -100,7 +110,7 @@ const CreateNoti = (props) => {
                     <div className='form-group'>
                         <textarea className='form-control' rows='6' value={content} onChange={e => setContent(e.target.value)} placeholder='Write something here'></textarea>
                     </div>
-                    <button className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Post</button>                    
+                    <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Post</button>                    
                                             
                 </form>
             </div>
