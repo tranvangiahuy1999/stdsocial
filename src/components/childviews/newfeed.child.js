@@ -88,8 +88,9 @@ const Newfeed = (props) =>  {
                             avatar={value.user.avatar}
                             username={value.user.user_name}
                             date={value.date.split('T')[0]}
-                            imgcontent= {value.image}
                             textcontent={value.content}
+                            linkyoutube={value.linkyoutube}
+                            imgcontent= {value.image}
                             like={value.likecount}
                             cmt={value.commentcount}
                             likeHandle={() => likeHandle(value._id)}

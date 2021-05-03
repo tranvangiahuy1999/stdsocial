@@ -23,7 +23,7 @@ import {useAlert} from 'react-alert'
 const NotiPage = (props) => {
     const [searchNotiTitle, setSearchNotiTitle] = useState('')
     const [searchFalcuty, setSearchFalcuty] = useState('')
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, setStartDate] = useState('');
     const [notiData, setNotiData] = useState(null)
     const [findData, setFindData] = useState({title: '', faculty: '', date: ''})
     const [falcuty, setFalcuty] = useState([])    
@@ -34,7 +34,7 @@ const NotiPage = (props) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPage, setTotalPage] = useState(1)        
     
-    const [selectedOption, setSelectedOption] = useState(null)
+    const [selectedOption, setSelectedOption] = useState({value: "All", label: "All"})
 
     let {path, url} = useRouteMatch()
     let history = useHistory()
@@ -42,19 +42,21 @@ const NotiPage = (props) => {
 
     useEffect(() => {        
         getRole()
-        getPage(1)        
+        getPage(1)
     },[])
     
 
     function dateConvert() {
-        const output = ''
+        let output = ''
 
-        if(startDate && startDate.length > 0){
-            const month = String(startDate.getMonth()).padStart(2, '0');
+        if(startDate){          
+            const month = String(startDate.getMonth() + 1).padStart(2, '0');
             const day = String(startDate.getDate()).padStart(2, '0');
             const year = startDate.getFullYear();
             output = year + '-' + month  + '-' + day;
         }
+
+        console.log(output, startDate)
 
         return output
     }   
@@ -94,37 +96,41 @@ const NotiPage = (props) => {
         }
     }
 
-    async function submitFilter(page){                    
+    async function submitFilter(page){                   
+        let option = selectedOption.value;
         if(selectedOption && selectedOption.value !== 'All'){
             await setSearchFalcuty(selectedOption.value)
+        } else {
+            await setSearchFalcuty('')
+            option = ''
         }
 
         setSendBtnState(true)
 
-        const date = dateConvert()        
+        const date = await dateConvert()        
 
-        await setFindData({title: searchNotiTitle, faculty: searchFalcuty, date: date})
-        await setCurrentSearchPage(page)
+        await setFindData({title: searchNotiTitle, faculty: option, date: date})
+        await setCurrentSearchPage(page)        
         
         let api = `http://${process.env.REACT_APP_IP}/notification/dateSort/${date}/${date}/${page}`
 
-        if(searchNotiTitle.length > 0 || searchFalcuty.length > 0 || date.length > 0){
-            if(searchNotiTitle.length > 0 && searchFalcuty.length > 0 && date.length > 0){
-                api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${searchFalcuty}/${date}/${date}/${page}`
+        if(searchNotiTitle.length > 0 || option.length > 0 || date.length > 0){
+            if(searchNotiTitle.length > 0 && option.length > 0 && date.length > 0){
+                api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${date}/${date}/${page}`
             }
             else if(searchNotiTitle.length > 0) {
-                if(searchFalcuty.length > 0 ){
-                    api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${searchFalcuty}/${page}`                    
+                if(option.length > 0 ){
+                    api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${page}`                    
                 } else if(date.length > 0){
                     api = `http://${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${date}/${date}/${page}`                   
                 } else {
                     api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
                 }
-                else if(searchFalcuty.length > 0){
+                else if(option.length > 0){
                     if(date.length > 0){
-                        api = `http://${process.env.REACT_APP_IP}/notification/role-date/${searchFalcuty}/${date}/${date}/${page}`                    
+                        api = `http://${process.env.REACT_APP_IP}/notification/role-date/${option}/${date}/${date}/${page}`                    
                     } else {
-                        api = `http://${process.env.REACT_APP_IP}/notification/faculty/${searchFalcuty}/${page}`                    
+                        api = `http://${process.env.REACT_APP_IP}/notification/faculty/${option}/${page}`                    
                     }
                 }            
             } else {
@@ -132,12 +138,13 @@ const NotiPage = (props) => {
                 return
             }
 
-            await axios.get(api , {
+            await axios.get(api ,{
                 headers:{
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
             .then(async res =>{
+                console.log(res)
                 if(res.data.code === 0){
                     await setNotiData(res.data.data)
                     if(res.data.total) {    
@@ -157,7 +164,7 @@ const NotiPage = (props) => {
         setSendBtnState(false)
     }
 
-    function handleChange(selectedOption) {
+    function handleChange(selectedOption) {        
         setSelectedOption(selectedOption)
     }
 
@@ -165,6 +172,7 @@ const NotiPage = (props) => {
         setSearchNotiTitle('')
         setSearchFalcuty('')
         setStartDate('')
+        setSelectedOption({value: "All", label: "All"})
     }    
 
     async function getRole(){
@@ -243,7 +251,7 @@ const NotiPage = (props) => {
                                                 key={value._id}                             
                                                 borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
                                                 backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}
-                                                notiLink={() => <Link className="link" to={`${url}/${value._id}`}>Click to see detail</Link>}
+                                                notiLink={<Link className="link" to={`${url}/${value._id}`}>Click to see detail</Link>}
                                                 falcutyname={value.role}
                                                 date={value.date.split('T')[0]}
                                                 title={value.title}
@@ -261,9 +269,9 @@ const NotiPage = (props) => {
                                 <div className='paging mt-2' style={{width:'max-content'}}>
                                     {
                                         (findData.title.length > 0 || findData.faculty.length > 0 || findData.date.length > 0)?(
-                                            <Pagination defaultCurrent={currentSearchPage} total={parseInt(totalPage*10)} onChange={(page, pageSize) => {pagingHandle(page)}}/>                                  
+                                            <Pagination defaultCurrent={1} current={currentSearchPage} total={parseInt(totalPage*10)} onChange={(page, pageSize) => {pagingHandle(page)}}/>                                  
                                         ):(
-                                            <Pagination defaultCurrent={currentPage} total={parseInt(totalPage*10)} onChange={(page, pageSize) => {pagingHandle(page)}}/>                                  
+                                            <Pagination defaultCurrent={1} current={currentPage} total={parseInt(totalPage*10)} onChange={(page, pageSize) => {pagingHandle(page)}}/>                                  
                                         )
                                     }
                                 </div>                                

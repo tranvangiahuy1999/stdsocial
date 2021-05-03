@@ -4,7 +4,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { Image } from 'antd';
 import { AiFillClockCircle, AiFillLike, AiOutlineLike} from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
-import { RiSendPlaneFill } from "react-icons/ri";
+import ReactPlayer from 'react-player/youtube'
+
 import CommentChild from './comment-child.component'
 
 export default class StatusCard extends React.Component {
@@ -13,12 +14,10 @@ export default class StatusCard extends React.Component {
         this.state = {
             text: false,
             pic: false,
+            linkyt: false,
             like: false,
-            dimensions: {}
         }
-        this.likeHandle = this.likeHandle.bind(this)
-        this.onImgLoad = this.onImgLoad.bind(this)
-        this.updateDimension = this.updateDimension.bind(this)
+        this.likeHandle = this.likeHandle.bind(this)              
     }
 
     componentDidMount(){
@@ -28,6 +27,9 @@ export default class StatusCard extends React.Component {
         if(this.props.textcontent && this.props.textcontent.length > 0){
             this.setState({text: true})
         }
+        if(this.props.linkyoutube && this.props.linkyoutube.length > 0){
+            this.setState({linkyt: true})
+        }
     }
 
     likeHandle(){
@@ -36,14 +38,6 @@ export default class StatusCard extends React.Component {
             like: !this.state.like
         })
         this.props.likeHandle()
-    }
-
-    updateDimension(){
-
-    }
-
-    onImgLoad({target:img}) {
-        this.setState({dimensions:{width:img.offsetWidth, height:img.offsetHeight}});
     }
 
     render(){
@@ -66,13 +60,22 @@ export default class StatusCard extends React.Component {
                 </div>
                 <div className='stc-contain p-1 mt-1' style={{paddingTop: '4px'}}>
                     {
-                        (this.state.text)?
+                        (this.state.text) && (
                         <div className='mb-2'>
                             <div className='stc-text'>{this.props.textcontent}</div>
-                        </div>:<div></div>
+                        </div>)
                     }
+
                     {
-                        (this.state.pic)?
+                        (this.state.linkyt) && (
+                            <div>
+                                <ReactPlayer width='100%' controls={true} url={this.props.linkyoutube}/>
+                            </div>
+                        )
+                    }
+
+                    {
+                        (this.state.pic) && (
                         <div className='p-0 img-frame'>
                             {/* <Slideshow
                                 input={this.props.imgcontent}
@@ -83,7 +86,7 @@ export default class StatusCard extends React.Component {
                                     width={380}
                                     src={this.props.imgcontent}
                                 />                                
-                        </div>:<div></div>
+                        </div>)
                     }
                     <div className='row m-2 pt-2'>
                         <div style={{width:'50%'}}>

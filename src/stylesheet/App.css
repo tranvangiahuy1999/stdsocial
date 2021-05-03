@@ -393,8 +393,9 @@
   overflow-y: scroll;
 }
 .reading-title{
-  color: blue;
+  color: rgb(0, 0, 228);
   text-align: center;
+  font-weight: bold;  
   padding: 10px;
 }
 
@@ -402,14 +403,13 @@
   text-align: end;
   color: blue;
   font-style: italic;
-  padding: 14px;
+  padding: 16px;
   border-bottom: 1px solid lightblue;
   text-decoration: underline;
 }
 
 .reading-content {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 24px;  
   padding: 16px;
 }
 

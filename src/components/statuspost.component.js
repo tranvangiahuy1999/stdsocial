@@ -9,6 +9,10 @@ import { Avatar } from 'antd';
 
 const StatusPost =(props) => {
     const [text, setText] = useState('')
+
+    const [youtubeLink, setYouTubeLink] = useState('')
+    const [inputYTState, setInputYTState] = useState(false)
+
     const [fileInput, setFileInput] = useState('')
     const [previewFile, setPreviewFile] = useState(null)
     const [postbtn, setPostbtn] = useState(false)
@@ -29,6 +33,13 @@ const StatusPost =(props) => {
         _previewFile(file)
     }
 
+    function youtubeUpload(){
+        setFileInput('')
+        setPreviewFile(null)
+
+        setInputYTState(true)
+    }
+
     async function uploadImage(){        
         var formData = new FormData();
         setPostbtn(true)
@@ -46,12 +57,11 @@ const StatusPost =(props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {         
-                console.log(res)                       
+            .then(res => {                                          
                 if(res.data.code === 0){                
                     setText('')
                     setFileInput('')
-                    setPreviewFile(null)
+                    setPreviewFile(null)                    
                                     
                     alert.show('Posted!', {
                         type: 'success'
@@ -72,7 +82,8 @@ const StatusPost =(props) => {
         }
         else {
             await axios.post(api, {
-                content: text
+                content: text,
+                linkyoutube: youtubeLink,
             }, {
                 headers:{                            
                     'Authorization' : 'Bearer ' + props.token
@@ -82,7 +93,9 @@ const StatusPost =(props) => {
                 if(res.data.code === 0){
                     setText('')
                     setFileInput('')
-                    setPreviewFile(null)                    
+                    setPreviewFile(null)
+                    setInputYTState(false)
+                    setYouTubeLink('')
                     
                     alert.show('Posted', {
                         type: 'success'
@@ -107,13 +120,16 @@ const StatusPost =(props) => {
 
     function _handleSubmit(e){
         e.preventDefault();
-        if(previewFile || text.length > 0){            
+        if(previewFile || text.length > 0 || youtubeLink.length > 0){            
             uploadImage()
         }
         return
     }
 
     function _inputImageBtn(){
+        setYouTubeLink('')
+        setInputYTState(false)
+
         const input = document.getElementById('input-img')
         if(input){
             input.click()
@@ -134,7 +150,12 @@ const StatusPost =(props) => {
                     </div>
                     <div className='stp-post' style={{width:'90%'}}>
                         <textarea className='post-text p-2' rows='3' onChange={e => setText(e.target.value)} value={text} placeholder={`What's on your mind, ${props.username}?`}></textarea>
-                        <div className='stp-preview row ml-2'>
+                        <div className='stp-preview row ml-2'>                            
+                            {
+                                inputYTState && (<div style={{width:'100%', justifyContent:'center', display:'flex'}}>
+                                    <input type='text' value={youtubeLink} onChange={e => setYouTubeLink(e.target.value)} placeholder='Paste youtube video url here' style={{outline:'none', border:'none', width:'80%', color:'blue', textAlign:'center'}}></input>
+                                </div>)
+                            }
                             {previewFile && (
                                 <div>
                                     <img className='ml-3' src={previewFile} alt='chosen' style={{height:'180px', borderRadius:'4px'}}/> 
@@ -148,7 +169,7 @@ const StatusPost =(props) => {
                                 <input id='input-img' type='file' name='image' style={{display:'none'}} onChange={_handleChange} accept="image/png, image/jpeg"/>
                             </div>
                             <div>
-                                <AiFillYoutube className='clickable-icon ml-3' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
+                                <AiFillYoutube onClick={youtubeUpload} className='clickable-icon ml-3' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
                             </div>
                             <div>
                                 <button className='btn ml-3 mr-3' disabled={postbtn}>Post</button>
