@@ -38,7 +38,8 @@ const Homepage = (props) => {
     let history = useHistory();
     let { path, url } = useRouteMatch();    
 
-    useEffect(async () => {        
+    useEffect(async () => {      
+        console.log(props.token)  
         await getCurrentUserData()      
     }, [])    
 
