@@ -13,7 +13,8 @@
 
 .form-container img {
   width: 100px;
-  height: 60px;  
+  height: auto;
+  margin: 6px;
 }
 
 .form-container{
@@ -22,6 +23,7 @@
 }
 
 .containerr {
+  overflow: overlay;
   background-color: whitesmoke;
   overflow-x: hidden;
   padding:0;
@@ -63,7 +65,7 @@
 
 .navbar img{
   width: auto;
-  height: 34px;
+  height: 40px;
   padding-left: 6px;  
 }
 
@@ -85,7 +87,7 @@
 
 .sidebar {
   position: sticky;  
-  top: 75px;
+  top: 90px;
   padding: 10px;
   margin-left: 10px;
   border-radius: 10px;   
@@ -96,13 +98,22 @@
   border-radius: 10px;
 }
 
-.sidebar .sidebar-child, .stp-container {
+.stp-container {
   border-radius: 4px;
   padding: 2px;
   margin: 2px;
 }
 
-.sidebar .sidebar-child:hover {
+.sidebar .sidebar-btn {
+  border: none;
+  width: 100%;
+  text-align: start;
+  padding: 10px;
+  background-color: white;
+  align-content: center;  
+}
+
+.sidebar .sidebar-btn:hover {
   border-radius: 10px;
   background-color: lightgray;
 }
@@ -238,8 +249,7 @@
   padding: 4px;
 }
 
-.noti-card:hover {
-  cursor: pointer;
+.noti-card:hover {  
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.16);
 }
 
@@ -428,7 +438,9 @@
 .child-page, .newfeed-page {
   justify-content: center;
   padding: 14px;
-  margin-top: 75px;
+  margin-right: 10px;
+  margin-left: 8px;
+  margin-top: 75px;  
 }
 
 .child-page {
@@ -443,9 +455,11 @@
   border-bottom: 2px solid green;
 }
 
-.alert-custom {
-  text-align: center;
-  margin-top: 12px;
+.userwall:hover {
+  border-radius: 16px;
+  background-color: lightgray;
+  cursor: pointer;
+  padding: 2px;
 }
 
 .link {
@@ -453,6 +467,7 @@
   margin-top: auto;
   margin-bottom: auto;
 }
+
 .sidebar .link {
   font-size: larger;
 }
@@ -488,7 +503,45 @@
   background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
 }
 
-.comment-body, .stc-input-text {
+.stc-input-text {
   border-radius: 10px;
   background-color: lightgray;
+}
+
+.personal-page {
+  margin-top: 75px;  
+}
+
+.personal-head {
+  background-color: #63d471;
+  background-image: linear-gradient(315deg, #63d471 0%, #233329 74%);
+  height: 200px;
+  border-radius: 10px;
+  text-align: center;
+  align-items: center;
+}
+
+.personal-head div {
+  color: white;
+  font-weight: bold;
+  font-size: x-large;
+  margin-left: 10px;
+}
+
+.intro-zone {
+  background-color: white;  
+  padding: 10px;
+  border-radius: 10px;  
+}
+
+.intro-header {
+  color: black;
+  font-weight: bold;
+  font-size: larger;
+  padding: 6px;
+  border-bottom: 2px solid green;
+}
+
+.cmttab:hover {
+  text-decoration: underline;
 }

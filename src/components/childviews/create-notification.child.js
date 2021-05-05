@@ -15,16 +15,15 @@ const CreateNoti = (props) => {
 
     const alert = useAlert() 
 
-    const [selectedOption, setSelectedOption] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(null)    
 
-    useEffect(async ()=> {
+    useEffect(async ()=> {                 
         await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {
-            console.log(res)
+        .then(async res => {            
             if(res.data.code === 0){
                 if(Array.isArray(res.data.data.faculty)) {
                     await setFalcuty(res.data.data.faculty)
@@ -61,6 +60,8 @@ const CreateNoti = (props) => {
                 }
             })
             .then(async res => {
+
+                console.log(res)
                 if(res.data.code === 0){
                     setTitle('')
                     setDesc('')

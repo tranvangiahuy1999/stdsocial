@@ -24,13 +24,16 @@ const CreateAccountPage = (props) => {
 
     const [btnState, setBtnState] = useState(false)
 
-    const {path, url} = useRouteMatch()
-    const history = useHistory()
+    const {path, url} = useRouteMatch()    
 
     const alert = useAlert() 
 
     useEffect( async () => {
         //check status code
+        getRole()
+    }, [])
+
+    async function getRole(){
         await axios.get(`http://${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
@@ -48,7 +51,7 @@ const CreateAccountPage = (props) => {
         .catch(e => {
             console.error(e)
         })
-    }, [])
+    }
 
     async function createAccount (e){
         e.preventDefault();

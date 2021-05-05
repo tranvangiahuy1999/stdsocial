@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 import logo from '../resources/logo-tdtu.png'
 import {FaGooglePlus} from 'react-icons/fa'
 import {useHistory} from 'react-router-dom'
@@ -13,6 +13,7 @@ const LoginView = (props) => {
     const axios = require('axios');
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
+    const [loginBtnState, setLoginBtnState] = useState(false)
     
     const [checked, setChecked] = useState(false)
     const {width, height} = useWindowDimensions()    
@@ -32,12 +33,12 @@ const LoginView = (props) => {
                 type: 'error'
             })
             return
-        }
+        }        
 
         axios.post(`http://${process.env.REACT_APP_IP}/api/googlelogin`,{
             tokenId: response.tokenId
         })
-        .then(res => {            
+        .then(res => {                        
             if(res.data.code === 0){
                 props.getToken(res.data.token)                   
                 history.push('/home')
@@ -53,22 +54,23 @@ const LoginView = (props) => {
         })
     }
 
-    const responseErrorGoogle = (response) => {
-        console.log(response);
+    const responseErrorGoogle = (response) => {        
         alert.show(`Login failed!`, {
             type: 'error'
         })
     }
     
     async function submitHandle(e) {
-        e.preventDefault();
+        e.preventDefault();        
 
         if(user.length === 0 && password.length === 0){
             alert.show(`Dont let username and password empty!`, {
                 type: 'error'
-            })
-            return            
+            })            
+            return
         }
+
+        setLoginBtnState(true)
 
         axios.post(`http://${process.env.REACT_APP_IP}/account/login`, {
             user: user,
@@ -84,12 +86,15 @@ const LoginView = (props) => {
                     type: 'error'
                 })
             }
+            setLoginBtnState(false)
         })
         .catch(e => {
             alert.show('Check your user or pwd!', {
                 type: 'error'
-            })            
+            })
+            setLoginBtnState(false)     
         })
+        setLoginBtnState(false)
     }    
         return(
             <div className="col-md-12 containerr" style={{flex: 1}}>
@@ -109,7 +114,7 @@ const LoginView = (props) => {
                                     <Form.Group>
                                         <Form.Check defaultChecked={checked} onChange={checkHandle} custom label={`Remember me`}/>
                                     </Form.Group>                                                        
-                                    <Button className="btn col-md-12 mt-2" type="submit" variant="primary">Login with TDTU Social</Button>
+                                    <Button className="btn col-md-12 mt-2" type="submit" disabled={loginBtnState}>Login with TDTU Social</Button>
                                     <div style={{textAlign:'center', color:'gray', margin:'2px'}}>
                                         Or
                                     </div>
@@ -122,7 +127,7 @@ const LoginView = (props) => {
                                         onSuccess={responseSuccessGoogle}
                                         onFailure={responseErrorGoogle}
                                         cookiePolicy={'single_host_origin'}
-                                    />,
+                                    />
                         </Form>
                     </div>
                 </div>

@@ -8,24 +8,6 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 
 const NotiZone = (props) => {
-    const [notiData, setNotiData] = useState(null)
-
-    useEffect(async ()=> {
-        await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${1}`,{
-            headers: {
-                'Authorization' : 'Bearer ' + props.token
-            }
-        })
-        .then(async res => {
-            if(res.data.code === 0){
-                await setNotiData(res.data.data)                
-            }
-        })
-        .catch(e => {
-            console.error(e)
-        })
-    }, [])
-
     function notiClickHandle(){
 
     }
@@ -37,8 +19,8 @@ const NotiZone = (props) => {
             </div>
             <div className='notizone-body'>            
                 {
-                    notiData && notiData.length > 0?
-                    notiData.map((value, index) => (
+                    props.notiData && props.notiData.length > 0?
+                    props.notiData.map((value, index) => (
                         <NotiCard
                             key={index} //id noti
                             borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}

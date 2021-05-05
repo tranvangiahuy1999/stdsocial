@@ -5,23 +5,21 @@ import moment from 'moment';
 const CommentChild = (props) => {
     return(
         <Comment            
-            author={<a>Han Solo</a>}
+            author={<a>{props.user_name}</a>}
             avatar={
                 <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                alt="Han Solo"
+                src={props.avatar}
+                alt="avatar"
                 />
             }
             content={
                 <p>
-                We supply a series of design principles, practical patterns and high quality design
-                resources (Sketch and Axure), to help people create their product prototypes beautifully
-                and efficiently.
+                    {props.content}
                 </p>
             }
             datetime={
                 <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                <span>{moment().fromNow()}</span>
+                <span>{props.datetime}</span>
                 </Tooltip>
             }
             />

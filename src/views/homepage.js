@@ -5,8 +5,9 @@ import {
     Route,
     useRouteMatch,
     useHistory,
-    Link
+    Link,
 } from 'react-router-dom'
+import {useAlert} from 'react-alert'
 
 import Sidebar from "react-sidebar";
 import NavBar from '../components/navbar.component'
@@ -15,62 +16,116 @@ import Newfeed from '../components/childviews/newfeed.child'
 import NotiPage from '../components/childviews/notification.child'
 import CreateNoti from '../components/childviews/create-notification.child'
 import CreateAccountPage from '../components/childviews/create-account.child'
+import PersonalPage from '../components/childviews/personal-page.child'
 import useWindowDimensions from '../components/useWindowDimensions'
 import axios from 'axios'
 import {connect} from 'react-redux';
 import {LOGOUT} from '../constants/index'
+import {
+    Avatar, 
+    } from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
 
-const Homepage = (props) => {
+const Homepage = (props) => {    
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [userData, setUserData] = useState()
+    const [route, setRoute] = useState(null)
+    const alert = useAlert()
 
     const {width, height} = useWindowDimensions()
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { path, url } = useRouteMatch();    
 
-    const routeComponent = [
-        {
-            name: 'Homepage',
-            route: url,
-            icon: <FaHome size="20px" color='gray'/>
-        },
-        {
-            name: 'Notification',
-            route: `${url}/notification`,
-            icon: <RiNotificationBadgeFill size="20px" color='gray'/>,
-        },
-        {
-            name: 'Post notificate',
-            route: `${url}/postnotificate`,
-            icon: <RiNotificationBadgeLine size="20px" color='gray'/>,
-        },
-        {
-            name: 'Create account',
-            route: `${url}/createaccount`,
-            icon: <FaUserPlus size="20px" color='gray'/>,
+    useEffect(async () => {        
+        await getCurrentUserData()      
+    }, [])    
+
+    function setCompRoute(role){
+        if(role === 'admin') {
+            setRoute([
+                {
+                    name: 'Homepage',
+                    route: url,
+                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                },
+                {
+                    name: 'Notification',
+                    route: `${url}/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                },
+                {
+                    name: 'Post notificate',
+                    route: `${url}/postnotificate`,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                },
+                {
+                    name: 'Create account',
+                    route: `${url}/createaccount`,
+                    icon: <FaUserPlus className='mb-1' size="22px" color='gray'/>,
+                },        
+            ])
         }
-    ]
+        else if(role === 'user') {
+            setRoute([
+                {
+                    name: 'Homepage',
+                    route: url,
+                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                },
+                {
+                    name: 'Notification',
+                    route: `${url}/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                },
+                {
+                    name: 'Post notificate',
+                    route: `${url}/postnotificate`,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                },                  
+            ])
+        }
+        else {
+            setRoute([
+                {
+                    name: 'Homepage',
+                    route: url,
+                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                },
+                {
+                    name: 'Notification',
+                    route: `${url}/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                }                    
+            ])
+        }
+    }
 
-    useEffect(async () => {
-        console.log('token: ',props.token)
-
+    async function getCurrentUserData(){
         await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {
+        .then(res => {            
             if(res.data.code === 0){
-                await setUserData(res.data.data)
+                setUserData(res.data.data)
+                setCompRoute(res.data.data.role)
+                if(res.data.data.faculty.length < 1){
+                    alert.show('Your account is not registed', {
+                        type:'error'
+                    })
+                    setTimeout(() => {
+                        history.push('/register')
+                    }, 3000)                    
+                }
             }
         })
         .catch(e => {
             console.error(e)
         })
-    }, [])
+    }
 
     function onSetSidebarOpen(open) {
         setSidebarOpen(open)
@@ -78,21 +133,26 @@ const Homepage = (props) => {
  
     async function logOutHandle(){
         await props.logOut()
-        history.push('/login')  
-    }    
+        history.push('/login') 
+    }
 
-        return(
+        return(            
                 //Mobile render
                 <Router>
                 <div className="containerr">
                     <div>
                         <NavBar
-                            sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}
-                            avatar={userData?userData.avatar:''}
-                            username={userData?userData.user_name:''}
-                            logOutHandle={logOutHandle}
+                            sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
+                            logOutHandle={logOutHandle}                            
+                            usersession={
+                            <Link to={`${url}/userwall`}>
+                                <div className='userwall row mr-1' onClick={props.userwallredirect}>
+                                    <Avatar src={userData?userData.avatar:''} alt="avatar" ></Avatar>
+                                    <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{userData?userData.user_name:''}</div>
+                                </div>
+                            </Link>}
                         ></NavBar>
-                    </div>
+                    </div>                    
                     <div className='row'>
                     {
                         width < 768?(
@@ -102,11 +162,10 @@ const Homepage = (props) => {
                                     <SideBar
                                         avatar={userData?userData.avatar:''}
                                         username={userData?userData.user:''}
-                                        sidebarchild={routeComponent.map((value, index)=> (                                            
-                                            <div className="p-2 sidebar-child">
-                                                {value.icon}
-                                                <Link className="link pl-2" style={{color:'gray'}} to={value.route}>{value.name}</Link>
-                                            </div>                                            
+                                        sidebarchild={(route) && route.map((value, index)=> (                                            
+                                            <div key={index}>
+                                                <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                            </div>                                         
                                         ))}
                                     ></SideBar>}
                                     open={sidebarOpen}
@@ -118,11 +177,10 @@ const Homepage = (props) => {
                                 <SideBar
                                     avatar={userData?userData.avatar:''}
                                     username={userData?userData.user:''}
-                                    sidebarchild={routeComponent.map((value, index)=> (                                            
-                                        <div className="p-2 sidebar-child">
-                                            {value.icon}
-                                            <Link className="link pl-2" style={{color:'gray'}} to={value.route}>{value.name}</Link>
-                                        </div>                                            
+                                    sidebarchild={(route) && route.map((value, index)=> (
+                                        <div key={index}>
+                                            <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                        </div>                                                                                                                           
                                     ))}                                                                            
                                 ></SideBar>
                             </div>
@@ -140,18 +198,36 @@ const Homepage = (props) => {
                                 component={NotiPage}
                             />
                             <Route
-                                path={`${path}/postnotificate`}                                    
-                                component={CreateNoti}
+                                path={`${path}/userwall`}
+                                component={PersonalPage}
                             />
-                            <Route
-                                path={`${path}/createaccount`}                                    
-                                component={CreateAccountPage}
-                            />                            
+                            {
+                                (userData && userData.role === 'user') && (
+                                    <Route
+                                        path={`${path}/postnotificate`}                                    
+                                        component={CreateNoti}
+                                    />
+                                )
+                            }
+                            {   
+                                (userData && userData.role === 'admin') && (
+                                    <>
+                                    <Route
+                                        path={`${path}/postnotificate`}                                    
+                                        component={CreateNoti}
+                                    />
+                                    <Route
+                                        path={`${path}/createaccount`}                               
+                                        component={CreateAccountPage}
+                                    />
+                                    </>
+                                )                             
+                            }                                                                                       
                         </Switch>                    
                     </div>
                     </div>
                 </div>
-                </Router>
+                </Router>                         
         )        
 }
 

@@ -37,7 +37,12 @@ const StatusPost =(props) => {
         setFileInput('')
         setPreviewFile(null)
 
-        setInputYTState(true)
+        if(inputYTState){
+            setYouTubeLink('')
+            setInputYTState(false)
+        } else {
+            setInputYTState(true)
+        }        
     }
 
     async function uploadImage(){        
@@ -66,6 +71,8 @@ const StatusPost =(props) => {
                     alert.show('Posted!', {
                         type: 'success'
                     })
+
+                    props.posted()
                 } else {                                        
                     alert.show('Something wrong!', {
                         type: 'error'
@@ -96,6 +103,8 @@ const StatusPost =(props) => {
                     setPreviewFile(null)
                     setInputYTState(false)
                     setYouTubeLink('')
+
+                    props.posted()
                     
                     alert.show('Posted', {
                         type: 'success'
@@ -122,6 +131,10 @@ const StatusPost =(props) => {
         e.preventDefault();
         if(previewFile || text.length > 0 || youtubeLink.length > 0){            
             uploadImage()
+        } else {
+            alert.show('There is no data to post!', {
+                type:'error'
+            })
         }
         return
     }
@@ -144,16 +157,15 @@ const StatusPost =(props) => {
         return(
             <form className='stp-container col-12 bg-white' onSubmit={_handleSubmit}>
                 <div className='stp-contain row p-2'>
-                    <div className={{}} style={{width:'10%'}}>
-                        <Avatar src={props.avatar} alt='avatar'></Avatar> 
-                        {/* <img className='avatar' src={props.avatar} style={{width: '30px' , height:'30px'}} alt='avatar'></img> */}
+                    <div style={{width:'10%'}}>
+                        <Avatar src={props.avatar} alt='avatar'></Avatar>                         
                     </div>
                     <div className='stp-post' style={{width:'90%'}}>
                         <textarea className='post-text p-2' rows='3' onChange={e => setText(e.target.value)} value={text} placeholder={`What's on your mind, ${props.username}?`}></textarea>
-                        <div className='stp-preview row ml-2'>                            
+                        <div className='stp-preview row ml-2'>
                             {
-                                inputYTState && (<div style={{width:'100%', justifyContent:'center', display:'flex'}}>
-                                    <input type='text' value={youtubeLink} onChange={e => setYouTubeLink(e.target.value)} placeholder='Paste youtube video url here' style={{outline:'none', border:'none', width:'80%', color:'blue', textAlign:'center'}}></input>
+                                inputYTState && (<div style={{width:'100%', justifyContent:'center', display:'flex', marginRight:'22px'}}>
+                                    <input type='text' value={youtubeLink} onChange={e => setYouTubeLink(e.target.value)} placeholder='Paste youtube video url here' style={{outline:'none', border:'none', width:'80%', color:'rgb(2, 117, 216)', textAlign:'center'}}></input>
                                 </div>)
                             }
                             {previewFile && (
@@ -172,7 +184,7 @@ const StatusPost =(props) => {
                                 <AiFillYoutube onClick={youtubeUpload} className='clickable-icon ml-3' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
                             </div>
                             <div>
-                                <button className='btn ml-3 mr-3' disabled={postbtn}>Post</button>
+                                <button className='btn ml-3 mr-4' disabled={postbtn}>Post</button>
                             </div>
                         </div>
                         
