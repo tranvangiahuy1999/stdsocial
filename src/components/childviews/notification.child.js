@@ -8,7 +8,7 @@ import {
     Link
 } from 'react-router-dom'
 
-import { Pagination } from 'antd';
+import { Pagination, Spin, Space } from 'antd';
 import NotiReader from './notification-reader.child'
 import DatePicker from "react-datepicker";
 import NotiCard from '../notificatecard.component'
@@ -25,7 +25,7 @@ const NotiPage = (props) => {
     const [startDate, setStartDate] = useState('');
     const [notiData, setNotiData] = useState(null)
     const [findData, setFindData] = useState({title: '', faculty: '', date: ''})
-    const [falcuty, setFalcuty] = useState([])    
+    const [falcuty, setFalcuty] = useState([])
 
     const [sendBtnState, setSendBtnState] = useState(false)
 
@@ -34,6 +34,7 @@ const NotiPage = (props) => {
     const [totalPage, setTotalPage] = useState(1)        
     
     const [selectedOption, setSelectedOption] = useState({value: "All", label: "All"})
+    const [loading, setLoading] = useState(true)
 
     let {path, url} = useRouteMatch()
     let history = useHistory()
@@ -60,24 +61,24 @@ const NotiPage = (props) => {
     async function getPage(page){        
         setCurrentPage(page)
 
+        setLoading(true)
         await axios.get(`https://${process.env.REACT_APP_IP}/notification/page/${page}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
         .then(async res => {   
-            console.log(res)         
+            console.log(res)
+            setLoading(false)       
             await setNotiData(res.data.data)
             if(res.data.total) {    
                 await setTotalPage(res.data.total)         
-            }
-
-            setSendBtnState(false)            
+            }                     
         })        
         .catch(e => {
-            console.error(e)
-            setSendBtnState(false)
+            console.error(e)            
         })
+        setLoading(false)
         setSendBtnState(false)
     }
 
@@ -135,6 +136,8 @@ const NotiPage = (props) => {
                 return
             }
 
+            setLoading(true)
+
             await axios.get(api ,{
                 headers:{
                     'Authorization' : 'Bearer ' + props.token
@@ -152,12 +155,12 @@ const NotiPage = (props) => {
                     alert.show(res.data.message, {
                         type: 'error'
                     })                                   
-                }
-                setSendBtnState(false)
+                }                
             })
             .catch(e => {
                 console.error(e)
             })
+        setLoading(false)
         setSendBtnState(false)
     }
 
@@ -241,7 +244,13 @@ const NotiPage = (props) => {
                                     </div>
                                 </form>
                             <div className='noti-list mt-2'>
-                                {
+                                {   (loading)?(
+                                    <div style={{textAlign:'center', margin:'30px'}}>
+                                        <Space size="middle">
+                                            <Spin size="large" />
+                                        </Space>
+                                    </div>
+                                ):(
                                     (notiData && notiData.length > 0)?
                                         notiData.map((value, index) => (
                                             <NotiCard
@@ -259,8 +268,9 @@ const NotiPage = (props) => {
                                             <div className='empty-data'>
                                                 <div className='empty-text'>No content to show</div>
                                             </div>
-                                        )
-                                }
+                                        )                            
+                                    )
+                                }                                    
                             </div>
                             <div>
                                 <div className='paging mt-2' style={{width:'max-content'}}>

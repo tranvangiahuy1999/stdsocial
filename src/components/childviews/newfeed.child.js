@@ -7,13 +7,14 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-import { notification } from 'antd';
+import { notification, Spin, Space } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null) 
     const [notiData, setNotiData] = useState(null)
+    const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)    
 
     const {width, height} = useWindowDimensions()
@@ -89,7 +90,7 @@ const Newfeed = (props) =>  {
             }
         })
         .then(async res => {
-            console.log('newsfeed', res)
+            console.log('newsfeed', res)            
             if(res.data.code === 0){
                 await setNewfeedData(res.data.data)
             }
@@ -97,6 +98,7 @@ const Newfeed = (props) =>  {
         .catch(e => {
             console.error(e)
         })
+        setLoading(false)
     }        
     
     function newPostHandle(post) {
@@ -104,7 +106,14 @@ const Newfeed = (props) =>  {
     }
     
     return(
-        <div className='col-15 row newfeed-page'>            
+        (loading)?(
+            <div style={{textAlign:'center'}}>
+                <Space size="middle" style={{marginTop:'100px'}}>
+                    <Spin size="large" />
+                </Space>
+            </div>
+        ):(
+            <div className='col-15 row newfeed-page'>            
             <div className={(width < 768)?'col-12 p-0':'col-8 p-0'}>            
                 <StatusPost
                     avatar={userData?userData.avatar:''}
@@ -152,6 +161,7 @@ const Newfeed = (props) =>  {
                 )
             }
         </div>
+        )        
     )
 }
 

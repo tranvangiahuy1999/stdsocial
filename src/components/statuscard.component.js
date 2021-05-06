@@ -194,7 +194,7 @@ export default class StatusCard extends React.Component {
                                 {
                                     (this.props.user_id === this.props.user_post_id || this.props.role === 'admin') && (
                                         <Dropdown overlay={menu} placement="bottomRight" arrow>
-                                            <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
+                                            <BsThreeDots className='clickable-icon ml-2' size='22px' color='gray'></BsThreeDots>
                                         </Dropdown>
                                     )
                                 }                        

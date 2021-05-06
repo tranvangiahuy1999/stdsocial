@@ -184,7 +184,7 @@
 }
 
 .clickable-icon-dark:hover {
-  background-color: rgb(235, 235, 235);
+  background-color: gray;
   border-radius: 20%;
   cursor: pointer;
 }
