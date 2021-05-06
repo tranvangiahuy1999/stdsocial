@@ -192,7 +192,7 @@ export default class StatusCard extends React.Component {
                             </div>
                             <div className='col-2' style={{margin:'auto'}}>
                                 {
-                                    ((this.props.user_id === this.props.user_post_id || this.props.role === 'admin')) && (
+                                    (this.props.user_id === this.props.user_post_id || this.props.role === 'admin') && (
                                         <Dropdown overlay={menu} placement="bottomRight" arrow>
                                             <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
                                         </Dropdown>
@@ -249,7 +249,7 @@ export default class StatusCard extends React.Component {
                                 (this.state.cmtState)&&(
                                     <div>
                                         {
-                                            (this.props.commentlist && this.props.commentlist.length > 0)?(
+                                            (this.props.commentlist.length > 0)?(
                                                 this.props.commentlist.map((value, index) => (                                            
                                                     <CommentChild
                                                         key={value._id}
