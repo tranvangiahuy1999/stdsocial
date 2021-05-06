@@ -3,6 +3,7 @@ import {
     useParams
   } from "react-router-dom";
 import axios from 'axios'
+import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
 
 const NotiReader = (props) => {
@@ -18,9 +19,9 @@ const NotiReader = (props) => {
     const alert = useAlert()
 
     useEffect(() => {
-        console.log(id)
+        console.log('id',id, 'token' ,props.token)
 
-        axios.get(`https://${process.env.REACT_APP_IP}/notification/${id}`, {
+        axios.get(`https://${process.env.REACT_APP_IP}/notification/${id}` ,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -54,4 +55,10 @@ const NotiReader = (props) => {
     )
 }
 
-export default NotiReader
+function mapStateToProps(state) {
+    return {
+        token: state.token
+    };
+}
+
+export default connect(mapStateToProps)(NotiReader)

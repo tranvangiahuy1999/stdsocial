@@ -39,29 +39,30 @@ const CommentChild = (props) => {
             <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <div>Are you sure to delete this post?</div>
             </Modal>
-            <Comment            
-            author={<a>{props.user_name}</a>}
-            avatar={
-                <Avatar
-                src={props.avatar}
-                alt="avatar"
+            <div>
+                <Comment            
+                author={<a>{props.user_name}</a>}
+                avatar={
+                    <Avatar
+                    src={props.avatar}
+                    alt="avatar"
+                    />
+                }
+                content={
+                    <p>
+                        {props.content}
+                    </p>
+                }
+                datetime={
+                    <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                    <span>{props.datetime}</span>
+                    </Tooltip>
+                }
                 />
-            }
-            content={
-                <p>
-                    {props.content}
-                </p>
-            }
-            datetime={
-                <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                <span>{props.datetime}</span>
-                </Tooltip>
-            }
-            />
-            <Dropdown overlay={menu} placement="bottomRight" arrow>
+            </div>            
+            <Dropdown className='mt-auto mb-auto' overlay={menu} placement="bottomRight" arrow>
                 <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
             </Dropdown>
-
         </div>        
     )
 }
