@@ -16,14 +16,16 @@ const NavBar = (props) =>  {
     const [pwd, setpwd] = useState('');
     const [repwd, setRepwd] = useState('');
     const {width, height} = useWindowDimensions()
+    const alert = useAlert()
 
     const showModal = () => {
+        setpwd('')
+        setRepwd('')
         setIsModalVisible(true);
       };
     
     const handleOk = () => {
-        setIsModalVisible(false);
-        onSubmitPwd()
+        onSubmitPwd()        
     };
     
     const handleCancel = () => {
@@ -34,9 +36,40 @@ const NavBar = (props) =>  {
 
     function onSubmitPwd(){
         if(pwd !== repwd){
+            alert.show('Password and re-password does not match', {
+                type:'error'
+            })
             return
         }
 
+        if(pwd.length < 6){
+            alert.show('Password at least 6 character', {
+                type:'error'
+            })
+            return
+        }
+
+        axios.put(`https://${process.env.REACT_APP_IP}/account/repassword`, {
+            repassword: pwd
+        }, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then(res => {            
+            if(res.data.code === 0){
+                alert.show('Password has changed', {
+                    type:'success'
+                })
+                setIsModalVisible(false)
+            }
+            else {
+                alert.show(res.data.message, {
+                    type:'error'
+                })
+            }
+        })
+        .catch(e=> console.error(e))
     }
 
     const menu = (

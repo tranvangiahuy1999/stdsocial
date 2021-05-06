@@ -8,12 +8,13 @@ import {
     Link
 } from 'react-router-dom'
 
-import { Checkbox } from 'antd';
+import { Checkbox, Space, Spin } from 'antd';
 import axios from 'axios'
 import AccManagerPage from './account-manager.child'
 import { RiSendPlaneFill } from "react-icons/ri";
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
+
 
 const CreateAccountPage = (props) => {
     const [username, setUsername] = useState('')
@@ -23,6 +24,8 @@ const CreateAccountPage = (props) => {
     const [falcutyChoose, setFalcutyChoose] = useState([])
 
     const [btnState, setBtnState] = useState(false)
+
+    const [loading, setLoading] = useState(true)
 
     const {path, url} = useRouteMatch()    
 
@@ -51,6 +54,7 @@ const CreateAccountPage = (props) => {
         .catch(e => {
             console.error(e)
         })
+        setLoading(false)
     }
 
     async function createAccount (e){
@@ -156,13 +160,21 @@ const CreateAccountPage = (props) => {
                                         <div>
                                             <div className='p-2 ml-4' styles={{backgroundColor:'rgba(241,242,246,255)'}}>                                        
                                                 {
-                                                    (falcuty && falcuty.length > 0)?
-                                                    falcuty.map((value, index) => (
-                                                        <div key={index}>
-                                                            <Checkbox onChange={checkHandle} value={value.nameRole}>{value.nameRole}</Checkbox>                                                        
+                                                    (loading)?(
+                                                        <div style={{textAlign:'center'}}>
+                                                            <Space size="middle" style={{marginTop:'100px'}}>
+                                                                <Spin size='large'/>
+                                                            </Space>
                                                         </div>
-                                                    )):
-                                                    <div>No falcuty has shown</div>
+                                                    ):(
+                                                        (falcuty && falcuty.length > 0)?
+                                                        falcuty.map((value, index) => (
+                                                            <div key={index}>
+                                                                <Checkbox onChange={checkHandle} value={value.nameRole}>{value.nameRole}</Checkbox>                                                        
+                                                            </div>
+                                                        )):
+                                                        <div>No falcuty has shown</div>
+                                                    )
                                                 }
                                             </div>
                                         </div>

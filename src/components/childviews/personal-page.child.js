@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Avatar } from 'antd';
+import { Avatar, Space, Spin } from 'antd';
 import {connect} from 'react-redux';
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
@@ -17,6 +17,9 @@ const PersonalPage = (props) => {
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
     const [changeUsernameState, setChangeUsernameState] = useState(false)
+
+    const [loading, setLoading] = useState(true)
+
     const alert = useAlert()
     const [page, setPage] = useState(1)
 
@@ -54,11 +57,12 @@ const PersonalPage = (props) => {
             }
             })
             .then((res) => {                
-                if(res.data.code===0){
+                if(res.data.code===0){                    
                     setNewfeedData(res.data.data)
                 }
             })
             .catch(e => console.error(e))
+            setLoading(false)
         }
     }        
 
@@ -122,7 +126,8 @@ const PersonalPage = (props) => {
                 alert.show('Username changed', {
                     type: 'success'
                 })
-                changeUsernameState(false)
+                props.getToken(res.data.token)                
+                setChangeUsernameState(false)
             }
             else {
                 alert.show(res.data.message, {
@@ -134,7 +139,14 @@ const PersonalPage = (props) => {
     }
 
     return(
-        <div className='personal-page'>
+        (loading)?(
+            <div style={{textAlign:'center'}}>
+                <Space size="middle" style={{marginTop:'100px'}}>
+                    <Spin size="large" />
+                </Space>
+            </div>
+        ):(
+            <div className='personal-page'>
             <div className='mr-3 ml-3'>
                 <div className='personal-head row'>
                     {
@@ -173,15 +185,7 @@ const PersonalPage = (props) => {
                         )
                     }
                 </div>
-                <div className='row pt-4'>
-                    <div className={width < 768?'col-12':'col-4'}>
-                        <div className='intro-zone'>
-                            <div className='intro-header'>Introduce</div>
-                            <div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div className='row pt-4'>                    
                     <div className={width < 768?'col-12':'col-8'}>
                         <StatusPost
                             avatar={userData?userData.avatar:''}
@@ -223,9 +227,18 @@ const PersonalPage = (props) => {
                         )
                         }
                     </div>
+                    <div className={width < 768?'col-12':'col-4'}>
+                        <div className='intro-zone'>
+                            <div className='intro-header'>Introduce</div>
+                            <div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        )        
     )
 }
 
