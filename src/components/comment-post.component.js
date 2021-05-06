@@ -34,7 +34,7 @@ const CommentPost = (props) => {
 
     setSubmitting(true)
     if(props.postid){
-      axios.put(`http://${process.env.REACT_APP_IP}/newfeed/comment/${props.postid}`, {
+      axios.put(`https://${process.env.REACT_APP_IP}/newfeed/comment/${props.postid}`, {
         comment: cmttext
       }, {
         headers: {

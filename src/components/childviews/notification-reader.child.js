@@ -20,7 +20,7 @@ const NotiReader = (props) => {
     useEffect(() => {
         console.log(id)
 
-        axios.get(`http://${process.env.REACT_APP_IP}/notification/${id}`, {
+        axios.get(`https://${process.env.REACT_APP_IP}/notification/${id}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }

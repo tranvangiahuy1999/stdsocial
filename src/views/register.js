@@ -37,7 +37,7 @@ const RegisterPage = (props) => {
     },[])
 
     async function getRole(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -68,7 +68,7 @@ const RegisterPage = (props) => {
 
         setBtnState(true)        
 
-        axios.put(`http://${process.env.REACT_APP_IP}/account/update/user`,{
+        axios.put(`https://${process.env.REACT_APP_IP}/account/update/user`,{
             faculty: faculty,
             birth: datetime,
             phone: phone,

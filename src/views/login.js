@@ -35,7 +35,7 @@ const LoginView = (props) => {
             return
         }        
 
-        axios.post(`http://${process.env.REACT_APP_IP}/api/googlelogin`,{
+        axios.post(`https://${process.env.REACT_APP_IP}/api/googlelogin`,{
             tokenId: response.tokenId
         })
         .then(res => {                        
@@ -70,11 +70,9 @@ const LoginView = (props) => {
             return
         }
 
-        setLoginBtnState(true)
+        setLoginBtnState(true)        
 
-        console.log(`http://${process.env.REACT_APP_IP}/account/login`)
-
-        axios.post(`http://${process.env.REACT_APP_IP}/account/login`, {
+        axios.post(`https://${process.env.REACT_APP_IP}/account/login`, {
             user: user,
             password: password
         })

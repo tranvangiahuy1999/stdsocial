@@ -64,7 +64,7 @@ const NotiPage = (props) => {
     async function getPage(page){        
         setCurrentPage(page)
 
-        await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${page}`,{
+        await axios.get(`https://${process.env.REACT_APP_IP}/notification/page/${page}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -112,25 +112,25 @@ const NotiPage = (props) => {
         await setFindData({title: searchNotiTitle, faculty: option, date: date})
         await setCurrentSearchPage(page)        
         
-        let api = `http://${process.env.REACT_APP_IP}/notification/dateSort/${date}/${date}/${page}`
+        let api = `https://${process.env.REACT_APP_IP}/notification/dateSort/${date}/${date}/${page}`
 
         if(searchNotiTitle.length > 0 || option.length > 0 || date.length > 0){
             if(searchNotiTitle.length > 0 && option.length > 0 && date.length > 0){
-                api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${date}/${date}/${page}`
+                api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${date}/${date}/${page}`
             }
             else if(searchNotiTitle.length > 0) {
                 if(option.length > 0 ){
-                    api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${page}`                    
+                    api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${page}`                    
                 } else if(date.length > 0){
-                    api = `http://${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${date}/${date}/${page}`                   
+                    api = `https://${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${date}/${date}/${page}`                   
                 } else {
-                    api = `http://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
+                    api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
                 }
                 else if(option.length > 0){
                     if(date.length > 0){
-                        api = `http://${process.env.REACT_APP_IP}/notification/role-date/${option}/${date}/${date}/${page}`                    
+                        api = `https://${process.env.REACT_APP_IP}/notification/role-date/${option}/${date}/${date}/${page}`                    
                     } else {
-                        api = `http://${process.env.REACT_APP_IP}/notification/faculty/${option}/${page}`                    
+                        api = `https://${process.env.REACT_APP_IP}/notification/faculty/${option}/${page}`                    
                     }
                 }            
             } else {
@@ -176,7 +176,7 @@ const NotiPage = (props) => {
     }    
 
     async function getRole(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }

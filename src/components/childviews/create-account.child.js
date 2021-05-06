@@ -34,7 +34,7 @@ const CreateAccountPage = (props) => {
     }, [])
 
     async function getRole(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -69,7 +69,7 @@ const CreateAccountPage = (props) => {
         } else {
             setBtnState(true)
 
-            await axios.post(`http://${process.env.REACT_APP_IP}/admin/adduser`,
+            await axios.post(`https://${process.env.REACT_APP_IP}/admin/adduser`,
             {'user': username, 'password': pwd, 'role': falcutyChoose},
             {
                 headers: {

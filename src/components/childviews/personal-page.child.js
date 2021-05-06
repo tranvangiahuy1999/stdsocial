@@ -25,7 +25,7 @@ const PersonalPage = (props) => {
     }, [userData])
 
     async function getCurrentUserData(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -42,7 +42,7 @@ const PersonalPage = (props) => {
 
     async function getPersonalNewfeed(page){
         if(await userData){
-            axios.get(`http://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
+            axios.get(`https://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }

@@ -49,10 +49,10 @@ const StatusPost =(props) => {
         var formData = new FormData();
         setPostbtn(true)
 
-        let api = `http://${process.env.REACT_APP_IP}/newfeed/add`
+        let api = `https://${process.env.REACT_APP_IP}/newfeed/add`
 
         if(fileInput){
-            api = `http://${process.env.REACT_APP_IP}/newfeed/add/image`
+            api = `https://${process.env.REACT_APP_IP}/newfeed/add/image`
             await formData.append("image", fileInput);
             await formData.append("content", text);
             

@@ -89,7 +89,7 @@ export default class StatusCard extends React.Component {
 
     deleteHandle(){        
         if(this.props.post_id && this.props.token){
-            axios.delete(`http://${process.env.REACT_APP_IP}/newfeed/delete/${this.props.post_id}`, {
+            axios.delete(`https://${process.env.REACT_APP_IP}/newfeed/delete/${this.props.post_id}`, {
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
