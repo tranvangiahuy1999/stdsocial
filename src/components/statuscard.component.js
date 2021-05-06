@@ -2,19 +2,17 @@ import React from 'react'
 
 import { BsThreeDots } from "react-icons/bs";
 import { Image } from 'antd';
-import { AiFillClockCircle, AiFillLike, AiOutlineLike} from "react-icons/ai";
+import { AiFillClockCircle, AiFillLike, AiOutlineLike, AiFillSave, AiOutlineCloseCircle} from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 
 import { BiComment } from "react-icons/bi";
 import ReactPlayer from 'react-player/youtube'
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Modal } from 'antd';
 
 import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'
 import axios from 'axios'
-
-// const cmtPerLoad = 5
 
 export default class StatusCard extends React.Component {
     constructor(){
@@ -27,14 +25,16 @@ export default class StatusCard extends React.Component {
             cmtState: false,
             deleteStatusState: false,
             editStatusState: false,
-            // next: 5,
-            // cmtData: null
+            modalshow: false,
+            edittext: ''   
         }
         this.likeHandle = this.likeHandle.bind(this)   
-        this.cmtHandle = this.cmtHandle.bind(this)            
-        // this.loadmoreHandel = this.loadmoreHandel.bind(this)
+        this.cmtHandle = this.cmtHandle.bind(this)                    
         this.deleteHandle = this.deleteHandle.bind(this)
         this.editHandle = this.editHandle.bind(this)
+        this.showModal = this.showModal.bind(this)
+        this.handleOk = this.handleOk.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)        
     }
 
     componentDidMount(){
@@ -47,15 +47,33 @@ export default class StatusCard extends React.Component {
         if(this.props.linkyoutube && this.props.linkyoutube.length > 0){
             this.setState({linkyt: true})
         }
-        if(this.props.commentlist){
+        if(this.props.commentlist && this.props.textcontent){
             this.setState({
-                cmtData: this.props.commentlist
+                cmtData: this.props.commentlist                
             })
         }
     }
 
-    likeHandle(){
-        //post like +1 or -1 to server
+    showModal = () => {
+        this.setState({
+            modalshow: true
+        })        
+    };
+
+    handleOk = () => {
+        this.setState({
+            modalshow: false
+        })
+        this.deleteHandle()
+    };
+
+    handleCancel = () => {
+        this.setState({
+            modalshow: false
+        })        
+    };
+
+    likeHandle(){        
         this.setState({
             like: !this.state.like
         })
@@ -67,11 +85,7 @@ export default class StatusCard extends React.Component {
             cmtState: !this.state.cmtState
         })
         this.props.cmtHandle()
-    }
-    
-    // loadmoreHandel(){
-
-    // }
+    }  
 
     deleteHandle(){        
         if(this.props.post_id && this.props.token){
@@ -96,6 +110,10 @@ export default class StatusCard extends React.Component {
     }
 
     editHandle(){
+        this.setState({editStatusState: true, edittext: this.props.textcontent})
+    }
+
+    submitEditText(){
 
     }
 
@@ -106,7 +124,7 @@ export default class StatusCard extends React.Component {
                 <div style={{color:'gray'}} onClick={this.editHandle}><FaRegEdit className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></FaRegEdit> Edit</div>        
               </Menu.Item>
               <Menu.Item>
-                <div style={{color:'gray'}} onClick={this.deleteHandle}><ImBin className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></ImBin> Delete</div> 
+                <div style={{color:'gray'}} onClick={this.showModal}><ImBin className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></ImBin> Delete</div> 
               </Menu.Item>      
             </Menu>
         );
@@ -117,6 +135,9 @@ export default class StatusCard extends React.Component {
                     </div>
                 ):(
                     <div className='stc-container bg-white col-12 mt-3 mb-2'>
+                        <Modal title="Confirm" visible={this.state.modalshow} onOk={this.handleOk} onCancel={this.handleCancel}>
+                            <div>Are you sure to delete this post?</div>
+                        </Modal>
                         <div className='stc-header row col-14 pt-2'>
                             <div className='col-1' style={{margin:'auto'}}>
                                 <img src={this.props.avatar} width='30px' height='30px'></img>
@@ -141,9 +162,20 @@ export default class StatusCard extends React.Component {
                         <div className='stc-contain p-1 mt-1' style={{paddingTop: '4px'}}>
                             {
                                 (this.state.text) && (
-                                <div className='mb-2'>
-                                    <div className='stc-text'>{this.props.textcontent}</div>
-                                </div>)
+                                    (this.state.editStatusState)?(
+                                        <div className='mb-2 p-2 pb-5' style={{border:'1px solid lightgray', borderRadius:'10px'}}>
+                                            <textarea style={{border:'none', outline:'none', width:'100%', fontSize:'larger'}} value={this.state.edittext} onChange={e => this.setState({edittext: e.target.value})} placeholder='What is on your mine?'/>
+                                            <div className='row m-2' style={{float:'right'}}>
+                                                <AiFillSave className='clickable-icon mr-2' color='gray' size='22px' onClick={this.submitEditText}></AiFillSave>
+                                                <AiOutlineCloseCircle className='clickable-icon' color='gray' size='22px' onClick={() => this.setState({editStatusState: false, })}></AiOutlineCloseCircle>
+                                            </div>
+                                        </div>
+                                    ):(                                        
+                                        <div className='mb-2'>
+                                            <div className='stc-text'>{this.props.textcontent}</div>
+                                        </div>
+                                    )
+                                )
                             }
 
                             {

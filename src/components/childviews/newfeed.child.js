@@ -7,7 +7,7 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-import { notification, Modal } from 'antd';
+import { notification } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
 const Newfeed = (props) =>  {
@@ -24,7 +24,7 @@ const Newfeed = (props) =>  {
         socket.on('connect', function() {
             console.log('Connected')   
             socket.on('new_notification', (data) => {                
-                if(data && userData && notiData){     
+                if(data && userData && notiData){
                     if(userData.faculty.includes(data.role)){                        
                         openNotification(data.role)                        
                         setNotiData([data].concat(notiData))
@@ -45,21 +45,7 @@ const Newfeed = (props) =>  {
           top: '70px',
           icon: <SmileOutlined style={{ color: '#108ee9' }} />,
         });
-      };
-
-      const [isModalVisible, setIsModalVisible] = useState(false);
-
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    const handleOk = () => {
-        setIsModalVisible(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
+      };      
 
     async function getNotiData(){        
         await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${1}`,{
@@ -130,12 +116,7 @@ const Newfeed = (props) =>  {
         .catch(e => {
             console.log(e)
         })
-    }
-
-    function confirmDelete(){
-
-        return true
-    }    
+    }      
     
     return(
         <div className='col-15 row newfeed-page'>            
@@ -144,10 +125,7 @@ const Newfeed = (props) =>  {
                     avatar={userData?userData.avatar:''}
                     username={userData?userData.user_name:''}
                     posted={() => getNewfeed(1)}               
-                    ></StatusPost>
-                <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                    <div>Are you sure to delete this post?</div>
-                </Modal>          
+                    ></StatusPost>                        
                 <div className='post-data'>
                     {(newfeedData && newfeedData.length > 0)?                        
                         newfeedData.map((value, index) => (                                       
