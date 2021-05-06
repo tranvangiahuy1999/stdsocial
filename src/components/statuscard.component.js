@@ -47,10 +47,19 @@ export default class StatusCard extends React.Component {
         if(this.props.linkyoutube && this.props.linkyoutube.length > 0){
             this.setState({linkyt: true})
         }
+
         if(this.props.commentlist && this.props.textcontent){
             this.setState({
                 cmtData: this.props.commentlist                
             })
+        }
+
+        if(this.props.likelist && this.props.user_id) {            
+            if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
+                this.setState({
+                    like: true
+                })
+            }
         }
     }
 
@@ -73,18 +82,31 @@ export default class StatusCard extends React.Component {
         })        
     };
 
-    likeHandle(){        
-        this.setState({
-            like: !this.state.like
-        })
-        this.props.likeHandle()
+    likeHandle(){
+        if(this.props.post_id){
+            axios.put(`https://${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
+                headers: {
+                    'Authorization' : 'Bearer ' + this.props.token
+                }
+            })
+            .then((res) => {
+                if(res.data.code === 0){
+                    console.log(res)
+                    this.setState({
+                        like: !this.state.like
+                    })
+                }
+            })
+            .catch(e => {
+                console.error(e)
+            })
+        }                       
     }
 
     cmtHandle(){        
         this.setState({
             cmtState: !this.state.cmtState
-        })
-        this.props.cmtHandle()
+        })        
     }  
 
     deleteHandle(){        
@@ -94,8 +116,7 @@ export default class StatusCard extends React.Component {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
             })
-            .then(res => {
-                console.log(res)
+            .then(res => {                
                 if(res.data.code === 0){
                     this.setState({
                         deleteStatusState: true

@@ -20,7 +20,7 @@ const Newfeed = (props) =>  {
     var alert = useAlert()
 
     useEffect(async () => {       
-        const socket = io.connect(`http://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
+        const socket = io.connect(`https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')   
             socket.on('new_notification', (data) => {                
@@ -48,7 +48,7 @@ const Newfeed = (props) =>  {
       };      
 
     async function getNotiData(){        
-        await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${1}`,{
+        await axios.get(`https://${process.env.REACT_APP_IP}/notification/page/${1}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -65,7 +65,7 @@ const Newfeed = (props) =>  {
     }
 
     async function getUserData(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -81,7 +81,7 @@ const Newfeed = (props) =>  {
     }
 
     async function getNewfeed(page){
-        await axios.get(`http://${process.env.REACT_APP_IP}/newfeed/${page}`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/newfeed/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -95,27 +95,7 @@ const Newfeed = (props) =>  {
         .catch(e => {
             console.error(e)
         })
-    }
-    
-    function cmtHandle(id){        
-        //post {statusId, token} retrive cmt of status
-    }
-
-    function likeHandle(id){        
-        axios.put(`http://${process.env.REACT_APP_IP}/newfeed/like/${id}`,{
-            headers:{
-                'Authorization' : 'Bearer ' + props.token
-            }
-        })
-        .then((res) => {
-            if(res.data.code === 0){
-                console.log(res)
-            }
-        })
-        .catch(e => {
-            console.error(e)
-        })
-    }
+    }        
     
     function newPostHandle(post) {
         setNewfeedData([post].concat(newfeedData))
@@ -141,10 +121,9 @@ const Newfeed = (props) =>  {
                             linkyoutube={value.linkyoutube}
                             imgcontent= {value.image}
                             like={value.likecount}
-                            cmt={value.commentcount}
-                            likeHandle={() => likeHandle(value._id)}
-                            cmtHandle={() => cmtHandle(value._id)}
-                            commentlist={value.commentlist}                            
+                            cmt={value.commentcount}                            
+                            likelist={value.likelist} 
+                            commentlist={value.commentlist}                          
                             user_id={userData?userData.id:''}
                             user_post_id={value.user.user_id}
                             post_id={value._id}             
@@ -153,7 +132,7 @@ const Newfeed = (props) =>  {
                                 alert.show('Deleted success!', {
                                     type:'success'
                             })}}
-                            role={(userData) && userData.role}             
+                            role={(userData) && userData.role}                                       
                         ></StatusCard>))
                         :<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>

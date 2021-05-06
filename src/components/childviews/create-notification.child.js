@@ -18,7 +18,7 @@ const CreateNoti = (props) => {
     const [selectedOption, setSelectedOption] = useState(null)    
 
     useEffect(async ()=> {                 
-        await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
+        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -48,7 +48,7 @@ const CreateNoti = (props) => {
         e.preventDefault()
         setBtnState(true)
         if(selectedOption){
-            await axios.post(`http://${process.env.REACT_APP_IP}/notification/add`,
+            await axios.post(`https://${process.env.REACT_APP_IP}/notification/add`,
             {
                 'title': title,
                 'content': content,
