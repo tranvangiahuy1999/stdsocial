@@ -105,12 +105,11 @@ const PersonalPage = (props) => {
             })
             .then(res => {
                 console.log(res)
-                if(res.data.code===0){
-                    props.getToken(res.data.token)
+                if(res.data.code===0){                    
                     alert.show('Avatar changed',{
                         type:'success'
                     })
-
+                    props.getToken(res.data.token)
                     setFileInput('')
                     setPreviewFile(null)
                 } else {

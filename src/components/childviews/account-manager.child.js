@@ -1,39 +1,36 @@
 import React, {useState, useEffect} from 'react'
 import AccRow from '../account-row.component'
-// import Modal from 'react-modal';
+import axios from 'axios'
+import { useAlert } from 'react-alert'
+import {Spin, Space} from 'antd'
+import {connect} from 'react-redux'
 
-// const customStyles = {
-//     content : {
-//       top                   : '50%',
-//       left                  : '50%',
-//       right                 : 'auto',
-//       bottom                : 'auto',
-//       marginRight           : '-50%',
-//       transform             : 'translate(-50%, -50%)'
-//     }
-// };
-
-// Modal.setAppElement('#root')
 
 const AccManagerPage = (props) => {
     const [searchInput, setSearchInput] = useState('')
-    const [modalIsOpen,setIsOpen] = useState(false);
+    const [accountList, setAccountList] = useState()
+    const [loading, setLoading] = useState(true)
+    
+    const alert = useAlert()
 
     useEffect(() => {
+        getAccountList()
+    }, [])
 
-    })
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function editHandle(){
-
-    }
-
-    function deleteHandle(){
-  
-    }
+    function getAccountList(){
+        axios.get(`https://${process.env.REACT_APP_IP}/admin/user`, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then(res => {
+            if(res.data.code===0){
+                setAccountList(res.data.data)
+            }                
+        })
+        .catch(e => console.error(e))
+        setLoading(false)
+    }  
 
     return(
         <div className='child-page'>
@@ -41,7 +38,7 @@ const AccManagerPage = (props) => {
                     ACCOUNT LIST
                 </h5>
                 <div className='child-body'>
-                    <div className='col-12' >                        
+                    <div className='col-12' >                                       
                         <div className='row acc-filter p-2'>
                             <label>Find by user:</label>
                             <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} value={searchInput} onChange={e => setSearchInput(e.target.value)}></input>                            
@@ -62,7 +59,27 @@ const AccManagerPage = (props) => {
                             </div>
                         </div>
                         <div className='acc-manager-body'>
-                            <AccRow editHandle={editHandle} deleteHandle={deleteHandle}></AccRow>
+                        {
+                        (loading)?(
+                            <div style={{textAlign:'center'}}>
+                                <Space size="middle" style={{marginTop:'100px'}}>
+                                    <Spin size="large" />
+                                </Space>
+                            </div>
+                        ):(
+                            (accountList && accountList.length > 0)?(
+                                accountList.map((value, index) => (
+                                    <AccRow key={value._id} acc_id={value._id} user={value.user} user_name={value.user_name} faculty={value.faculty.length}></AccRow>
+                                ))
+                            ):(
+                                <div className='empty-data'>
+                                    <div className='empty-text'>
+                                        There is no user
+                                    </div>
+                                </div>
+                            )
+                        )
+                    }                                 
                         </div>
                     </div>
                 </div>
@@ -70,4 +87,10 @@ const AccManagerPage = (props) => {
     )
 }
 
-export default AccManagerPage
+function mapStateToProps(state){
+    return{
+        token: state.token
+    }
+}
+
+export default connect(mapStateToProps)(AccManagerPage)
