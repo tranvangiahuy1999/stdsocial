@@ -70,8 +70,7 @@ const Newfeed = (props) =>  {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {
-            console.log('user', res)
+        .then(async res => {            
             if(res.data.code === 0){
                 await setUserData(res.data.data)                
             }
@@ -153,7 +152,8 @@ const Newfeed = (props) =>  {
                             alertshow={()=> {
                                 alert.show('Deleted success!', {
                                     type:'success'
-                            })}}                 
+                            })}}
+                            role={(userData) && userData.role}             
                         ></StatusCard>))
                         :<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>

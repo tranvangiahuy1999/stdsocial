@@ -72,12 +72,14 @@ const LoginView = (props) => {
 
         setLoginBtnState(true)
 
+        console.log(`http://${process.env.REACT_APP_IP}/account/login`)
+
         axios.post(`http://${process.env.REACT_APP_IP}/account/login`, {
             user: user,
             password: password
         })
-        .then(async res => {             
-            if(res.data.code === 0){
+        .then(async res => {       
+            if(res.data.code === 0){                
                 await props.getToken(res.data.token)                   
                 history.push('/home')
             }
@@ -92,6 +94,7 @@ const LoginView = (props) => {
             alert.show('Check your user or pwd!', {
                 type: 'error'
             })
+            console.log(e)
             setLoginBtnState(false)     
         })
         setLoginBtnState(false)

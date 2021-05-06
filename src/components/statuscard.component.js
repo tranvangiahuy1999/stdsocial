@@ -120,9 +120,13 @@ export default class StatusCard extends React.Component {
     render(){
         const menu = (
             <Menu>
-              <Menu.Item>
-                <div style={{color:'gray'}} onClick={this.editHandle}><FaRegEdit className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></FaRegEdit> Edit</div>        
-              </Menu.Item>
+                {
+                    (this.props.user_id && this.props.user_post_id && this.props.role && (this.props.user_id === this.props.user_post_id || this.props.role !== 'admin')) && (
+                        <Menu.Item>
+                            <div style={{color:'gray'}} onClick={this.editHandle}><FaRegEdit className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></FaRegEdit> Edit</div>        
+                        </Menu.Item>
+                    )
+                }              
               <Menu.Item>
                 <div style={{color:'gray'}} onClick={this.showModal}><ImBin className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></ImBin> Delete</div> 
               </Menu.Item>      
@@ -151,7 +155,7 @@ export default class StatusCard extends React.Component {
                             </div>
                             <div className='col-2' style={{margin:'auto'}}>
                                 {
-                                    (this.props.user_id && this.props.user_post_id && this.props.user_id === this.props.user_post_id) && (
+                                    (this.props.user_id && this.props.user_post_id && this.props.role && (this.props.user_id === this.props.user_post_id || this.props.role === 'admin')) && (
                                         <Dropdown overlay={menu} placement="bottomRight" arrow>
                                             <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
                                         </Dropdown>
