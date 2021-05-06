@@ -19,10 +19,11 @@ const Newfeed = (props) =>  {
     const {width, height} = useWindowDimensions()
     var alert = useAlert()
 
-    useEffect(async () => {       
-        const socket = io.connect(`wss:https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
+    useEffect(() => {       
+        const socket = io.connect(`https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')
+
             socket.on('new_notification', (data) => {                
                 if(data && userData && notiData){
                     if(userData.faculty.includes(data.role)){                        
@@ -31,11 +32,12 @@ const Newfeed = (props) =>  {
                     }                                   
                 }
             })
+
+            socket.on('new_comment', (data) => console.log('newcomment',data))
         })
-        await getNotiData()
-        await getUserData()
-        await getNewfeed(1)     
-        // showModal()   
+        getNotiData()
+        getUserData()
+        getNewfeed(1)             
     }, [])
 
     const openNotification = (role) => {        

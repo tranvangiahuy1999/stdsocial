@@ -29,6 +29,7 @@ export default class StatusCard extends React.Component {
             edittext: '',
             likecount: 0,
             commentcount: 0,
+            cmtlist: []
         }
         this.likeHandle = this.likeHandle.bind(this)   
         this.cmtHandle = this.cmtHandle.bind(this)                    
@@ -40,19 +41,19 @@ export default class StatusCard extends React.Component {
     }
 
     componentDidMount(){
-        if(this.props.imgcontent && this.props.imgcontent.length > 0){
+        if(this.props.imgcontent){
             this.setState({pic: true})
         }
-        if(this.props.textcontent && this.props.textcontent.length > 0){
+        if(this.props.textcontent){
             this.setState({text: true})
         }
-        if(this.props.linkyoutube && this.props.linkyoutube.length > 0){
+        if(this.props.linkyoutube){
             this.setState({linkyt: true})
         }
 
-        if(this.props.commentlist && this.props.textcontent){
+        if(this.props.commentlist){
             this.setState({
-                cmtData: this.props.commentlist                
+                cmtlist: this.props.commentlist
             })
         }
 
@@ -147,6 +148,10 @@ export default class StatusCard extends React.Component {
         }
     }
 
+    pageLoadMore(){
+        
+    }
+
     editHandle(){
         this.setState({editStatusState: true, edittext: this.props.textcontent})
     }
@@ -187,7 +192,7 @@ export default class StatusCard extends React.Component {
                             <div className='col-9' style={{margin:'auto'}}>
                                 <div className='text-primary ml-1' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>
                                 <div className='row ml-0 ml-1'>
-                                    <text style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</text>
+                                    <div style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</div>
                                     <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
                                 </div>
                             </div>
@@ -202,22 +207,12 @@ export default class StatusCard extends React.Component {
                             </div>
                         </div>
                         <div className='stc-contain p-1 mt-1' style={{paddingTop: '4px'}}>
-                            {                                
-                                    (this.state.editStatusState)?(
-                                        <div className='mb-2 p-2 pb-5' style={{border:'1px solid lightgray', borderRadius:'10px'}}>
-                                            <textarea style={{border:'none', outline:'none', width:'100%', fontSize:'larger'}} value={this.state.edittext} onChange={e => this.setState({edittext: e.target.value})} placeholder='What is on your mine?'/>
-                                            <div className='row m-2' style={{float:'right'}}>
-                                                <AiOutlineSave className='clickable-icon mr-2' color='gray' size='22px' onClick={this.submitEditText}></AiOutlineSave>
-                                                <AiOutlineCloseCircle className='clickable-icon' color='gray' size='22px' onClick={() => this.setState({editStatusState: false, })}></AiOutlineCloseCircle>
-                                            </div>
-                                        </div>
-                                    ):(
-                                        (this.state.text) && (                                    
-                                        <div className='mb-2'>
-                                            <div className='stc-text'>{this.props.textcontent}</div>
-                                        </div>
-                                    )
-                                )
+                            {                                                            
+                                (this.state.text) && (                                    
+                                    <div className='mb-2'>
+                                        <div className='stc-text'>{this.props.textcontent}</div>
+                                    </div>
+                                )                                
                             }
 
                             {
@@ -264,10 +259,14 @@ export default class StatusCard extends React.Component {
                                                 this.props.commentlist.map((value, index) => (                                            
                                                     <CommentChild
                                                         key={index}
-                                                        user_name={(value.user_name)?value.user_name:''}
-                                                        avatar={(value.avatar)?value.avatar:''}
-                                                        content={(value.comment)?value.comment:''}
-                                                        datetime={(value.time)?(value.time.split('T')[0]):''}
+                                                        user_name={value.user_name}
+                                                        avatar={value.avatar}
+                                                        content={value.comment}
+                                                        datetime={value.time.split('T')[0]}
+                                                        cmt_id={value._id}
+                                                        user_cmt_id={value.id_user}
+                                                        user_id={this.props.user_id}
+                                                        user_role={this.props.role}
                                                     >                                            
                                                     </CommentChild>
                                                 ))
