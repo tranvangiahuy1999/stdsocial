@@ -2,7 +2,7 @@ import React from 'react'
 
 import { BsThreeDots } from "react-icons/bs";
 import { Image } from 'antd';
-import { AiFillClockCircle, AiFillLike, AiOutlineLike, AiOutlineSave, AiOutlineCloseCircle} from "react-icons/ai";
+import { AiFillClockCircle, AiFillLike, AiOutlineLike} from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 
@@ -50,28 +50,22 @@ export default class StatusCard extends React.Component {
         if(this.props.linkyoutube){
             this.setState({linkyt: true})
         }
-
-        if(this.props.commentlist){
+        
+        this.setState({
+            cmtlist: this.props.commentlist
+        })        
+               
+        if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
             this.setState({
-                cmtlist: this.props.commentlist
+                like: true
             })
-        }
-
-        if(this.props.likelist && this.props.user_id) {            
-            if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
-                this.setState({
-                    like: true
-                })
-            }
-        }
-
-        if(this.props.likecount && this.props.commentcount){
-            this.setState({
-                likecount: this.props.likecount,
-                commentcount: this.props.commentcount
-            })
-        }
-    }
+        }        
+        
+        this.setState({
+            likecount: this.props.likecount,
+            commentcount: this.props.commentcount
+        })        
+    }    
 
     showModal = () => {
         this.setState({
