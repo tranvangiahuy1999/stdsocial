@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom'
 
 import { Pagination } from 'antd';
-
 import NotiReader from './notification-reader.child'
 import DatePicker from "react-datepicker";
 import NotiCard from '../notificatecard.component'
@@ -41,10 +40,9 @@ const NotiPage = (props) => {
     const alert = useAlert()
 
     useEffect(() => {        
-        getRole()
+        getRole()        
         getPage(1)
-    },[])
-    
+    },[])    
 
     function dateConvert() {
         let output = ''
@@ -54,9 +52,7 @@ const NotiPage = (props) => {
             const day = String(startDate.getDate()).padStart(2, '0');
             const year = startDate.getFullYear();
             output = year + '-' + month  + '-' + day;
-        }
-
-        console.log(output, startDate)
+        }        
 
         return output
     }   
@@ -69,7 +65,8 @@ const NotiPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {            
+        .then(async res => {   
+            console.log(res)         
             await setNotiData(res.data.data)
             if(res.data.total) {    
                 await setTotalPage(res.data.total)         
@@ -210,18 +207,18 @@ const NotiPage = (props) => {
                             <div>
                                 <form>
                                     <div className='row col-12 pl-2'>
-                                        <div class="form-group col-7">                                
+                                        <div className="form-group col-7">                                
                                             <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='Search by tittle' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
                                         </div>
-                                        <div class="form-group col-5">                                
+                                        <div className="form-group col-5">                                
                                             <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Search by falcuty" />  
                                         </div>
                                     </div>
                                     <div className=' row col-12 pl-2'>
-                                        <div class="form-group col-5">                                
+                                        <div className="form-group col-5">                                
                                             <DatePicker className='form-control' selected={startDate} onChange={date => setStartDate(date)} />
                                         </div>
-                                        <div class="form-check col-3">                        
+                                        <div className="form-check col-3">                        
                                             <div className='ml-2' style={{width:'50%'}}>
                                                 <input className="form-check-input" type="checkbox" />
                                                 <label className="form-check-label">
@@ -235,10 +232,10 @@ const NotiPage = (props) => {
                                                 </label>
                                             </div>
                                         </div>                        
-                                        <div class="col-2">
+                                        <div className="col-2">
                                             <button type='button' className='btn btn-danger m-2' style={{fontSize: '14px', alignItems:'center'}} onClick={cleanAll}><RiDeleteBin6Line size='16px' color='white'></RiDeleteBin6Line> Clear</button>            
                                         </div> 
-                                        <div class="col-2">
+                                        <div className="col-2">
                                             <button disabled={sendBtnState} type='button' className='btn btn-primary m-2' style={{fontSize: '14px', justifyContent:'center'}} onClick={() => submitFilter(1)}><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Find</button>
                                         </div>
                                     </div>

@@ -17,16 +17,20 @@ const CreateNoti = (props) => {
 
     const [selectedOption, setSelectedOption] = useState(null)    
 
-    useEffect(async ()=> {                 
-        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+    useEffect(()=> {                 
+        getCurrentUser()
+    }, [])
+
+    function getCurrentUser() {
+        axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {            
+        .then(res => {            
             if(res.data.code === 0){
                 if(Array.isArray(res.data.data.faculty)) {
-                    await setFalcuty(res.data.data.faculty)
+                    setFalcuty(res.data.data.faculty)
                 }
             } else {
                 alert.show(res.data.message, {
@@ -37,8 +41,7 @@ const CreateNoti = (props) => {
         .catch(e => {
             console.error(e)
         })
-        
-    }, [])
+    }
 
     function handleChange(selectedOption) {
         setSelectedOption(selectedOption)

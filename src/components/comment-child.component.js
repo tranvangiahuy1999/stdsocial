@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Comment, Tooltip, Avatar, Menu, Dropdown, Modal } from 'antd';
 import { FaRegEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
-import { BsThreeDots } from "react-icons/bs";
+import { RiEditLine } from "react-icons/ri";
 import moment from 'moment';
 import axios from 'axios'
 import { connect } from 'react-redux'
@@ -95,7 +95,7 @@ const CommentChild = (props) => {
                     {
                         (props.user_cmt_id && props.user_id && props.user_role && (props.user_cmt_id === props.user_id || props.user_role ==='admin')) && (
                             <Dropdown className='mt-auto mb-auto ml-4' overlay={menu} placement="bottomRight" arrow>
-                                <BsThreeDots className='clickable-icon-dark ml-2' size='20px' color='gray'></BsThreeDots>
+                                <RiEditLine className='clickable-icon-dark ml-2' size='20px' color='gray'></RiEditLine>
                             </Dropdown>    
                         )
                     }                                      

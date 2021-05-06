@@ -115,7 +115,7 @@ const Newfeed = (props) =>  {
                     {(newfeedData && newfeedData.length > 0)?                        
                         newfeedData.map((value, index) => (                                       
                         <StatusCard
-                            key={index}
+                            key={value._id}
                             avatar={value.user.avatar}
                             username={value.user.user_name}
                             date={value.date.split('T')[0]}

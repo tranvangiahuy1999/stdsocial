@@ -258,7 +258,7 @@ export default class StatusCard extends React.Component {
                                             (this.props.commentlist && this.props.commentlist.length > 0)?(
                                                 this.props.commentlist.map((value, index) => (                                            
                                                     <CommentChild
-                                                        key={index}
+                                                        key={value._id}
                                                         user_name={value.user_name}
                                                         avatar={value.avatar}
                                                         content={value.comment}

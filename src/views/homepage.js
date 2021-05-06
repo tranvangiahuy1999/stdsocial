@@ -152,6 +152,7 @@ const Homepage = (props) => {
                                     <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{userData?userData.user_name:''}</div>
                                 </div>
                             </Link>}
+                            user_role={userData?userData.role:''}
                         ></NavBar>
                     </div>                    
                     <div className='row'>
