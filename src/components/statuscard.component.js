@@ -87,7 +87,7 @@ export default class StatusCard extends React.Component {
     };
 
     likeHandle(){
-        if(this.props.post_id){
+        // if(this.props.post_id){
             axios.put(`https://${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
@@ -112,7 +112,7 @@ export default class StatusCard extends React.Component {
             .catch(e => {
                 console.error(e)
             })
-        }                       
+        // }                       
     }
 
     cmtHandle(){        
@@ -192,7 +192,7 @@ export default class StatusCard extends React.Component {
                             </div>
                             <div className='col-2' style={{margin:'auto'}}>
                                 {
-                                    (this.props.user_id && this.props.user_post_id && this.props.role && (this.props.user_id === this.props.user_post_id || this.props.role === 'admin')) && (
+                                    ((this.props.user_id === this.props.user_post_id || this.props.role === 'admin')) && (
                                         <Dropdown overlay={menu} placement="bottomRight" arrow>
                                             <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
                                         </Dropdown>
