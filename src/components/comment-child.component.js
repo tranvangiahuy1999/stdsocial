@@ -1,10 +1,44 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Comment, Tooltip, Avatar, Menu, Dropdown, Modal } from 'antd';
+import { FaRegEdit } from "react-icons/fa";
+import { ImBin } from "react-icons/im";
+import { BsThreeDots } from "react-icons/bs";
 import moment from 'moment';
 
 const CommentChild = (props) => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    function editHandle() {
+
+    }
+
+    const menu = (
+        <Menu>                    
+            <Menu.Item>
+                <div style={{color:'gray'}} onClick={editHandle}><FaRegEdit className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></FaRegEdit> Edit</div>        
+            </Menu.Item>                          
+            <Menu.Item>
+                <div style={{color:'gray'}} onClick={showModal}><ImBin className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></ImBin> Delete</div> 
+            </Menu.Item>      
+        </Menu>
+    )
     return(
-        <div>
+        <div className='row'>
+            <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <div>Are you sure to delete this post?</div>
+            </Modal>
             <Comment            
             author={<a>{props.user_name}</a>}
             avatar={
@@ -24,6 +58,9 @@ const CommentChild = (props) => {
                 </Tooltip>
             }
             />
+            <Dropdown overlay={menu} placement="bottomRight" arrow>
+                <BsThreeDots className='clickable-icon-dark ml-2' size='22px' color='gray'></BsThreeDots>
+            </Dropdown>
 
         </div>        
     )

@@ -58,6 +58,7 @@ const LoginView = (props) => {
         alert.show(`Login failed!`, {
             type: 'error'
         })
+        console.log(response)
     }
     
     async function submitHandle(e) {

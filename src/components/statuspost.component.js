@@ -158,9 +158,9 @@ const StatusPost =(props) => {
             <form className='stp-container col-12 bg-white' onSubmit={_handleSubmit}>
                 <div className='stp-contain row p-2'>
                     <div style={{width:'10%'}}>
-                        <Avatar className='ml-3' src={props.avatar} alt='avatar'></Avatar>                         
+                        <Avatar className='ml-2' src={props.avatar} alt='avatar'></Avatar>                         
                     </div>
-                    <div className='stp-post' style={{width:'90%'}}>
+                    <div className='stp-post' style={{width:'85%'}}>
                         <textarea className='post-text p-2' rows='3' onChange={e => setText(e.target.value)} value={text} placeholder={`What's on your mind, ${props.username}?`}></textarea>
                         <div className='stp-preview row ml-2'>
                             {
