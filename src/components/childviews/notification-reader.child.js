@@ -19,7 +19,6 @@ const NotiReader = (props) => {
     const alert = useAlert()
 
     useEffect(() => {
-        console.log('id',id, 'token' ,props.token)
 
         axios.get(`https://${process.env.REACT_APP_IP}/notification/${id}` ,{
             headers: {
