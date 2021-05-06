@@ -271,7 +271,7 @@ export default class StatusCard extends React.Component {
                                             )
                                         }                                
                                         <a className='ml-5'>Load more...</a>
-                                        <CommentPost avatar={this.props.avatar} postid={this.props.post_id}></CommentPost>                         
+                                        <CommentPost avatar={this.props.current_avatar} postid={this.props.post_id}></CommentPost>                         
                                     </div>
                                 )
                             }             

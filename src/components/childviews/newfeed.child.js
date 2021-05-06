@@ -117,6 +117,7 @@ const Newfeed = (props) =>  {
                         <StatusCard
                             key={value._id}
                             avatar={value.user.avatar}
+                            current_avatar={userData?userData.avatar:''}
                             username={value.user.user_name}
                             date={value.date.split('T')[0]}
                             textcontent={value.content}
