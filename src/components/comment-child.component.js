@@ -1,10 +1,11 @@
 import React from 'react'
-import { Comment, Tooltip, Avatar } from 'antd';
+import { Comment, Tooltip, Avatar, Menu, Dropdown, Modal } from 'antd';
 import moment from 'moment';
 
 const CommentChild = (props) => {
     return(
-        <Comment            
+        <div>
+            <Comment            
             author={<a>{props.user_name}</a>}
             avatar={
                 <Avatar
@@ -23,6 +24,8 @@ const CommentChild = (props) => {
                 </Tooltip>
             }
             />
+
+        </div>        
     )
 }
 

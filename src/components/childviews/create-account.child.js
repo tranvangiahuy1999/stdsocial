@@ -70,7 +70,7 @@ const CreateAccountPage = (props) => {
             setBtnState(true)
 
             await axios.post(`https://${process.env.REACT_APP_IP}/admin/adduser`,
-            {'user': username, 'password': pwd, 'role': falcutyChoose},
+            {'user': username, 'password': pwd, 'faculty': falcutyChoose},
             {
                 headers: {
                     'Authorization' : 'Bearer ' + props.token

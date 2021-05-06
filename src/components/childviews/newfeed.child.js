@@ -20,7 +20,7 @@ const Newfeed = (props) =>  {
     var alert = useAlert()
 
     useEffect(async () => {       
-        const socket = io.connect(`https:ws//${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
+        const socket = io.connect(`https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')
             socket.on('new_notification', (data) => {                
