@@ -113,7 +113,7 @@ const Homepage = (props) => {
             if(res.data.code === 0){
                 setUserData(res.data.data)
                 setCompRoute(res.data.data.role)
-                if(res.data.data.faculty.length < 1){
+                if(res.data.data.faculty.length < 1 && res.data.data.role === 'student'){
                     alert.show('Your account is not registed', {
                         type:'error'
                     })
