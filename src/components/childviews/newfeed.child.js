@@ -20,7 +20,7 @@ const Newfeed = (props) =>  {
     var alert = useAlert()
 
     useEffect(async () => {       
-        const socket = io.connect(`https:wss//${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
+        const socket = io.connect(`https:ws//${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')
             socket.on('new_notification', (data) => {                
@@ -120,8 +120,8 @@ const Newfeed = (props) =>  {
                             textcontent={value.content}
                             linkyoutube={value.linkyoutube}
                             imgcontent= {value.image}
-                            like={value.likecount}
-                            cmt={value.commentcount}                            
+                            likecount={value.likecount}
+                            commentcount={value.commentcount}                            
                             likelist={value.likelist} 
                             commentlist={value.commentlist}                          
                             user_id={userData?userData.id:''}

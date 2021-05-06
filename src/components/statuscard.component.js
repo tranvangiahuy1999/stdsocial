@@ -26,7 +26,9 @@ export default class StatusCard extends React.Component {
             deleteStatusState: false,
             editStatusState: false,
             modalshow: false,
-            edittext: ''   
+            edittext: '',
+            likecount: 0,
+            commentcount: 0,
         }
         this.likeHandle = this.likeHandle.bind(this)   
         this.cmtHandle = this.cmtHandle.bind(this)                    
@@ -61,6 +63,13 @@ export default class StatusCard extends React.Component {
                 })
             }
         }
+
+        if(this.props.likecount && this.props.commentcount){
+            this.setState({
+                likecount: this.props.likecount,
+                commentcount: this.props.commentcount
+            })
+        }
     }
 
     showModal = () => {
@@ -91,7 +100,15 @@ export default class StatusCard extends React.Component {
             })
             .then((res) => {
                 if(res.data.code === 0){
-                    console.log(res)
+                    if(this.state.like){
+                        this.setState({
+                            likecount: this.state.likecount -= 1
+                        })
+                    } else {
+                        this.setState({
+                            likecount: this.state.likecount += 1
+                        })
+                    }        
                     this.setState({
                         like: !this.state.like
                     })
@@ -227,10 +244,10 @@ export default class StatusCard extends React.Component {
                             }
                             <div className='row m-2 pt-2'>
                                 <div style={{width:'50%'}}>
-                                    <div style={{textAlign:'start', color:'gray', fontSize:'15px'}}>{this.props.like}<AiFillLike className="ml-2" style={{alignSelf:'center',padding:'2px', marginRight:'10px', backgroundColor:'rgb(0,138,216)', borderRadius:'50%'}} color='white' size='16px'></AiFillLike></div>
+                                    <div style={{textAlign:'start', color:'gray', fontSize:'15px'}}>{this.state.likecount}<AiFillLike className="ml-2" style={{alignSelf:'center',padding:'2px', marginRight:'10px', backgroundColor:'rgb(0,138,216)', borderRadius:'50%'}} color='white' size='16px'></AiFillLike></div>
                                 </div>
                                 <div style={{width:'50%'}}>
-                                    <div className='cmttab' onClick={this.cmtHandle} style={{textAlign:'end', color:'gray', cursor:'pointer', fontSize:'15px'}}>{this.props.cmt} Comments</div>
+                                    <div className='cmttab' onClick={this.cmtHandle} style={{textAlign:'end', color:'gray', cursor:'pointer', fontSize:'15px'}}>{this.state.commentcount} Comments</div>
                                 </div>
                             </div>
                         </div>
