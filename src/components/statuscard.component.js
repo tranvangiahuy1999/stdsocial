@@ -86,8 +86,7 @@ export default class StatusCard extends React.Component {
         })        
     };
 
-    likeHandle(){
-        // if(this.props.post_id){
+    likeHandle(){        
             axios.put(`https://${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token

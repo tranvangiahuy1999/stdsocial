@@ -95,7 +95,7 @@ const CommentChild = (props) => {
                     {
                         (props.user_cmt_id && props.user_id && props.user_role && (props.user_cmt_id === props.user_id || props.user_role ==='admin')) && (
                             <Dropdown className='mt-auto mb-auto ml-4' overlay={menu} placement="bottomRight" arrow>
-                                <RiEditLine className='clickable-icon-dark ml-2' size='20px' color='gray'></RiEditLine>
+                                <RiEditLine className='clickable-icon ml-2' size='20px' color='gray'></RiEditLine>
                             </Dropdown>    
                         )
                     }                                      

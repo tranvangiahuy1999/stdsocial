@@ -92,8 +92,40 @@ const PersonalPage = (props) => {
         setPreviewFile(null)
     }
 
-    function uploadAvatar(){
+    async function uploadAvatar(){
+        var formData = new FormData();
+        if(fileInput){
+            await formData.append("image", fileInput);
 
+            axios.put(`https://${process.env.REACT_APP_IP}/account/update/avatar`, formData, {
+                headers:{        
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization' : 'Bearer ' + props.token
+                }
+            })
+            .then(res => {
+                console.log(res)
+                if(res.data.code===0){
+                    props.getToken(res.data.token)
+                    alert.show('Avatar changed',{
+                        type:'success'
+                    })
+
+                    setFileInput('')
+                    setPreviewFile(null)
+                } else {
+                    alert.show(res.data.message,{
+                        type:'error'
+                    })
+                }
+            })
+            .catch(e => console.error(e))
+        }
+        else {
+            alert.show(`Image hasn't uploaded`,{
+                type:'error'
+            })
+        }
     }
 
     function newPostHandle(post) {
