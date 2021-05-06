@@ -23,7 +23,7 @@ const PersonalPage = (props) => {
 
     async function getPersonalNewfeed(page){
         if(userData){
-            await axios.get(`http://${process.env.REACT_APP_IP}/link/newfeed/yourfeed/${userData.id}/${page}`, {
+            await axios.get(`http://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -130,7 +130,7 @@ const PersonalPage = (props) => {
                         <StatusPost
                             avatar={userData?userData.avatar:''}
                             username={userData?userData.user_name:''}
-                            posted={getPersonalNewfeed(1)}
+                            posted={() => getPersonalNewfeed(1)}
                             >
                         </StatusPost>
                         {

@@ -545,3 +545,10 @@
 .cmttab:hover {
   text-decoration: underline;
 }
+
+.float-alert {
+  position: fixed;
+  z-index: 9999;
+  left: 0px;
+  top:80px
+}

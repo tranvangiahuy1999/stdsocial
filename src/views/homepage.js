@@ -38,9 +38,9 @@ const Homepage = (props) => {
     let history = useHistory();
     let { path, url } = useRouteMatch();    
 
-    useEffect(async () => {      
-        console.log(props.token)  
-        await getCurrentUserData()      
+    useEffect(async () => {              
+        await getCurrentUserData()  
+        console.log(props.token)    
     }, [])    
 
     function setCompRoute(role){

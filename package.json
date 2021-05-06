@@ -35,7 +35,7 @@
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "set PORT=9000 && react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -11,7 +11,8 @@ import logo from '../resources/logo-tdtu.png'
 import axios from 'axios'
 import useWindowDimensions from '../components/useWindowDimensions'
 import { useAlert } from 'react-alert'
-import {useHistory, Redirect} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
+import {getToken} from '../actions/index'
 
 const RegisterPage = (props) => {
     const {width, height} = useWindowDimensions()
@@ -43,7 +44,7 @@ const RegisterPage = (props) => {
         })
         .then(async res =>{            
             if(res.data.code === 0){
-                await setFalcutyData(res.data.data)
+                await setFalcutyData(res.data.data)                
             } else {
                 alert.show(res.data.message, {
                     type: 'error'
@@ -78,10 +79,12 @@ const RegisterPage = (props) => {
             }            
         })
         .then(res => {
+            console.log(res)
             if(res.data.code === 0){
+                props.getToken(res.data.token)
                 alert.show(res.data.message + '. Đang chuyển hướng...', {
                     type:'success'
-                })
+                })                
                 setTimeout(()=> {
                     history.push('/home')
                 }, 3000)                
@@ -165,4 +168,10 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(RegisterPage)
+function mapDispatchToProps(dispatch) {
+    return {
+        getToken: token => dispatch(getToken(token)),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage)

@@ -201,7 +201,7 @@ const NotiPage = (props) => {
         <Router>
             <div className='child-page'>
                 <h5 className='child-header'>
-                    NOTIFICATON
+                    NOTIFICATONS
                 </h5>
 
                 <Switch>

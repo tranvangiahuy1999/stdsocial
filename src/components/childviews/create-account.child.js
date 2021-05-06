@@ -54,24 +54,21 @@ const CreateAccountPage = (props) => {
     }
 
     async function createAccount (e){
-        e.preventDefault();
-        setBtnState(true)
+        e.preventDefault();        
 
         if(pwd !== repwd){
             alert.show(`Password and Re-password doesn't match!`, {
                 type: 'error'
-            })
-
-            setBtnState(false)
+            })            
 
         } else if(falcutyChoose.length === 0) {
             alert.show(`Choose one of the falcuty!`, {
                 type: 'error'
-            })
-
-            setBtnState(false)
+            })            
             
         } else {
+            setBtnState(true)
+
             await axios.post(`http://${process.env.REACT_APP_IP}/admin/adduser`,
             {'user': username, 'password': pwd, 'role': falcutyChoose},
             {
@@ -79,7 +76,7 @@ const CreateAccountPage = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {
+            .then(res => {                
                 if(res.data.code === 0){                    
                     alert.show('Create successfully!', {
                         type:'success'
@@ -133,7 +130,7 @@ const CreateAccountPage = (props) => {
                             <div className='col-12' style={{margin:'auto'}}>                                
                                 <form className='row' onSubmit={createAccount}>
                                     <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
-                                        <h6>Create Falcuty account</h6>
+                                        <h6>Create Faculty account</h6>
                                         <div className='form-group'>
                                             <label>Username</label>
                                             <input value={username} onChange={v => setUsername(v.target.value)} className='form-control' placeholder='Enter username' required></input>
@@ -155,7 +152,7 @@ const CreateAccountPage = (props) => {
 
                                     </div>
                                     <div className='col-6 selectboxmap'>
-                                        <h6>Choose falcuty you want to add</h6>
+                                        <h6>Choose faculty you want to add</h6>
                                         <div>
                                             <div className='p-2 ml-4' styles={{backgroundColor:'rgba(241,242,246,255)'}}>                                        
                                                 {

@@ -7,36 +7,61 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-// import socketIOClient from "socket.io-client";
+import { notification, Modal } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null) 
-    const [notiData, setNotiData] = useState(null)   
+    const [notiData, setNotiData] = useState(null) 
+    const [page, setPage] = useState(1)    
 
     const {width, height} = useWindowDimensions()
     var alert = useAlert()
 
     useEffect(async () => {       
-        const socket = io.connect(`http://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true, reconnection: false});  
+        const socket = io.connect(`http://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')   
-            socket.once('new_notification', (data) => {
+            socket.on('new_notification', (data) => {                
                 if(data && userData && notiData){     
-                    if(userData.faculty.includes(data.role)){
-                        alert.show(`You have new notification from ${data.role}`)
+                    if(userData.faculty.includes(data.role)){                        
+                        openNotification(data.role)                        
                         setNotiData([data].concat(notiData))
                     }                                   
                 }
             })
         })
-
         await getNotiData()
         await getUserData()
-        await getNewfeed()
+        await getNewfeed(1)     
+        // showModal()   
     }, [])
 
-    async function getNotiData(){
+    const openNotification = (role) => {        
+        notification.open({
+          message: 'Notification',
+          description: `You have new notification from ${role}`,
+          top: '70px',
+          icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+        });
+      };
+
+      const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    async function getNotiData(){        
         await axios.get(`http://${process.env.REACT_APP_IP}/notification/page/${1}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
@@ -70,8 +95,8 @@ const Newfeed = (props) =>  {
         })
     }
 
-    async function getNewfeed(){
-        await axios.get(`http://${process.env.REACT_APP_IP}/newfeed`, {
+    async function getNewfeed(page){
+        await axios.get(`http://${process.env.REACT_APP_IP}/newfeed/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -106,15 +131,23 @@ const Newfeed = (props) =>  {
             console.log(e)
         })
     }
+
+    function confirmDelete(){
+
+        return true
+    }    
     
     return(
-        <div className='col-15 row newfeed-page'>
-            <div className={(width < 768)?'col-12 p-0':'col-8 p-0'}>
+        <div className='col-15 row newfeed-page'>            
+            <div className={(width < 768)?'col-12 p-0':'col-8 p-0'}>            
                 <StatusPost
                     avatar={userData?userData.avatar:''}
                     username={userData?userData.user_name:''}
-                    posted={getNewfeed}               
-                    ></StatusPost>            
+                    posted={() => getNewfeed(1)}               
+                    ></StatusPost>
+                <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <div>Are you sure to delete this post?</div>
+                </Modal>          
                 <div className='post-data'>
                     {(newfeedData && newfeedData.length > 0)?                        
                         newfeedData.map((value, index) => (                                       
@@ -127,11 +160,18 @@ const Newfeed = (props) =>  {
                             linkyoutube={value.linkyoutube}
                             imgcontent= {value.image}
                             like={value.likecount}
-                            cmt={value.commentcount}                            
+                            cmt={value.commentcount}
                             likeHandle={() => likeHandle(value._id)}
                             cmtHandle={() => cmtHandle(value._id)}
-                            commentlist={value.commentlist}
-                            postid={value._id}
+                            commentlist={value.commentlist}                            
+                            user_id={userData?userData.id:''}
+                            user_post_id={value.user.user_id}
+                            post_id={value._id}                            
+                            token={props.token}
+                            alertshow={()=> {
+                                alert.show('Deleted success!', {
+                                    type:'success'
+                            })}}                            
                         ></StatusCard>))
                         :<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>
