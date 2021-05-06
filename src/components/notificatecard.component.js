@@ -39,7 +39,7 @@ const NotiCard = (props) => {
                 <div className='noticard-body'>
                     <div numberOfLines={1} className='noticard-title' style={{color:'black', fontWeight:'bold', fontSize:'16px'}}>
                         {props.title} {
-                            (userData && (userData.role === 'admin' || (userData.role === 'user' && userData.faculty.some(props.falcutyname)))) && (
+                            (userData && (userData.role === 'admin' || userData.role === 'user')) && (                                
                                 <span><RiDeleteBin2Line className='ml-1 clickable-icon' size='20px' color='gray'></RiDeleteBin2Line></span>
                             )
                         }                  

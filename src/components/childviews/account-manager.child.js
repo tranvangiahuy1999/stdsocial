@@ -49,13 +49,13 @@ const AccManagerPage = (props) => {
                         {props.link}
                         <div className='row acc-manager-head'>
                             <div className='table-text col-3'>
-                                Username
+                                User
                             </div> 
                             <div className='table-text col-3'>
-                                Faculty
+                                Username
                             </div>
                             <div className='table-text col-3'>
-                                Date Create
+                                Faculty count
                             </div>
                             <div className='table-text col-3'>
                                 Actions
