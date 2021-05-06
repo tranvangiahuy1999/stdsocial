@@ -189,7 +189,7 @@ const PersonalPage = (props) => {
                             <Avatar className='ml-4' src={userData?userData.avatar:''} size={80}></Avatar>
                         )
                     }                    
-                    <AiFillCamera onClick={changeAvatarHandler} className='bg-dark' color='white' size='22px' style={{borderRadius:'50%', marginLeft:'-10px', zIndex:'10'}}></AiFillCamera>
+                    <AiFillCamera onClick={changeAvatarHandler} className='bg-dark' color='white' size='22px' style={{borderRadius:'50%', marginLeft:'-10px', zIndex:'1'}}></AiFillCamera>
                     <div>
                         {
                             (changeUsernameState)?(

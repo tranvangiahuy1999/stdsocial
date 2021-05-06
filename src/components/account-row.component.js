@@ -9,6 +9,9 @@ import { useAlert } from 'react-alert';
 const AccRow = (props) => {
     const [deleteModalState, setDeleteModalState] = useState(false);
     const [deleteState, setDeleteState] = useState(false)
+
+    const [editModalState, setEditModelState] = useState(false)
+
     const alert = useAlert()
 
     const showDelModal = () => {        
@@ -22,6 +25,18 @@ const AccRow = (props) => {
     
     const handleDelCancel = () => {
         setDeleteModalState(false)
+    }
+
+    const showEditModal = () => {
+        setEditModelState(true)
+    }
+
+    const handleEditOk = () => {
+        setEditModelState(false)
+    }
+
+    const handleEditCancel = () => {
+        setEditModelState(false)
     }
 
     function deleteHandle(){
@@ -58,6 +73,9 @@ const AccRow = (props) => {
             <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                 Are you sure you want to delete this account? <span style={{color:'red'}}>*There is no running back!</span>
             </Modal>
+            <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
+                
+            </Modal>
             <div className='col-3'>{props.user}</div>
             <div className='col-3'>
                 <div className='ml-1'>
@@ -71,7 +89,7 @@ const AccRow = (props) => {
             </div>
             <div className='col-3'>
                 <div className='ml-2'>
-                    <FaRegEdit className='clickable-icon' size='20px' color='gray' onClick={editHandle}></FaRegEdit>
+                    <FaRegEdit className='clickable-icon' size='20px' color='gray' onClick={showEditModal}></FaRegEdit>
                     <span>
                         <ImBin className='ml-3 clickable-icon' size='20px' color='gray' onClick={showDelModal}></ImBin>
                     </span>
