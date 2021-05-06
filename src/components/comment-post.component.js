@@ -30,9 +30,7 @@ const CommentPost = (props) => {
     
     if(cmttext.length < 1){
       return;
-    }
-    
-    console.log(props.postid)
+    }    
 
     setSubmitting(true)
     if(props.postid){

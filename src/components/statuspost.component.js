@@ -62,7 +62,7 @@ const StatusPost =(props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {                                          
+            .then(res => {                                       
                 if(res.data.code === 0){                
                     setText('')
                     setFileInput('')
@@ -72,7 +72,7 @@ const StatusPost =(props) => {
                         type: 'success'
                     })
 
-                    props.posted()
+                    props.posted(res.data.data)
                 } else {                                        
                     alert.show('Something wrong!', {
                         type: 'error'
@@ -96,7 +96,7 @@ const StatusPost =(props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {                              
+            .then(res => {                                              
                 if(res.data.code === 0){
                     setText('')
                     setFileInput('')
@@ -104,7 +104,7 @@ const StatusPost =(props) => {
                     setInputYTState(false)
                     setYouTubeLink('')
 
-                    props.posted()
+                    props.posted(res.data.data)
                     
                     alert.show('Posted', {
                         type: 'success'

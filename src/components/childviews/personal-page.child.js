@@ -17,26 +17,12 @@ const PersonalPage = (props) => {
     const {width, height} = useWindowDimensions()
 
     useEffect(() => {
-        getCurrentUserData()
-        getPersonalNewfeed(1)
+        getCurrentUserData()        
     }, [])
 
-    async function getPersonalNewfeed(page){
-        if(userData){
-            await axios.get(`http://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
-            headers: {
-                'Authorization' : 'Bearer ' + props.token
-            }
-            })
-            .then((res) => {
-                console.log('newfeed',res)
-                if(res.data.code===1){
-                    setNewfeedData(res.data.data)
-                }
-            })
-            .catch(e => console.error(e))
-        }
-    }
+    useEffect(() => {
+        getPersonalNewfeed(1)
+    }, [userData])
 
     async function getCurrentUserData(){
         await axios.get(`http://${process.env.REACT_APP_IP}/account/current`, {
@@ -53,6 +39,22 @@ const PersonalPage = (props) => {
             console.error(e)
         })
     }
+
+    async function getPersonalNewfeed(page){
+        if(await userData){
+            axios.get(`http://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+            })
+            .then((res) => {                
+                if(res.data.code===0){
+                    setNewfeedData(res.data.data)
+                }
+            })
+            .catch(e => console.error(e))
+        }
+    }    
 
     function likeHandle(id) {
 
@@ -92,6 +94,10 @@ const PersonalPage = (props) => {
 
     }
 
+    function newPostHandle(post) {
+        setNewfeedData([post].concat(newfeedData))
+    }
+
     return(
         <div className='personal-page'>
             <div className='mr-3 ml-3'>
@@ -118,7 +124,7 @@ const PersonalPage = (props) => {
                     }
                 </div>
                 <div className='row pt-4'>
-                    <div className={width < 768?'col-12':'col-5'}>
+                    <div className={width < 768?'col-12':'col-4'}>
                         <div className='intro-zone'>
                             <div className='intro-header'>Introduce</div>
                             <div>
@@ -126,11 +132,11 @@ const PersonalPage = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className={width < 768?'col-12':'col-7'}>
+                    <div className={width < 768?'col-12':'col-8'}>
                         <StatusPost
                             avatar={userData?userData.avatar:''}
                             username={userData?userData.user_name:''}
-                            posted={() => getPersonalNewfeed(1)}
+                            posted={newPostHandle}
                             >
                         </StatusPost>
                         {
@@ -148,6 +154,15 @@ const PersonalPage = (props) => {
                                         cmt={value.commentcount}                            
                                         likeHandle={() => likeHandle(value._id)}
                                         cmtHandle={() => cmtHandle(value._id)}
+                                        commentlist={value.commentlist}                            
+                                        user_id={userData?userData.id:''}
+                                        user_post_id={value.user.user_id}
+                                        post_id={value._id}                            
+                                        token={props.token}
+                                        alertshow={()=> {
+                                            alert.show('Deleted success!', {
+                                                type:'success'
+                                        })}}
                                     ></StatusCard>))
                             )
                         :(

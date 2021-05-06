@@ -13,7 +13,7 @@ import { SmileOutlined } from '@ant-design/icons';
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null) 
-    const [notiData, setNotiData] = useState(null) 
+    const [notiData, setNotiData] = useState(null)
     const [page, setPage] = useState(1)    
 
     const {width, height} = useWindowDimensions()
@@ -114,9 +114,13 @@ const Newfeed = (props) =>  {
             }
         })
         .catch(e => {
-            console.log(e)
+            console.error(e)
         })
-    }      
+    }
+    
+    function newPostHandle(post) {
+        setNewfeedData([post].concat(newfeedData))
+    }
     
     return(
         <div className='col-15 row newfeed-page'>            
@@ -124,8 +128,8 @@ const Newfeed = (props) =>  {
                 <StatusPost
                     avatar={userData?userData.avatar:''}
                     username={userData?userData.user_name:''}
-                    posted={() => getNewfeed(1)}               
-                    ></StatusPost>                        
+                    posted={newPostHandle}           
+                    ></StatusPost>
                 <div className='post-data'>
                     {(newfeedData && newfeedData.length > 0)?                        
                         newfeedData.map((value, index) => (                                       
@@ -144,12 +148,12 @@ const Newfeed = (props) =>  {
                             commentlist={value.commentlist}                            
                             user_id={userData?userData.id:''}
                             user_post_id={value.user.user_id}
-                            post_id={value._id}                            
+                            post_id={value._id}             
                             token={props.token}
                             alertshow={()=> {
                                 alert.show('Deleted success!', {
                                     type:'success'
-                            })}}                            
+                            })}}                 
                         ></StatusCard>))
                         :<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>

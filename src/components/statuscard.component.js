@@ -2,7 +2,7 @@ import React from 'react'
 
 import { BsThreeDots } from "react-icons/bs";
 import { Image } from 'antd';
-import { AiFillClockCircle, AiFillLike, AiOutlineLike, AiFillSave, AiOutlineCloseCircle} from "react-icons/ai";
+import { AiFillClockCircle, AiFillLike, AiOutlineLike, AiOutlineSave, AiOutlineCloseCircle} from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 
@@ -160,17 +160,17 @@ export default class StatusCard extends React.Component {
                             </div>
                         </div>
                         <div className='stc-contain p-1 mt-1' style={{paddingTop: '4px'}}>
-                            {
-                                (this.state.text) && (
+                            {                                
                                     (this.state.editStatusState)?(
                                         <div className='mb-2 p-2 pb-5' style={{border:'1px solid lightgray', borderRadius:'10px'}}>
                                             <textarea style={{border:'none', outline:'none', width:'100%', fontSize:'larger'}} value={this.state.edittext} onChange={e => this.setState({edittext: e.target.value})} placeholder='What is on your mine?'/>
                                             <div className='row m-2' style={{float:'right'}}>
-                                                <AiFillSave className='clickable-icon mr-2' color='gray' size='22px' onClick={this.submitEditText}></AiFillSave>
+                                                <AiOutlineSave className='clickable-icon mr-2' color='gray' size='22px' onClick={this.submitEditText}></AiOutlineSave>
                                                 <AiOutlineCloseCircle className='clickable-icon' color='gray' size='22px' onClick={() => this.setState({editStatusState: false, })}></AiOutlineCloseCircle>
                                             </div>
                                         </div>
-                                    ):(                                        
+                                    ):(
+                                        (this.state.text) && (                                    
                                         <div className='mb-2'>
                                             <div className='stc-text'>{this.props.textcontent}</div>
                                         </div>
@@ -236,7 +236,7 @@ export default class StatusCard extends React.Component {
                                             )
                                         }                                
                                         <a className='ml-5'>Load more...</a>
-                                        <CommentPost avatar={this.props.avatar} postid={this.props.postid}></CommentPost>                         
+                                        <CommentPost avatar={this.props.avatar} postid={this.props.post_id}></CommentPost>                         
                                     </div>
                                 )
                             }             
