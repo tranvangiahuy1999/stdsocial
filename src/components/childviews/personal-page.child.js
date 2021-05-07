@@ -16,7 +16,7 @@ const PersonalPage = (props) => {
     const [fileInput, setFileInput] = useState('')
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
-    const [changeUsernameState, setChangeUsernameState] = useState(false)
+    const [changeUsernameState, setChangeUsernameState] = useState(false)    
 
     const [loading, setLoading] = useState(true)
 
@@ -26,20 +26,37 @@ const PersonalPage = (props) => {
     const {width, height} = useWindowDimensions()
 
     useEffect(() => {
-        getCurrentUserData()        
+        getCurrentUserData()
+        if(userData && userData.role === 'student' ){
+            getUserInformation()
+        }
     }, [])
 
     useEffect(() => {
         getPersonalNewfeed(1)
     }, [userData])
 
-    async function getCurrentUserData(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+    function getUserInformation(){
+        if(userData){
+            axios.get(`https://${process.env.REACT_APP_IP}/account/user/${userData.id}`, {
+                headers: {
+                    'Authorization' : 'Bearer ' + props.token
+                }
+            })
+            .then(res => {
+                console.log(res)                
+            })
+        }
+    }
+
+    function getCurrentUserData(){
+        axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {            
+        .then(res => {           
+            console.log(res) 
             if(res.data.code === 0){
                 setUserData(res.data.data)
             }
@@ -104,8 +121,7 @@ const PersonalPage = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {
-                console.log(res)
+            .then(res => {                
                 if(res.data.code===0){                    
                     alert.show('Avatar changed',{
                         type:'success'
@@ -218,7 +234,7 @@ const PersonalPage = (props) => {
                     }
                 </div>
                 <div className='row pt-4'>                    
-                    <div className={width < 768?'col-12':'col-8'}>
+                    <div className={(width < 768 || (userData && userData.role !== 'student'))?'col-12':'col-8'}>
                         <StatusPost
                             avatar={userData?userData.avatar:''}
                             username={userData?userData.user_name:''}
@@ -259,14 +275,20 @@ const PersonalPage = (props) => {
                         )
                         }
                     </div>
-                    <div className={width < 768?'col-12':'col-4'}>
-                        <div className='intro-zone'>
-                            <div className='intro-header'>Introduce</div>
-                            <div>
-                                
+                    {
+                        (userData && userData.role !== 'student')?(
+                            <></>
+                        ):(
+                            <div className={width < 768?'col-12':'col-4'}>
+                                <div className='intro-zone'>
+                                    <div className='intro-header'>Introduce</div>
+                                    <div>
+                                        
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        )
+                    }                                        
                 </div>
             </div>
         </div>

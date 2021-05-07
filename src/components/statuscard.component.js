@@ -149,10 +149,6 @@ export default class StatusCard extends React.Component {
         this.setState({editStatusState: true, edittext: this.props.textcontent})
     }
 
-    submitEditText(){
-
-    }
-
     render(){
         const menu = (
             <Menu>
@@ -183,7 +179,7 @@ export default class StatusCard extends React.Component {
                                 <img src={this.props.avatar} width='30px' height='30px'></img>
                             </div>
                             <div className='col-9' style={{margin:'auto'}}>
-                                <div className='text-primary ml-1' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>
+                                <div className='text-primary ml-1' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>                                
                                 <div className='row ml-0 ml-1'>
                                     <div style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</div>
                                     <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
