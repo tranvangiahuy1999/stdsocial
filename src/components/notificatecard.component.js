@@ -12,7 +12,7 @@ const NotiCard = (props) => {
     const [deleteState, setDeleteState] = useState(false)
 
     const [title, setTitle] = useState(props.title)
-    const [desc, setDesc] = useState(props.subtitle)    
+    const [desc, setDesc] = useState(props.subtitle)
 
     const [editModalState, setEditModelState] = useState(false)
     const [editTitle, setEditTitle] = useState('')

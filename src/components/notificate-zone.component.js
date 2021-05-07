@@ -29,7 +29,9 @@ const NotiZone = (props) => {
                             falcutyname={value.role}
                             date={value.date.split('T')[0]}
                             title={value.title}
+                            content = {value.content}
                             subtitle={value.description}
+                            noti_id= {value._id}
                             >                                
                         </NotiCard>
                     )):<div className='empty-data'>
