@@ -38,6 +38,7 @@ export default class StatusCard extends React.Component {
         this.showModal = this.showModal.bind(this)
         this.handleOk = this.handleOk.bind(this)
         this.handleCancel = this.handleCancel.bind(this)        
+        this.postHandle = this.postHandle.bind(this)
     }
 
     componentDidMount(){
@@ -49,21 +50,18 @@ export default class StatusCard extends React.Component {
         }
         if(this.props.linkyoutube){
             this.setState({linkyt: true})
-        }
-        
-        this.setState({
-            cmtlist: this.props.commentlist
-        })        
+        }            
                
         if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
             this.setState({
                 like: true
             })
-        }        
+        }
         
         this.setState({
             likecount: this.props.likecount,
-            commentcount: this.props.commentcount
+            commentcount: this.props.commentcount,
+            cmtlist: this.props.commentlist
         })        
     }    
 
@@ -139,6 +137,13 @@ export default class StatusCard extends React.Component {
                 console.error(e)
             })
         }
+    }
+
+    postHandle(data){        
+        this.setState({
+            cmtlist: data,
+            commentcount: data.length
+        })
     }
 
     pageLoadMore(){
@@ -244,8 +249,8 @@ export default class StatusCard extends React.Component {
                                 (this.state.cmtState)&&(
                                     <div>
                                         {
-                                            (this.props.commentlist.length > 0)?(
-                                                this.props.commentlist.map((value, index) => (                                            
+                                            (this.state.cmtlist && this.state.cmtlist.length > 0)?(
+                                                this.state.cmtlist.map((value, index) => (                                            
                                                     <CommentChild
                                                         key={value._id}
                                                         user_name={value.user_id.user_name}
@@ -266,7 +271,7 @@ export default class StatusCard extends React.Component {
                                             )
                                         }                                
                                         <a className='ml-5'>Load more...</a>
-                                        <CommentPost avatar={this.props.current_avatar} postid={this.props.post_id}></CommentPost>                         
+                                        <CommentPost posted={this.postHandle} avatar={this.props.current_avatar} postid={this.props.post_id}></CommentPost>                         
                                     </div>
                                 )
                             }             
