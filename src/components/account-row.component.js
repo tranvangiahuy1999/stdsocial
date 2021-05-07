@@ -70,12 +70,15 @@ const AccRow = (props) => {
             <></>
         ):(
             <div className='row acc-row col-14'>
+
             <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                 Are you sure you want to delete this account? <span style={{color:'red'}}>*There is no running back!</span>
             </Modal>
+
             <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
                 
             </Modal>
+            
             <div className='col-3'>{props.user}</div>
             <div className='col-3'>
                 <div className='ml-1'>

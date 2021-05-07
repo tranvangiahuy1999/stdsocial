@@ -134,8 +134,8 @@ const Newfeed = (props) =>  {
                             imgcontent= {value.image}
                             likecount={value.likecount}
                             commentcount={value.commentcount}                            
-                            likelist={value.likelist} 
-                            commentlist={value.commentlist}                          
+                            likelist={value.likelist?value.likelist:[]} 
+                            commentlist={value.commentlist?value.commentlist:[]}                          
                             user_id={userData?userData.id:''}
                             user_post_id={value.user.user_id}
                             post_id={value._id}             

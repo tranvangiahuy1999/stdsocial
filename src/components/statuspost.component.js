@@ -96,7 +96,8 @@ const StatusPost =(props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {                                              
+            .then(res => {
+                console.log(res)                                           
                 if(res.data.code === 0){
                     setText('')
                     setFileInput('')
@@ -104,7 +105,7 @@ const StatusPost =(props) => {
                     setInputYTState(false)
                     setYouTubeLink('')
 
-                    props.posted(res.data.data)
+                    props.posted(res.data.data[0])
                     
                     alert.show('Posted', {
                         type: 'success'
@@ -158,7 +159,7 @@ const StatusPost =(props) => {
             <form className='stp-container col-12 bg-white' onSubmit={_handleSubmit}>
                 <div className='stp-contain row p-2'>
                     <div style={{width:'10%'}}>
-                        <Avatar className='ml-3' src={props.avatar} alt='avatar'></Avatar>                         
+                        <Avatar className='ml-2' src={props.avatar} alt='avatar'></Avatar>                         
                     </div>
                     <div className='stp-post' style={{width:'85%'}}>
                         <textarea className='post-text p-2' rows='3' onChange={e => setText(e.target.value)} value={text} placeholder={`What's on your mind, ${props.username}?`}></textarea>
