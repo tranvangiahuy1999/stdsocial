@@ -149,7 +149,7 @@ export default class StatusCard extends React.Component {
         this.setState({editStatusState: true, edittext: this.props.textcontent})
     }
 
-    render(){
+    render(){        
         const menu = (
             <Menu>
                 {
@@ -248,12 +248,12 @@ export default class StatusCard extends React.Component {
                                                 this.props.commentlist.map((value, index) => (                                            
                                                     <CommentChild
                                                         key={value._id}
-                                                        user_name={value.user_name}
-                                                        avatar={value.avatar}
+                                                        user_name={value.user_id.user_name}
+                                                        avatar={value.user_id.avatar}
                                                         content={value.comment}
-                                                        datetime={value.time.split('T')[0]}
+                                                        datetime={value.date.split('T')[0]}
                                                         cmt_id={value._id}
-                                                        user_cmt_id={value.id_user}
+                                                        user_cmt_id={value.user_id._id}
                                                         user_id={this.props.user_id}
                                                         user_role={this.props.role}
                                                     >                                            

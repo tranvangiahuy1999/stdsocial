@@ -15,10 +15,11 @@ const Newfeed = (props) =>  {
     const [userData, setUserData] = useState(null) 
     const [notiData, setNotiData] = useState(null)
     const [loading, setLoading] = useState(true)
+    
     const [page, setPage] = useState(1)    
 
     const {width, height} = useWindowDimensions()
-    var alert = useAlert()
+    var alert = useAlert()    
 
     useEffect(() => {       
         const socket = io.connect(`https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
