@@ -12,7 +12,7 @@ import { useAlert } from 'react-alert';
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
-    const [newfeedData, setNewfeedData] = useState()
+    const [newfeedData, setNewfeedData] = useState([])
     const [fileInput, setFileInput] = useState('')
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
@@ -56,7 +56,8 @@ const PersonalPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
             })
-            .then((res) => {                
+            .then((res) => {
+                console.log(res)             
                 if(res.data.code===0){                    
                     setNewfeedData(res.data.data)
                 }
@@ -229,7 +230,7 @@ const PersonalPage = (props) => {
                                 newfeedData.map((value, index) => (                                       
                                     <StatusCard
                                         key={value._id}
-                                        avatar={value.user.avatar}
+                                        avatar={value.user.avatar?value.user.avatar:''}
                                         current_avatar={userData?userData.avatar:''}
                                         username={value.user.user_name}
                                         date={value.date.split('T')[0]}
@@ -237,12 +238,12 @@ const PersonalPage = (props) => {
                                         linkyoutube={value.linkyoutube}
                                         imgcontent= {value.image}
                                         likecount={value.likecount}
-                                        commentcount={value.commentcount}    
-                                        likelist={value.likelist}                                     
-                                        commentlist={value.commentlist}                            
+                                        commentcount={value.commentcount}                            
+                                        likelist={value.likelist?value.likelist:[]} 
+                                        commentlist={value.commentlist?value.commentlist:[]}                          
                                         user_id={userData?userData.id:''}
                                         user_post_id={value.user.user_id}
-                                        post_id={value._id}                            
+                                        post_id={value._id}             
                                         token={props.token}
                                         alertshow={()=> {
                                             alert.show('Deleted success!', {

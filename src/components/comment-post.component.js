@@ -46,6 +46,7 @@ const CommentPost = (props) => {
           alert.show('Comment posted', {
             type:'success'
           })
+          
           setCmtText('')
         } else {
           alert.show('Fail to post comment', {

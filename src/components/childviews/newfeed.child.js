@@ -125,7 +125,7 @@ const Newfeed = (props) =>  {
                         newfeedData.map((value, index) => (                                       
                         <StatusCard
                             key={value._id}
-                            avatar={value.user.avatar}
+                            avatar={value.user.avatar?value.user.avatar:''}
                             current_avatar={userData?userData.avatar:''}
                             username={value.user.user_name}
                             date={value.date.split('T')[0]}
@@ -144,7 +144,7 @@ const Newfeed = (props) =>  {
                                 alert.show('Deleted success!', {
                                     type:'success'
                             })}}
-                            role={(userData) && userData.role}                                       
+                            role={(userData) && userData.role}                                    
                         ></StatusCard>))
                         :<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>

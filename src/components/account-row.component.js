@@ -9,10 +9,18 @@ import { useAlert } from 'react-alert';
 const AccRow = (props) => {
     const [deleteModalState, setDeleteModalState] = useState(false);
     const [deleteState, setDeleteState] = useState(false)
+    const [faculty, setFaculty] = useState([])
+    
+    const [pwd, setPwd] = useState('')
+    const [rePwd, setRePwd] = useState('')
 
     const [editModalState, setEditModelState] = useState(false)
 
     const alert = useAlert()
+
+    useEffect(() => {
+        getRole()
+    }, [])
 
     const showDelModal = () => {        
         setDeleteModalState(true);
@@ -37,6 +45,26 @@ const AccRow = (props) => {
 
     const handleEditCancel = () => {
         setEditModelState(false)
+    }
+
+    function getRole(){
+        axios.get(`https://${process.env.REACT_APP_IP}/role`, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then( res =>{
+            if(res.data.code === 0){
+                setFaculty(res.data.data)
+            } else {
+                alert.show(res.data.message, {
+                    type: 'error'
+                })                
+            }
+        })
+        .catch(e => {
+            console.error(e)
+        })        
     }
 
     function deleteHandle(){
@@ -76,9 +104,16 @@ const AccRow = (props) => {
             </Modal>
 
             <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
-                
+                <div>                    
+                    <div className='form-group'>
+                        <input className='form-control' type='password' value={pwd} onChange={e => setPwd(e.target.value)} placeholder='Password'></input>
+                    </div>
+                    <div className='form-group'>
+                        <input className='form-control' type='password' value={rePwd} onChange={e => setRePwd(e.target.value)} placeholder='Re-password'></input>
+                    </div>                    
+                </div>
             </Modal>
-            
+
             <div className='col-3'>{props.user}</div>
             <div className='col-3'>
                 <div className='ml-1'>

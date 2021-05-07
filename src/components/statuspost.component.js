@@ -72,7 +72,7 @@ const StatusPost =(props) => {
                         type: 'success'
                     })
 
-                    props.posted(res.data.data)
+                    props.posted(res.data.data[0])
                 } else {                                        
                     alert.show('Something wrong!', {
                         type: 'error'
