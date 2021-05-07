@@ -12,7 +12,7 @@ const AccRow = (props) => {
     const [faculty, setFaculty] = useState([])
     
     const [pwd, setPwd] = useState('')
-    const [rePwd, setRePwd] = useState('')
+    const [rePwd, setRePwd] = useState('')    
 
     const [editModalState, setEditModelState] = useState(false)
 
@@ -36,11 +36,13 @@ const AccRow = (props) => {
     }
 
     const showEditModal = () => {
+        setPwd('')
+        setRePwd('')
         setEditModelState(true)
     }
 
     const handleEditOk = () => {
-        setEditModelState(false)
+        editHandle()        
     }
 
     const handleEditCancel = () => {
@@ -90,7 +92,43 @@ const AccRow = (props) => {
     }
 
     function editHandle(){
+        if(pwd !== rePwd){
+            alert.show('Password and re-password does not match', {
+                type:'error'
+            })
+            return
+        }
 
+        if(pwd.length < 6){
+            alert.show('Password at least 6 characters', {
+                type: 'error'
+            })
+            return
+        }
+
+        axios.put(`https://${process.env.REACT_APP_IP}/admin/user/${props.user_id}`, {
+            password: pwd
+        }, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then( res => {
+            if(res.data.code === 0){
+                alert.show('Password updated', {
+                    type: 'success'
+                })
+                setEditModelState(false)
+            }
+            else {
+                alert.show(res.data.message, {
+                    type: 'error'
+                })
+            }            
+        })
+        .catch(e => {
+            console.error(e)
+        })
     }
 
     return(

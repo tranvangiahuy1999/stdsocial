@@ -7,8 +7,8 @@ import {connect} from 'react-redux'
 
 
 const AccManagerPage = (props) => {
-    const [searchInput, setSearchInput] = useState('')
-    const [accountList, setAccountList] = useState()
+    // const [searchInput, setSearchInput] = useState('')
+    const [accountList, setAccountList] = useState([])
     const [loading, setLoading] = useState(true)
     
     const alert = useAlert()
@@ -26,11 +26,33 @@ const AccManagerPage = (props) => {
         .then(res => {
             if(res.data.code===0){
                 setAccountList(res.data.data)
-            }                
+            }
         })
         .catch(e => console.error(e))
         setLoading(false)
     }  
+
+    function searchHandle(e){
+        const username = e.target.value
+        
+        if(username === ''){
+            getAccountList()
+        }
+
+        axios.get(`https://${process.env.REACT_APP_IP}/admin/search_user/${username}`, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then( res => {
+            if(res.data.code === 0){
+                setAccountList(res.data.data)
+            }             
+        })
+        .catch(e => {
+            console.error(e)
+        })
+    }
 
     return(
         <div className='child-page'>
@@ -41,7 +63,7 @@ const AccManagerPage = (props) => {
                     <div className='col-12' >                                       
                         <div className='row acc-filter p-2'>
                             <label>Find by user:</label>
-                            <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} value={searchInput} onChange={e => setSearchInput(e.target.value)}></input>                            
+                            <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} onChange={searchHandle}></input>                            
                         </div>
                         {props.link}
                         <div className='row acc-manager-head'>
@@ -62,14 +84,14 @@ const AccManagerPage = (props) => {
                         {
                         (loading)?(
                             <div style={{textAlign:'center'}}>
-                                <Space size="middle" style={{marginTop:'100px'}}>
+                                <Space size="middle">
                                     <Spin size="large" />
                                 </Space>
                             </div>
                         ):(
                             (accountList && accountList.length > 0)?(
                                 accountList.map((value, index) => (
-                                    <AccRow key={value._id} acc_id={value._id} user={value.user} user_name={value.user_name} faculty={value.faculty.length}></AccRow>
+                                    <AccRow key={value._id} user_id={value._id} acc_id={value._id} user={value.user} user_name={value.user_name} faculty={value.faculty.length}></AccRow>
                                 ))
                             ):(
                                 <div className='empty-data'>

@@ -222,7 +222,7 @@ const NotiPage = (props) => {
                                             <DatePicker className='form-control' selected={startDate} onChange={date => setStartDate(date)} />
                                         </div>
                                         <div className="form-check col-3">                        
-                                            <div className='ml-2' style={{width:'50%'}}>
+                                            {/* <div className='ml-2' style={{width:'50%'}}>
                                                 <input className="form-check-input" type="checkbox" />
                                                 <label className="form-check-label">
                                                     Unread
@@ -233,7 +233,7 @@ const NotiPage = (props) => {
                                                 <label className="form-check-label">
                                                     Your post
                                                 </label>
-                                            </div>
+                                            </div> */}
                                         </div>                        
                                         <div className="col-2">
                                             <button type='button' className='btn btn-danger m-2' style={{fontSize: '14px', alignItems:'center'}} onClick={cleanAll}><RiDeleteBin6Line size='16px' color='white'></RiDeleteBin6Line> Clear</button>            
