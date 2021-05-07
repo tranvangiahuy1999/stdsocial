@@ -40,12 +40,12 @@ const StatusPost =(props) => {
         if(inputYTState){
             setYouTubeLink('')
             setInputYTState(false)
-        } else {
-            setInputYTState(true)
-        }        
+            return
+        } 
+        setInputYTState(true)  
     }
 
-    async function uploadImage(){        
+    async function uploadHandle(){        
         var formData = new FormData();
         setPostbtn(true)
 
@@ -56,7 +56,7 @@ const StatusPost =(props) => {
             await formData.append("image", fileInput);
             await formData.append("content", text);
             
-            await axios.post(api, formData, {
+            axios.post(api, formData, {
                 headers:{        
                     'Content-Type': 'multipart/form-data',
                     'Authorization' : 'Bearer ' + props.token
@@ -88,7 +88,7 @@ const StatusPost =(props) => {
             })
         }
         else {
-            await axios.post(api, {
+            axios.post(api, {
                 content: text,
                 linkyoutube: youtubeLink,
             }, {
@@ -131,13 +131,12 @@ const StatusPost =(props) => {
     function _handleSubmit(e){
         e.preventDefault();
         if(previewFile || text.length > 0 || youtubeLink.length > 0){            
-            uploadImage()
+            uploadHandle()
         } else {
             alert.show('There is no data to post!', {
                 type:'error'
             })
-        }
-        return
+        }        
     }
 
     function _inputImageBtn(){

@@ -1,10 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {
-    BrowserRouter as Router,    
-    Link,    
-} from 'react-router-dom'
+import React from 'react'
 import NotiCard from './notificatecard.component'
-import axios from 'axios'
 import {connect} from 'react-redux'
 
 const NotiZone = (props) => {
@@ -22,7 +17,7 @@ const NotiZone = (props) => {
                     props.notiData && props.notiData.length > 0?
                     props.notiData.map((value, index) => (
                         <NotiCard
-                            key={index} //id noti
+                            key={value._id}
                             borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
                             backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}                    
                             notiClickHandle={notiClickHandle}

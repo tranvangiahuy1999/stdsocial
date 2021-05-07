@@ -132,7 +132,7 @@ const NotiCard = (props) => {
                 Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
             </Modal>
 
-            <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
+            <Modal title="Update notification" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
                 <div>
                     <div className='form-group'>
                         <input className='form-control' value={editTitle} onChange={e => setEditTitle(e.target.value)} placeholder='Title'></input>
