@@ -34,7 +34,7 @@ const NotiPage = (props) => {
     const [totalPage, setTotalPage] = useState(1)        
     
     const [selectedOption, setSelectedOption] = useState({value: "All", label: "All"})
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)    
 
     let {path, url} = useRouteMatch()
     let history = useHistory()
@@ -262,6 +262,8 @@ const NotiPage = (props) => {
                                                 date={value.date.split('T')[0]}
                                                 title={value.title}
                                                 subtitle={value.description}
+                                                content = {value.content}
+                                                noti_id= {value._id}
                                                 >
                                             </NotiCard>))
                                         : (

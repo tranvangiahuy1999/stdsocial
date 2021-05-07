@@ -69,7 +69,7 @@ const CommentChild = (props) => {
         ):(
                 <div className='row'>
                 <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                    <div>Are you sure to delete this post?</div>
+                    <div>Are you sure to delete this comment?</div>
                 </Modal>
                 <div className='col-10'>
                     <Comment            
