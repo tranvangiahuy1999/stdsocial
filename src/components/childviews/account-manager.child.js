@@ -37,6 +37,7 @@ const AccManagerPage = (props) => {
         
         if(username === ''){
             getAccountList()
+            return
         }
 
         axios.get(`https://${process.env.REACT_APP_IP}/admin/search_user/${username}`, {
@@ -45,6 +46,7 @@ const AccManagerPage = (props) => {
             }
         })
         .then( res => {
+            console.log(res)
             if(res.data.code === 0){
                 setAccountList(res.data.data)
             }             

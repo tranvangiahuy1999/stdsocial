@@ -15,7 +15,7 @@ const NotiZone = (props) => {
     return(
         <div className='notizone-container bg-white'>
             <div className='component-title'>
-                <div className='title'><Link style={{color:'black'}}>NOTIFICATION</Link></div>
+                <div className='title'>NOTIFICATION <span className='mr-1' style={{fontSize:'16px', fontWeight:'normal', float: 'right'}}>{props.notilink}</span></div>
             </div>
             <div className='notizone-body'>            
                 {

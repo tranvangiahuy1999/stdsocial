@@ -137,7 +137,7 @@ const Newfeed = (props) =>  {
                             likelist={value.likelist?value.likelist:[]} 
                             commentlist={value.commentlist?value.commentlist:[]}                          
                             user_id={userData?userData.id:''}
-                            user_post_id={value.user.user_id}
+                            user_post_id={value.user._id}
                             post_id={value._id}             
                             token={props.token}
                             alertshow={()=> {
@@ -156,7 +156,7 @@ const Newfeed = (props) =>  {
                     <div/>
                 ):(
                     <div className='col-4' style={{justifyContent:'center', alignContent:'center'}}>
-                        <NotiZone notiData={notiData}></NotiZone>
+                        <NotiZone notiData={notiData} notilink={props.notilink}></NotiZone>
                     </div>
                 )
             }

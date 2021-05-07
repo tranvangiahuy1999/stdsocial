@@ -192,9 +192,10 @@ const Homepage = (props) => {
                         <Switch>                            
                             <Route
                                 path={`${path}`}                    
-                                exact={true}
-                                component={Newfeed}
-                            />                                                                
+                                exact={true}                                
+                            >
+                                <Newfeed notilink={<Link to={`${url}/notification`}>See all</Link>}></Newfeed>
+                            </Route>                                                
                             <Route
                                 path={`${path}/notification`}                                    
                                 component={NotiPage}

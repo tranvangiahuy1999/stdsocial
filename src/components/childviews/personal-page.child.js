@@ -242,7 +242,7 @@ const PersonalPage = (props) => {
                                         likelist={value.likelist?value.likelist:[]} 
                                         commentlist={value.commentlist?value.commentlist:[]}                          
                                         user_id={userData?userData.id:''}
-                                        user_post_id={value.user.user_id}
+                                        user_post_id={value.user._id}
                                         post_id={value._id}             
                                         token={props.token}
                                         alertshow={()=> {
