@@ -32,7 +32,7 @@ const CommentChild = (props) => {
     function deleteCommentHandle(){
         console.log(props.token)
         if(props.cmt_id){            
-            axios.put(`https://${process.env.REACT_APP_IP}/newfeed/delete/comment/${props.cmt_id}`, {}, {
+            axios.put(`${process.env.REACT_APP_IP}/newfeed/delete/comment/${props.cmt_id}`, {}, {
                 headers: {
                     'Authorization' : 'Bearer ' + props.token
                 }
@@ -87,7 +87,7 @@ const CommentChild = (props) => {
                     }
                     datetime={
                         <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{props.datetime}</span>
+                            <span>{props.datetime}</span>
                         </Tooltip>
                     }
                     />
@@ -96,7 +96,7 @@ const CommentChild = (props) => {
                         (props.user_cmt_id && props.user_id && props.user_role && (props.user_cmt_id === props.user_id || props.user_role ==='admin')) && (
                             <Dropdown className='mt-auto mb-auto ml-4' overlay={menu} placement="bottomRight" arrow>
                                 <RiEditLine className='clickable-icon ml-2' size='20px' color='gray'></RiEditLine>
-                            </Dropdown>    
+                            </Dropdown>
                         )
                     }                                      
             </div>      

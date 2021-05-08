@@ -49,7 +49,7 @@ const NavBar = (props) =>  {
             return
         }
 
-        axios.put(`https://${process.env.REACT_APP_IP}/account/repassword`, {
+        axios.put(`${process.env.REACT_APP_IP}/account/repassword`, {
             repassword: pwd
         }, {
             headers: {

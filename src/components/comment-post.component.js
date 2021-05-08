@@ -34,14 +34,15 @@ const CommentPost = (props) => {
 
     setSubmitting(true)
     if(props.postid){
-      axios.put(`https://${process.env.REACT_APP_IP}/newfeed/comment/${props.postid}`, {
+      axios.put(`${process.env.REACT_APP_IP}/newfeed/comment/${props.postid}`, {
         comment: cmttext
       }, {
         headers: {
           'Authorization' : 'Bearer ' + props.token
       }
       })
-      .then(res => {         
+      .then(res => {      
+        console.log(res)
         if(res.data.code === 0){
           alert.show('Comment posted', {
             type:'success'

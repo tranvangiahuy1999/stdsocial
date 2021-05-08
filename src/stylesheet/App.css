@@ -20,6 +20,7 @@
 .form-container{
   background-color: rgba(255,255,255);
   border-radius: 10px;
+  user-select: none;
 }
 
 .containerr {
@@ -46,6 +47,11 @@
 
 .logo-title {
   display: flex;
+}
+
+.login-form hr {
+  border: 1px solid lightgray;
+  width: 100%;  
 }
 
 .navbar .navbar-text-front, .navbar .navbar-text-back {

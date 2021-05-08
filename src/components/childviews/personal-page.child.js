@@ -39,7 +39,7 @@ const PersonalPage = (props) => {
     }, [userData])
 
     function getUserInformation(){        
-            axios.get(`https://${process.env.REACT_APP_IP}/account/user/${userData.id}`, {
+            axios.get(`${process.env.REACT_APP_IP}/account/user/${userData.id}`, {
                 headers: {
                     'Authorization' : 'Bearer ' + props.token
                 }
@@ -50,17 +50,13 @@ const PersonalPage = (props) => {
                     setPersonalInfo(res.data.data)
                 }
             })
-            .catch(async e => {
-                console.error(e)
-                if(e.response.status===401){
-                    await props.logOut()
-                    history.push('/login')
-                }
+            .catch( e => {
+                console.error(e)                
             })
     }
 
     function getCurrentUserData(){
-        axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+        axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -81,7 +77,7 @@ const PersonalPage = (props) => {
 
     async function getPersonalNewfeed(page){
         if(await userData){
-            axios.get(`https://${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
+            axios.get(`${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -133,7 +129,7 @@ const PersonalPage = (props) => {
         if(fileInput){
             await formData.append("image", fileInput);
 
-            axios.put(`https://${process.env.REACT_APP_IP}/account/update/avatar`, formData, {
+            axios.put(`${process.env.REACT_APP_IP}/account/update/avatar`, formData, {
                 headers:{        
                     'Content-Type': 'multipart/form-data',
                     'Authorization' : 'Bearer ' + props.token
@@ -185,7 +181,7 @@ const PersonalPage = (props) => {
             return
         }
 
-        axios.put(`https://${process.env.REACT_APP_IP}/account/rename`, {
+        axios.put(`${process.env.REACT_APP_IP}/account/rename`, {
             rename: changeUsernameText
         }, {
             headers: {

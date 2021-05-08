@@ -50,7 +50,7 @@ const AccRow = (props) => {
     }
 
     function getRole(){
-        axios.get(`https://${process.env.REACT_APP_IP}/role`, {
+        axios.get(`${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -70,7 +70,7 @@ const AccRow = (props) => {
     }
 
     function deleteHandle(){
-        axios.delete(`https://${process.env.REACT_APP_IP}/admin/user/${props.acc_id}`, {
+        axios.delete(`${process.env.REACT_APP_IP}/admin/user/${props.acc_id}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -106,7 +106,7 @@ const AccRow = (props) => {
             return
         }
 
-        axios.put(`https://${process.env.REACT_APP_IP}/admin/user/${props.user_id}`, {
+        axios.put(`${process.env.REACT_APP_IP}/admin/user/${props.user_id}`, {
             password: pwd
         }, {
             headers: {

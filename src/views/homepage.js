@@ -104,7 +104,7 @@ const Homepage = (props) => {
     }
 
     async function getCurrentUserData(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+        await axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -123,12 +123,12 @@ const Homepage = (props) => {
                 }
             }
         })
-        .catch(async e => {
+        .catch( e => {
             console.error(e)
-            if(e.response.status==401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status==401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 

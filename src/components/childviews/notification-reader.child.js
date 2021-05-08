@@ -22,7 +22,7 @@ const NotiReader = (props) => {
 
     useEffect(() => {
 
-        axios.get(`https://${process.env.REACT_APP_IP}/notification/${id}` ,{
+        axios.get(`${process.env.REACT_APP_IP}/notification/${id}` ,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -39,12 +39,12 @@ const NotiReader = (props) => {
                 alert.show(`Notification doens't exist`)
             }
         })
-        .catch(async e => {
+        .catch( e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            } 
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // } 
         })
 
     }, [])

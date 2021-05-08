@@ -24,7 +24,7 @@ const CreateNoti = (props) => {
     }, [])
 
     function getCurrentUser() {
-        axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+        axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -40,12 +40,12 @@ const CreateNoti = (props) => {
                 })
             }
         })
-        .catch(async e => {
+        .catch( e => {
             console.error(e)            
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 
@@ -54,10 +54,10 @@ const CreateNoti = (props) => {
     }
 
     async function onSubmit(e) {
-        e.preventDefault()
-        setBtnState(true)
+        e.preventDefault()        
         if(selectedOption){
-            await axios.post(`https://${process.env.REACT_APP_IP}/notification/add`,
+            setBtnState(true)
+            await axios.post(`${process.env.REACT_APP_IP}/notification/add`,
             {
                 'title': title,
                 'content': content,
@@ -87,13 +87,13 @@ const CreateNoti = (props) => {
 
                 }                
             })
-            .catch(async e => {
+            .catch( e => {
                 console.error(e)
                 
-                if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            //     if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
             })
             setBtnState(false)
         }

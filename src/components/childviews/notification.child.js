@@ -75,12 +75,12 @@ const NotiPage = (props) => {
                 setTotalPage(res.data.total)         
             }                     
         })        
-        .catch(async e => {
+        .catch( e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }   
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
         setLoading(false)
         setSendBtnState(false)
@@ -160,12 +160,12 @@ const NotiPage = (props) => {
                     })                                   
                 }                
             })
-            .catch(async e => {
+            .catch( e => {
                 console.error(e)
-                if(e.response.status===401){
-                    await props.logOut()
-                    history.push('/login')
-                }
+                // if(e.response.status===401){
+                //     await props.logOut()
+                //     history.push('/login')
+                // }
             })
         setLoading(false)
         setSendBtnState(false)
@@ -199,12 +199,12 @@ const NotiPage = (props) => {
                 })     
             }
         })
-        .catch(async e => {
+        .catch( e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 

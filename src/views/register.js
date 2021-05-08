@@ -37,7 +37,7 @@ const RegisterPage = (props) => {
     },[])
 
     async function getRole(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -51,12 +51,12 @@ const RegisterPage = (props) => {
                 })                
             }
         })
-        .catch(async e => {
+        .catch( e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 
@@ -72,7 +72,7 @@ const RegisterPage = (props) => {
 
         setBtnState(true)        
 
-        axios.put(`https://${process.env.REACT_APP_IP}/account/update/user`,{
+        axios.put(`${process.env.REACT_APP_IP}/account/update/user`,{
             faculty: faculty,
             birth: datetime,
             phone: phone,
@@ -99,13 +99,14 @@ const RegisterPage = (props) => {
                 })            
             }            
         })
-        .catch(async e => {alert.show('something wrong',{
-            type:'error'
+        .catch( e => {
+            alert.show('something wrong',{
+                type:'error'
             })        
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
         setBtnState(false)
     }

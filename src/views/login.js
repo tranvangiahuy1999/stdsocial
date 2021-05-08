@@ -35,7 +35,7 @@ const LoginView = (props) => {
             return
         }        
 
-        axios.post(`https://${process.env.REACT_APP_IP}/api/googlelogin`,{
+        axios.post(`${process.env.REACT_APP_IP}/api/googlelogin`,{
             tokenId: response.tokenId
         })
         .then(res => {                        
@@ -73,7 +73,7 @@ const LoginView = (props) => {
 
         setLoginBtnState(true)        
 
-        axios.post(`https://${process.env.REACT_APP_IP}/account/login`, {
+        axios.post(`${process.env.REACT_APP_IP}/account/login`, {
             user: user,
             password: password
         })
@@ -105,6 +105,19 @@ const LoginView = (props) => {
                         <Form className="login-form col-10 m-5" onSubmit={submitHandle}>
                             <img className='login-img' src={logo} alt="tdtu-logo"/>
                                 <h3 className="text-primary">Login with TDTSocial</h3>
+                                <div style={{textAlign:'center', color:'gray', margin:'2px'}}>
+                                <div className='row' style={{textAlign:'center', color:'gray'}}>
+                                        <div className='col-4'>
+                                            <hr/>
+                                        </div>
+                                        <div className='col-4'>
+                                            Admin and user
+                                        </div>
+                                        <div className='col-4'>
+                                            <hr/>  
+                                        </div>                                        
+                                    </div>
+                                    </div>
                                     <Form.Group className="form-group pt-3">
                                         <Form.Label>Falcuty username</Form.Label>
                                         <Form.Control value={user} onChange={e => setUser(e.target.value)} type="text" placeholder="Enter falcuty username" />
@@ -117,11 +130,11 @@ const LoginView = (props) => {
                                         <Form.Check defaultChecked={checked} onChange={checkHandle} custom label={`Remember me`}/>
                                     </Form.Group>                                                        
                                     <Button className="btn col-md-12 mt-2" type="submit" disabled={loginBtnState}>Login with TDTU Social</Button>
-                                    <div style={{textAlign:'center', color:'gray', margin:'2px'}}>
-                                        Or
-                                    </div>
+                                    <div style={{textAlign:'center', color:'gray', margin: '4px'}}>  
+                                        Or student login                                                                                                                     
+                                    </div>                                                                                                            
                                     <GoogleLogin
-                                        clientId="173768816222-a3th16lqbckuej5epilhsnv3tg0l031q.apps.googleusercontent.com"
+                                        clientId={process.env.REACT_APP_GG_TOKEN}
                                         render={renderProps => (
                                                 <Button onClick={renderProps.onClick} disabled={renderProps.disabled} className="btn col-md-12 mt-2" type="button" variant="danger"><FaGooglePlus color="white" size="22px"/> Login with Google Account</Button>
                                             )}

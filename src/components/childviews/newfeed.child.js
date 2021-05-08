@@ -12,9 +12,9 @@ import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
 
 const Newfeed = (props) =>  {
-    const [newfeedData, setNewfeedData] = useState(null)
-    const [userData, setUserData] = useState(null) 
-    const [notiData, setNotiData] = useState(null)
+    const [newfeedData, setNewfeedData] = useState([])
+    const [userData, setUserData] = useState() 
+    const [notiData, setNotiData] = useState()
     const [loading, setLoading] = useState(true)
 
     const history = useHistory()
@@ -24,25 +24,27 @@ const Newfeed = (props) =>  {
     const {width, height} = useWindowDimensions()
     var alert = useAlert()    
 
-    useEffect(() => {       
-        const socket = io.connect(`https://${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
+    useEffect(() => {                
+        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});  
         socket.on('connect', function() {
             console.log('Connected')
 
-            socket.on('new_notification', (data) => {                
-                if(data && userData && notiData){
-                    if(userData.faculty.includes(data.role)){                        
-                        openNotification(data.role)                        
+            socket.on('new_notification', (data) => {
+                
+                if(userData && notiData) {
+                    if(userData.faculty.includes(data.role) && userData.role === 'student'){                        
+                        openNotification(data.role)
                         setNotiData([data].concat(notiData))
-                    }                                   
-                }
+                    }                                                   
+                }                   
             })
 
             socket.on('new_comment', (data) => console.log('newcomment',data))
         })
+
         getNotiData()
         getUserData()
-        getNewfeed(1)             
+        getNewfeed(1)
     }, [])
 
     const openNotification = (role) => {        
@@ -54,64 +56,65 @@ const Newfeed = (props) =>  {
         });
       };      
 
-    async function getNotiData(){        
-        await axios.get(`https://${process.env.REACT_APP_IP}/notification/page/${1}`,{
+    function getNotiData() {        
+        axios.get(`${process.env.REACT_APP_IP}/notification/page/${1}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {
+        .then(res => {
             console.log('noti',res)
             if(res.data.code === 0){
-                await setNotiData(res.data.data)                
+                setNotiData(res.data.data)                
             }
         })
         .catch(async e => {
-            console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            console.log(e)
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 
-    async function getUserData(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+    function getUserData(){
+         axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {            
-            if(res.data.code === 0){
-                await setUserData(res.data.data)                
+        .then(res => {            
+            if(res.data.code === 0){                
+                setUserData(res.data.data)                
             }
         })
         .catch(async e => {
-            console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            console.log(e)
+
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 
-    async function getNewfeed(page){
-        await axios.get(`https://${process.env.REACT_APP_IP}/newfeed/${page}`, {
+    function getNewfeed(page){
+        axios.get(`${process.env.REACT_APP_IP}/newfeed/${page}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {                     
+        .then(res => {                     
             if(res.data.code === 0){
-                await setNewfeedData(res.data.data)
+                setNewfeedData(res.data.data)
             }
         })
-        .catch(async e => {
+        .catch(e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     props.logOut()
+            //     history.push('/login')
+            // }
         })
         setLoading(false)
     }        

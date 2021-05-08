@@ -54,7 +54,7 @@ const NotiCard = (props) => {
     }
 
     function deleteHandle(){
-        axios.delete(`https://${process.env.REACT_APP_IP}/notification/delete/${props.noti_id}`, {
+        axios.delete(`${process.env.REACT_APP_IP}/notification/delete/${props.noti_id}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -76,7 +76,7 @@ const NotiCard = (props) => {
     }
 
     function editHandle() {
-        axios.put(`https://${process.env.REACT_APP_IP}/notification/update/${props.noti_id}`,{
+        axios.put(`${process.env.REACT_APP_IP}/notification/update/${props.noti_id}`,{
             title: editTitle,
             description: editDesc,
             faculty: props.falcutyname,
@@ -106,7 +106,7 @@ const NotiCard = (props) => {
     }
 
     function getCurrentUser() {
-        axios.get(`https://${process.env.REACT_APP_IP}/account/current`, {
+        axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }

@@ -98,7 +98,7 @@ export default class StatusCard extends React.Component {
     };
 
     likeHandle(){        
-            axios.put(`https://${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
+            axios.put(`${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
@@ -133,7 +133,7 @@ export default class StatusCard extends React.Component {
 
     deleteHandle(){        
         if(this.props.post_id && this.props.token){
-            axios.delete(`https://${process.env.REACT_APP_IP}/newfeed/delete/${this.props.post_id}`, {
+            axios.delete(`${process.env.REACT_APP_IP}/newfeed/delete/${this.props.post_id}`, {
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
@@ -245,10 +245,14 @@ export default class StatusCard extends React.Component {
     async updateHandle(){
         var formData = new FormData();        
 
-        let api = `https://${process.env.REACT_APP_IP}/newfeed/update/${this.props.post_id}`
+        let api = `${process.env.REACT_APP_IP}/newfeed/update/${this.props.post_id}`
 
         if(this.state.fileInput){
-            api=`https://${process.env.REACT_APP_IP}/newfeed/update/image/${this.props.post_id}`
+            if(!this.state.imgcontent) {
+                api = `${process.env.REACT_APP_IP}/newfeed/update/new_image/${this.props.post_id}`
+            } else {
+                api=`${process.env.REACT_APP_IP}/newfeed/update/image/${this.props.post_id}`
+            }
 
             await formData.append('image', this.state.fileInput)
             await formData.append('content', this.state.edittext)

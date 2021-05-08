@@ -20,7 +20,7 @@ const AccManagerPage = (props) => {
     }, [])
 
     function getAccountList(){
-        axios.get(`https://${process.env.REACT_APP_IP}/admin/user`, {
+        axios.get(`${process.env.REACT_APP_IP}/admin/user`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -30,12 +30,12 @@ const AccManagerPage = (props) => {
                 setAccountList(res.data.data)
             }
         })
-        .catch(async e => {
+        .catch(e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
         setLoading(false)
     }  
@@ -48,7 +48,7 @@ const AccManagerPage = (props) => {
             return
         }
 
-        axios.get(`https://${process.env.REACT_APP_IP}/admin/search_user/${username}`, {
+        axios.get(`${process.env.REACT_APP_IP}/admin/search_user/${username}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -59,12 +59,12 @@ const AccManagerPage = (props) => {
                 setAccountList(res.data.data)
             }             
         })
-        .catch(async e => {
+        .catch(e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
     }
 

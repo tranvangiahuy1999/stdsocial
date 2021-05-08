@@ -39,7 +39,7 @@ const CreateAccountPage = (props) => {
     }, [])
 
     async function getRole(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -53,12 +53,12 @@ const CreateAccountPage = (props) => {
                 })                
             }
         })
-        .catch(async e => {
+        .catch(e => {
             console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+            // if(e.response.status===401){
+            //     await props.logOut()
+            //     history.push('/login')
+            // }
         })
         setLoading(false)
     }
@@ -79,7 +79,7 @@ const CreateAccountPage = (props) => {
         } else {
             setBtnState(true)
 
-            await axios.post(`https://${process.env.REACT_APP_IP}/admin/adduser`,
+            await axios.post(`${process.env.REACT_APP_IP}/admin/adduser`,
             {'user': username, 'password': pwd, 'faculty': falcutyChoose},
             {
                 headers: {
@@ -103,12 +103,12 @@ const CreateAccountPage = (props) => {
                     })
                 }                
             })
-            .catch(async e => {
+            .catch( e => {
                 console.error(e)
-                if(e.response.status===401){
-                    await props.logOut()
-                    history.push('/login')
-                }                
+                // if(e.response.status===401){
+                //     await props.logOut()
+                //     history.push('/login')
+                // }                
             })
         }
         setBtnState(false)
