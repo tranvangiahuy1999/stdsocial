@@ -9,12 +9,15 @@ import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
 import { notification, Spin, Space } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router'
 
 const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState(null)
     const [userData, setUserData] = useState(null) 
     const [notiData, setNotiData] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    const history = useHistory()
     
     const [page, setPage] = useState(1)    
 
@@ -63,8 +66,12 @@ const Newfeed = (props) =>  {
                 await setNotiData(res.data.data)                
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -79,8 +86,12 @@ const Newfeed = (props) =>  {
                 await setUserData(res.data.data)                
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -90,14 +101,17 @@ const Newfeed = (props) =>  {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {
-            console.log('newsfeed', res)            
+        .then(async res => {                     
             if(res.data.code === 0){
                 await setNewfeedData(res.data.data)
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
         setLoading(false)
     }        
@@ -172,4 +186,10 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(Newfeed)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Newfeed)

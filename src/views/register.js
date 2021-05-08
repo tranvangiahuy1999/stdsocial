@@ -51,8 +51,12 @@ const RegisterPage = (props) => {
                 })                
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -93,13 +97,15 @@ const RegisterPage = (props) => {
                 alert.show(res.data.message, {
                     type:'error'
                 })            
-            }
-            setBtnState(false)
+            }            
         })
-        .catch(e => {alert.show('something wrong',{
+        .catch(async e => {alert.show('something wrong',{
             type:'error'
-            })            
-            setBtnState(false)
+            })        
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
         setBtnState(false)
     }
@@ -171,6 +177,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getToken: token => dispatch(getToken(token)),
+        logOut: () => dispatch({type: 'LOGOUT'}),
     };
 }
 

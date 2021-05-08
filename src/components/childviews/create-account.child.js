@@ -31,6 +31,8 @@ const CreateAccountPage = (props) => {
 
     const alert = useAlert() 
 
+    const history = useHistory()
+
     useEffect( async () => {
         //check status code
         getRole()
@@ -42,17 +44,21 @@ const CreateAccountPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res =>{
+        .then(res =>{
             if(res.data.code === 0){
-                await setFalcuty(res.data.data)
+                setFalcuty(res.data.data)
             } else {
                 alert.show(res.data.message, {
                     type: 'error'
                 })                
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
         setLoading(false)
     }
@@ -95,12 +101,14 @@ const CreateAccountPage = (props) => {
                     alert.show(res.data.message, {
                         type: 'error'
                     })
-                }
-                setBtnState(false)
+                }                
             })
-            .catch(e => {
+            .catch(async e => {
                 console.error(e)
-                setBtnState(false)
+                if(e.response.status===401){
+                    await props.logOut()
+                    history.push('/login')
+                }                
             })
         }
         setBtnState(false)
@@ -198,4 +206,10 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(CreateAccountPage)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountPage)

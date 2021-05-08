@@ -4,12 +4,14 @@ import axios from 'axios'
 import { useAlert } from 'react-alert'
 import {Spin, Space} from 'antd'
 import {connect} from 'react-redux'
+import { useHistory } from 'react-router'
 
 
 const AccManagerPage = (props) => {
     // const [searchInput, setSearchInput] = useState('')
     const [accountList, setAccountList] = useState([])
     const [loading, setLoading] = useState(true)
+    const history = useHistory()
     
     const alert = useAlert()
 
@@ -28,7 +30,13 @@ const AccManagerPage = (props) => {
                 setAccountList(res.data.data)
             }
         })
-        .catch(e => console.error(e))
+        .catch(async e => {
+            console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
+        })
         setLoading(false)
     }  
 
@@ -51,8 +59,12 @@ const AccManagerPage = (props) => {
                 setAccountList(res.data.data)
             }             
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -117,4 +129,10 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(AccManagerPage)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccManagerPage)

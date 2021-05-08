@@ -123,8 +123,12 @@ const Homepage = (props) => {
                 }
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status==401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 

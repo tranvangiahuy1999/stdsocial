@@ -9,6 +9,7 @@ import { FaRegEdit, FaRegSave, FaBirthdayCake, FaUsers, FaTransgender } from "re
 import {getToken} from '../../actions/index'
 import { AiFillCamera, AiOutlineCheck,  AiOutlineClose, AiFillPhone} from "react-icons/ai";
 import { useAlert } from 'react-alert';
+import { useHistory } from 'react-router';
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
@@ -20,7 +21,7 @@ const PersonalPage = (props) => {
     const [personalInfo, setPersonalInfo] = useState() 
 
     const [loading, setLoading] = useState(true)
-
+    const history = useHistory()
     const alert = useAlert()
     const [page, setPage] = useState(1)
 
@@ -49,7 +50,13 @@ const PersonalPage = (props) => {
                     setPersonalInfo(res.data.data)
                 }
             })
-            .catch(e => console.error(e))
+            .catch(async e => {
+                console.error(e)
+                if(e.response.status===401){
+                    await props.logOut()
+                    history.push('/login')
+                }
+            })
     }
 
     function getCurrentUserData(){
@@ -63,8 +70,12 @@ const PersonalPage = (props) => {
                 setUserData(res.data.data)
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -80,7 +91,13 @@ const PersonalPage = (props) => {
                     setNewfeedData(res.data.data)
                 }
             })
-            .catch(e => console.error(e))
+            .catch(async e => {
+                console.error(e)
+                if(e.response.status===401){
+                    await props.logOut()
+                    history.push('/login')
+                }
+            })
             setLoading(false)
         }
     }        
@@ -136,7 +153,13 @@ const PersonalPage = (props) => {
                     })
                 }
             })
-            .catch(e => console.error(e))
+            .catch(async e => {
+                console.error(e)
+                if(e.response.status===401){
+                    await props.logOut()
+                    history.push('/login')
+                }
+            })
         }
         else {
             alert.show(`Image hasn't uploaded`,{
@@ -184,7 +207,13 @@ const PersonalPage = (props) => {
                 })
             }
         })
-        .catch(e => console.error(e))
+        .catch(async e => {
+            console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
+        })
     }
 
     return(
@@ -317,6 +346,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getToken: token => dispatch(getToken(token)),
+        logOut: () => dispatch({type: 'LOGOUT'}),
     };
 }
 

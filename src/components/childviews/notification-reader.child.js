@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {    
+    useHistory,
     useParams
   } from "react-router-dom";
 import axios from 'axios'
@@ -15,6 +16,7 @@ const NotiReader = (props) => {
     const [date, setDate] = useState('')
     const [desc, setDesc] = useState('')
     const [content, setContent] = useState('')
+    const history = useHistory()
 
     const alert = useAlert()
 
@@ -37,8 +39,12 @@ const NotiReader = (props) => {
                 alert.show(`Notification doens't exist`)
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            } 
         })
 
     }, [])
@@ -60,4 +66,10 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(NotiReader)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotiReader)

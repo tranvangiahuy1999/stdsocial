@@ -4,6 +4,7 @@ import axios from 'axios'
 import Dropdown from 'react-dropdown';
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
+import { useHistory } from 'react-router';
 
 const CreateNoti = (props) => {
     const [title, setTitle] = useState('')
@@ -14,6 +15,7 @@ const CreateNoti = (props) => {
     const [btnState, setBtnState] = useState(false)
 
     const alert = useAlert() 
+    const history = useHistory()
 
     const [selectedOption, setSelectedOption] = useState(null)    
 
@@ -38,8 +40,12 @@ const CreateNoti = (props) => {
                 })
             }
         })
-        .catch(e => {
-            console.error(e)
+        .catch(async e => {
+            console.error(e)            
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -79,12 +85,15 @@ const CreateNoti = (props) => {
                         type: 'error'
                     })
 
-                }
-                setBtnState(false)
+                }                
             })
-            .catch(e => {
+            .catch(async e => {
                 console.error(e)
-                setBtnState(false)
+                
+                if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
             })
             setBtnState(false)
         }
@@ -128,4 +137,10 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(CreateNoti)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNoti)

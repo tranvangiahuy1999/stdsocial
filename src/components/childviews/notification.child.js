@@ -43,7 +43,7 @@ const NotiPage = (props) => {
     useEffect(() => {        
         getRole()        
         getPage(1)
-    },[])    
+    },[])
 
     function dateConvert() {
         let output = ''
@@ -67,16 +67,20 @@ const NotiPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(async res => {   
+        .then(res => {   
             console.log(res)
             setLoading(false)       
-            await setNotiData(res.data.data)
+            setNotiData(res.data.data)
             if(res.data.total) {    
-                await setTotalPage(res.data.total)         
+                setTotalPage(res.data.total)         
             }                     
         })        
-        .catch(e => {
-            console.error(e)            
+        .catch(async e => {
+            console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }   
         })
         setLoading(false)
         setSendBtnState(false)
@@ -87,10 +91,9 @@ const NotiPage = (props) => {
             if(findData.title.length > 0 || findData.faculty.length > 0 || findData.date.length > 0){
                 await submitFilter(page)
                 return
-            } else {
-                await getPage(page)
-                return
             }
+            await getPage(page)
+            return
         }
     }
 
@@ -157,8 +160,12 @@ const NotiPage = (props) => {
                     })                                   
                 }                
             })
-            .catch(e => {
+            .catch(async e => {
                 console.error(e)
+                if(e.response.status===401){
+                    await props.logOut()
+                    history.push('/login')
+                }
             })
         setLoading(false)
         setSendBtnState(false)
@@ -192,8 +199,12 @@ const NotiPage = (props) => {
                 })     
             }
         })
-        .catch(e => {
+        .catch(async e => {
             console.error(e)
+            if(e.response.status===401){
+                await props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -301,4 +312,10 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(NotiPage)
+function mapDispatchToProps(dispatch) {
+    return {        
+        logOut: () => dispatch({type: 'LOGOUT'}),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotiPage)
