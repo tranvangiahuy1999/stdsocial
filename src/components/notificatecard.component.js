@@ -88,7 +88,7 @@ const NotiCard = (props) => {
         })
         .then(res => {
             if(res.data.code===0){
-                alert.show('Delete success', {
+                alert.show('Updated', {
                     type:'success'
                 })
                 setTitle(editTitle)

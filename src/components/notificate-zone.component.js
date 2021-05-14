@@ -35,6 +35,7 @@ const NotiZone = (props) => {
                             content = {value.content}
                             subtitle={value.description}
                             noti_id= {value._id}
+                            seedetail={() => props.seedetail(value._id)}
                             >                                
                         </NotiCard>
                     )):<div className='empty-data'>

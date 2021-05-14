@@ -31,10 +31,10 @@ const Newfeed = (props) =>  {
     useEffect(() => {                
         getNotiData()
         getUserData()
-        getNewfeed(count)        
+        getNewfeed()        
         
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 500))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 500));
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
     }, [])
 
     useEffect(() => {
@@ -71,10 +71,10 @@ const Newfeed = (props) =>  {
     }
 
     function handleInfiniteOnLoad(){        
-        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100){
+        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100 && !loadingNewfeed){
             setLoadingNewfeed(true)
-            count += 1
-            getNewfeed(count)        
+            count += 1                       
+            getNewfeed()        
         }
     }    
 
@@ -118,7 +118,8 @@ const Newfeed = (props) =>  {
         })
     }
 
-    function getNewfeed(count){        
+    function getNewfeed(){
+        console.log(count)    
         axios.get(`${process.env.REACT_APP_IP}/newfeed/${count}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
@@ -127,7 +128,7 @@ const Newfeed = (props) =>  {
         .then(res => {                   
             if(res.data.code === 0){
                 newfeeddata = newfeeddata.concat(res.data.data)
-                setNewfeedData(newfeeddata)          
+                setNewfeedData(newfeeddata)                    
             } else {
                 setHasMore(false)
             }
@@ -141,7 +142,11 @@ const Newfeed = (props) =>  {
     
     function newPostHandle(post) {
         setNewfeedData([post].concat(newfeedData))
-    }      
+    }
+    
+    function seeDetail(id) {
+        history.push(`/home/notification/${id}`)
+    }
     
     return(       
         <div className='col-15 row newfeed-page' id='ele'>                  
@@ -213,7 +218,7 @@ const Newfeed = (props) =>  {
                     <div/>
                 ):(
                     <div className='col-4' style={{justifyContent:'center', alignContent:'center'}}>                          
-                        <NotiZone notiData={notiData} loading={loadingNoti} notilink={props.notilink}></NotiZone>
+                        <NotiZone notiData={notiData} loading={loadingNoti} notilink={props.notilink} seedetail={seeDetail}></NotiZone>
                     </div>
                 )
             }                  

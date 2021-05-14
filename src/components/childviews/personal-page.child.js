@@ -330,7 +330,7 @@ const PersonalPage = (props) => {
                                 newfeedData.map((value, index) => (                                       
                                     <StatusCard
                                         key={value._id}                                        
-                                        avatar={value.user.avatar?value.user.avatar:''}
+                                        avatar={value.user.avatar}
                                         current_avatar={userData?userData.avatar:''}
                                         username={value.user.user_name}
                                         date={value.date.split('T')[0]}
@@ -347,7 +347,7 @@ const PersonalPage = (props) => {
                                             alert.show('Deleted success!', {
                                                 type:'success'
                                         })}}
-                                        role={(userData) && userData.role}
+                                        role={(userData.role) && userData.role}
                                     ></StatusCard>))
                             )
                         :(
