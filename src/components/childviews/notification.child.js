@@ -1,15 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {
     BrowserRouter as Router,
-    Switch,
-    Route,
     useRouteMatch,
     useHistory,
-    Link
 } from 'react-router-dom'
 
 import { Pagination, Spin, Space } from 'antd';
-import NotiReader from './notification-reader.child'
+// import NotiReader from './notification-reader.child'
 import DatePicker from "react-datepicker";
 import NotiCard from '../notificatecard.component'
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,10 +17,10 @@ import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
 
 const NotiPage = (props) => {
+    const [notiData, setNotiData] = useState()
     const [searchNotiTitle, setSearchNotiTitle] = useState('')
     const [searchFalcuty, setSearchFalcuty] = useState('')
     const [startDate, setStartDate] = useState('');
-    const [notiData, setNotiData] = useState(null)
     const [findData, setFindData] = useState({title: '', faculty: '', date: ''})
     const [falcuty, setFalcuty] = useState([])
 
@@ -62,7 +59,7 @@ const NotiPage = (props) => {
         setCurrentPage(page)
 
         setLoading(true)
-        await axios.get(`https://${process.env.REACT_APP_IP}/notification/page/${page}`,{
+        await axios.get(`${process.env.REACT_APP_IP}/notification/page/${page}`,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -76,11 +73,7 @@ const NotiPage = (props) => {
             }                     
         })        
         .catch( e => {
-            console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)            
         })
         setLoading(false)
         setSendBtnState(false)
@@ -113,25 +106,25 @@ const NotiPage = (props) => {
         await setFindData({title: searchNotiTitle, faculty: option, date: date})
         await setCurrentSearchPage(page)        
         
-        let api = `https://${process.env.REACT_APP_IP}/notification/dateSort/${date}/${date}/${page}`
+        let api = `${process.env.REACT_APP_IP}/notification/dateSort/${date}/${date}/${page}`
 
         if(searchNotiTitle.length > 0 || option.length > 0 || date.length > 0){
             if(searchNotiTitle.length > 0 && option.length > 0 && date.length > 0){
-                api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${date}/${date}/${page}`
+                api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${date}/${date}/${page}`
             }
             else if(searchNotiTitle.length > 0) {
                 if(option.length > 0 ){
-                    api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${page}`                    
+                    api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${option}/${page}`                    
                 } else if(date.length > 0){
-                    api = `https://${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${date}/${date}/${page}`                   
+                    api = `${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${date}/${date}/${page}`                   
                 } else {
-                    api = `https://${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
+                    api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
                 }
                 else if(option.length > 0){
                     if(date.length > 0){
-                        api = `https://${process.env.REACT_APP_IP}/notification/role-date/${option}/${date}/${date}/${page}`                    
+                        api = `${process.env.REACT_APP_IP}/notification/role-date/${option}/${date}/${date}/${page}`                    
                     } else {
-                        api = `https://${process.env.REACT_APP_IP}/notification/faculty/${option}/${page}`                    
+                        api = `${process.env.REACT_APP_IP}/notification/faculty/${option}/${page}`                    
                     }
                 }            
             } else {
@@ -161,11 +154,7 @@ const NotiPage = (props) => {
                 }                
             })
             .catch( e => {
-                console.error(e)
-                // if(e.response.status===401){
-                //     await props.logOut()
-                //     history.push('/login')
-                // }
+                console.error(e)                
             })
         setLoading(false)
         setSendBtnState(false)
@@ -183,12 +172,13 @@ const NotiPage = (props) => {
     }    
 
     async function getRole(){
-        await axios.get(`https://${process.env.REACT_APP_IP}/role`, {
+        await axios.get(`${process.env.REACT_APP_IP}/role`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
         .then(async res => {
+            console.log(res)
             if(res.data.code === 0){
                 let array = ['All']
                 await res.data.data.map((value) => {array.push(value.nameRole)})
@@ -200,11 +190,7 @@ const NotiPage = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)            
         })
     }
 
@@ -214,9 +200,8 @@ const NotiPage = (props) => {
                 <h5 className='child-header'>
                     NOTIFICATONS
                 </h5>
-
-                <Switch>
-                    <Route path={`${path}`} exact>
+                {/* <Switch>
+                    <Route path={`${path}`} exact> */}
                         <div className='child-body'>
                             <div>
                                 <form>
@@ -232,19 +217,7 @@ const NotiPage = (props) => {
                                         <div className="form-group col-5">                                
                                             <DatePicker className='form-control' selected={startDate} onChange={date => setStartDate(date)} />
                                         </div>
-                                        <div className="form-check col-3">                        
-                                            {/* <div className='ml-2' style={{width:'50%'}}>
-                                                <input className="form-check-input" type="checkbox" />
-                                                <label className="form-check-label">
-                                                    Unread
-                                                </label>
-                                            </div>
-                                            <div className='ml-2' style={{width:'50%'}}>                        
-                                                <input className="form-check-input" type="checkbox" />
-                                                <label className="form-check-label">
-                                                    Your post
-                                                </label>
-                                            </div> */}
+                                        <div className="form-check col-3">                                                                  
                                         </div>                        
                                         <div className="col-2">
                                             <button type='button' className='btn btn-danger m-2' style={{fontSize: '14px', alignItems:'center'}} onClick={cleanAll}><RiDeleteBin6Line size='16px' color='white'></RiDeleteBin6Line> Clear</button>            
@@ -267,14 +240,14 @@ const NotiPage = (props) => {
                                             <NotiCard
                                                 key={value._id}                             
                                                 borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
-                                                backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}
-                                                notiLink={<Link className="link" to={`${url}/${value._id}`}>Click to see detail</Link>}
+                                                backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}                                                
                                                 falcutyname={value.role}
                                                 date={value.date.split('T')[0]}
                                                 title={value.title}
                                                 subtitle={value.description}
                                                 content = {value.content}
                                                 noti_id= {value._id}
+                                                seedetail = {() => history.push(`/home/notification/${value._id}`)}
                                                 >
                                             </NotiCard>))
                                         : (
@@ -298,9 +271,8 @@ const NotiPage = (props) => {
                             </div>
                         </div>
                         </div>
-                    </Route>
-                    <Route path={`${path}/:id`} component={NotiReader}/>
-                </Switch>
+                    {/* </Route>                    
+                </Switch> */}                
             </div>
         </Router>
     )

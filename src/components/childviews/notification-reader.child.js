@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import {    
     useHistory,
-    useParams
+    useParams,
+    withRouter     
   } from "react-router-dom";
 import axios from 'axios'
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
+import {compose} from "redux"
 
 const NotiReader = (props) => {
     let { id } = useParams()
@@ -27,7 +29,7 @@ const NotiReader = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {
+        .then(res => {            
             if(res.data.code === 0){
                 setTitle(res.data.data.title)
                 setFalcuty(res.data.data.role)
@@ -40,21 +42,19 @@ const NotiReader = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // } 
+            console.error(e)           
         })
 
     }, [])
 
-    return(        
-        <div className='child-body' style={{backgroundColor:'white', margin: '2px', padding:'16px'}}>
-            <h3 className='reading-title'>{title}</h3>
-            <div className='reading-date'>{faculty}/<span>{date}</span></div>            
-            <div className='reading-content'>                
-                {content}
+    return(   
+        <div className='child-page'>
+            <div className='child-body'>
+                <h3 className='reading-title'>{title}</h3>
+                <div className='reading-date'>{faculty}/<span>{date}</span></div>            
+                <div className='reading-content'>                
+                    {content}
+                </div>
             </div>
         </div>        
     )
@@ -72,4 +72,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotiReader)
+export default compose(
+    withRouter,
+    connect(mapStateToProps, mapDispatchToProps)
+  )(NotiReader);

@@ -1,6 +1,7 @@
 import React from 'react'
 import NotiCard from './notificatecard.component'
 import {connect} from 'react-redux'
+import { Spin, Space } from 'antd';
 
 const NotiZone = (props) => {
     function notiClickHandle(){
@@ -14,6 +15,13 @@ const NotiZone = (props) => {
             </div>
             <div className='notizone-body'>            
                 {
+                    (props.loading)?(
+                        <div style={{textAlign:'center', margin:'30px'}}>
+                            <Space size="middle">
+                                <Spin size='default' />
+                            </Space>
+                        </div>
+                    ):(
                     props.notiData && props.notiData.length > 0?
                     props.notiData.map((value, index) => (
                         <NotiCard
@@ -31,7 +39,7 @@ const NotiZone = (props) => {
                         </NotiCard>
                     )):<div className='empty-data'>
                             <div className='empty-text'>No content to show</div>
-                        </div>
+                        </div>)
                 }
             </div>
         </div>

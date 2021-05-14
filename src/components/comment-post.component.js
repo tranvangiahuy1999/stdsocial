@@ -41,14 +41,11 @@ const CommentPost = (props) => {
           'Authorization' : 'Bearer ' + props.token
       }
       })
-      .then(res => {      
-        console.log(res)
+      .then(res => {        
         if(res.data.code === 0){
           alert.show('Comment posted', {
             type:'success'
-          })
-
-          props.posted(res.data.data[0].commentlist)          
+          })                  
 
           setCmtText('')
         } else {

@@ -10,11 +10,14 @@ import { MdInsertPhoto } from "react-icons/md";
 
 import { BiComment } from "react-icons/bi";
 import ReactPlayer from 'react-player/youtube'
-import { Menu, Dropdown, Modal } from 'antd';
+import { Menu, Dropdown, Modal, List, Skeleton } from 'antd';
 
 import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'
 import axios from 'axios'
+import { io } from "socket.io-client";
+
+const count = 5
 
 export default class StatusCard extends React.Component {
     constructor(){
@@ -28,7 +31,13 @@ export default class StatusCard extends React.Component {
             edittext: '',
             likecount: 0,
             commentcount: 0,
+            likelist: [],
+
+            cmtdata: [],
             cmtlist: [],
+
+            initLoading: true,
+            loading: false,
 
             textcontent: '',
             imgcontent: '',
@@ -46,8 +55,7 @@ export default class StatusCard extends React.Component {
         this.deleteHandle = this.deleteHandle.bind(this)        
         this.showModal = this.showModal.bind(this)
         this.handleOk = this.handleOk.bind(this)
-        this.handleCancel = this.handleCancel.bind(this)        
-        this.postHandle = this.postHandle.bind(this)
+        this.handleCancel = this.handleCancel.bind(this)                
         this.showEditModal = this.showEditModal.bind(this)
         this.handleEditCancel = this.handleEditCancel.bind(this)
         this.handleEditOk = this.handleEditOk.bind(this)        
@@ -59,19 +67,28 @@ export default class StatusCard extends React.Component {
         this.youtubeUpload = this.youtubeUpload.bind(this)
         this.handleUpdate = this.handleUpdate.bind(this)
         this.updateHandle = this.updateHandle.bind(this)
+
+        this.onLoadMore  = this.onLoadMore.bind(this)        
     }
 
-    componentDidMount(){              
+    componentDidMount(){
+        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});
+        socket.on('new_comment', (data) => console.log('newcomment',data))  
+        
         if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
             this.setState({
                 like: true
             })
-        }
+        }        
         
         this.setState({
-            likecount: this.props.likecount,
-            commentcount: this.props.commentcount,
+            likecount: this.props.likelist.length,
+            commentcount: this.props.commentlist.length,
+            likelist: this.props.likelist,
+            
+            cmtdata: this.props.commentlist,
             cmtlist: this.props.commentlist,
+
             textcontent: this.props.textcontent,
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
@@ -150,14 +167,7 @@ export default class StatusCard extends React.Component {
                 console.error(e)
             })
         }
-    }
-
-    postHandle(data){        
-        this.setState({
-            cmtlist: data,
-            commentcount: data.length
-        })
-    }    
+    }  
 
     showEditModal() {           
         this.setState({
@@ -174,13 +184,7 @@ export default class StatusCard extends React.Component {
         this.setState({
             editStatusState:false
         })
-    }
-
-    pageLoadMore(){
-        
-    }
-    
-    //from here
+    }        
 
     deleteImageHandle(){
         this.setState({
@@ -242,6 +246,7 @@ export default class StatusCard extends React.Component {
             this.updateHandle()
         }
     }
+
     async updateHandle(){
         var formData = new FormData();        
 
@@ -305,6 +310,10 @@ export default class StatusCard extends React.Component {
             fileInput: '',
             previewFile: null,
         })
+    }
+
+    onLoadMore() {
+        
     }
 
     render(){        
@@ -433,8 +442,8 @@ export default class StatusCard extends React.Component {
                                 (this.state.cmtState)&&(
                                     <div>
                                         {
-                                            (this.state.cmtlist && this.state.cmtlist.length > 0)?(
-                                                this.state.cmtlist.map((value, index) => (                                            
+                                            (this.state.cmtdata && this.state.cmtdata.length > 0)?(
+                                                this.state.cmtdata.map((value, index) => (                                            
                                                     <CommentChild
                                                         key={value._id}
                                                         user_name={value.user_id.user_name}
@@ -455,7 +464,7 @@ export default class StatusCard extends React.Component {
                                             )
                                         }                                
                                         <a className='ml-5'>Load more...</a>
-                                        <CommentPost posted={this.postHandle} avatar={this.props.current_avatar} postid={this.props.post_id}></CommentPost>                         
+                                        <CommentPost avatar={this.props.current_avatar} postid={this.props.post_id}></CommentPost>                         
                                     </div>
                                 )
                             }             

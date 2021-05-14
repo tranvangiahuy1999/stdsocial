@@ -5,7 +5,7 @@ import {
     Route,
     useRouteMatch,
     useHistory,
-    Link,
+    Link,    
 } from 'react-router-dom'
 import {useAlert} from 'react-alert'
 
@@ -26,6 +26,8 @@ import {
     } from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
+import NotiReader from '../components/childviews/notification-reader.child'
+import AccManagerPage from '../components/childviews/account-manager.child'
 
 const Homepage = (props) => {    
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -124,11 +126,7 @@ const Homepage = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)
-            // if(e.response.status==401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)            
         })
     }
 
@@ -150,7 +148,7 @@ const Homepage = (props) => {
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
                             logOutHandle={logOutHandle}                            
                             usersession={
-                            <Link to={`${url}/userwall`}>
+                            <Link to={`${url}/personalwall/${12}`}>
                                 <div className='userwall row mr-1' onClick={props.userwallredirect}>
                                     <Avatar src={userData?userData.avatar:''} alt="avatar" ></Avatar>
                                     <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{userData?userData.user_name:''}</div>
@@ -196,16 +194,21 @@ const Homepage = (props) => {
                         <Switch>                            
                             <Route
                                 path={`${path}`}                    
-                                exact={true}                                
+                                exact={true}             
                             >
                                 <Newfeed notilink={<Link to={`${url}/notification`}>See all</Link>}></Newfeed>
                             </Route>                                                
                             <Route
                                 path={`${path}/notification`}                                    
                                 component={NotiPage}
+                                exact
                             />
                             <Route
-                                path={`${path}/userwall`}
+                                path={`${path}/notification/:id`}
+                                component={NotiReader}                                                              
+                            />
+                            <Route
+                                path={`${path}/personalwall/:id`}
                                 component={PersonalPage}
                             />
                             {
@@ -226,7 +229,12 @@ const Homepage = (props) => {
                                     <Route
                                         path={`${path}/createaccount`}                               
                                         component={CreateAccountPage}
+                                        exact
                                     />
+                                    <Route
+                                        path={`${path}/createaccount/accountmanager`}                               
+                                        component={AccManagerPage}
+                                    />                                
                                     </>
                                 )                             
                             }                                                                                       

@@ -7,8 +7,7 @@ import {connect} from 'react-redux'
 import { useHistory } from 'react-router'
 
 
-const AccManagerPage = (props) => {
-    // const [searchInput, setSearchInput] = useState('')
+const AccManagerPage = (props) => {    
     const [accountList, setAccountList] = useState([])
     const [loading, setLoading] = useState(true)
     const history = useHistory()
@@ -31,11 +30,7 @@ const AccManagerPage = (props) => {
             }
         })
         .catch(e => {
-            console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)            
         })
         setLoading(false)
     }  
@@ -60,11 +55,7 @@ const AccManagerPage = (props) => {
             }             
         })
         .catch(e => {
-            console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)            
         })
     }
 
@@ -79,7 +70,7 @@ const AccManagerPage = (props) => {
                             <label>Find by user:</label>
                             <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} onChange={searchHandle}></input>                            
                         </div>
-                        {props.link}
+                        <div style={{paddingTop: '6px', paddingBottom:'6px'}} >Can't find one? <span className='reading-link' onClick={() => history.push(`/home/createaccount`)}>Create here</span>.</div>
                         <div className='row acc-manager-head'>
                             <div className='table-text col-3'>
                                 User

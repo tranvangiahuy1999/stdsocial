@@ -18,7 +18,7 @@ const NotiCard = (props) => {
     const [editTitle, setEditTitle] = useState('')
     const [editDesc, setEditDesc] = useState('')
     const [editContent, setEditContent] = useState('')
-
+    
     const alert= useAlert()
 
     useEffect(() => {
@@ -126,54 +126,66 @@ const NotiCard = (props) => {
             <div className='empty-data'>
                 <div className='empty-text'>Deleted notification</div>
             </div>
-        ):(
-            <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: props.backgroundStyle}}>    
-            <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
-                Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
-            </Modal>
+        ):(      
+                <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: props.backgroundStyle}}>    
+                    <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
+                        Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
+                    </Modal>
 
-            <Modal title="Update notification" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
-                <div>
-                    <div className='form-group'>
-                        <input className='form-control' value={editTitle} onChange={e => setEditTitle(e.target.value)} placeholder='Title'></input>
-                    </div>
-                    <div className='form-group'>
-                        <input className='form-control' value={editDesc} onChange={e => setEditDesc(e.target.value)} placeholder='Description'></input>
-                    </div>
-                    <div className='form-group'>
-                        <input className='form-control' value={props.falcutyname} disabled={true} placeholder='Faculty'></input>
-                    </div>
-                    <div className='form-group'>
-                        <textarea className='form-control' value={editContent} onChange={e => setEditContent(e.target.value)} placeholder='Content'></textarea>
-                    </div>
-                </div>
-            </Modal>
-
-                <div className='noticard-header row pl-3'>
-                    <div style={{color:'gray', fontSize:'14px'}}>
-                        [{props.falcutyname}]
-                    </div>
-                        <div style={{color:'gray', fontSize:'14px', paddingLeft:'5px'}}>
-                            {props.date}
+                    <Modal title="Update notification" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
+                        <div>
+                            <div className='form-group'>
+                                <input className='form-control' value={editTitle} onChange={e => setEditTitle(e.target.value)} placeholder='Title'></input>
+                            </div>
+                            <div className='form-group'>
+                                <input className='form-control' value={editDesc} onChange={e => setEditDesc(e.target.value)} placeholder='Description'></input>
+                            </div>
+                            <div className='form-group'>
+                                <input className='form-control' value={props.falcutyname} disabled={true} placeholder='Faculty'></input>
+                            </div>
+                            <div className='form-group'>
+                                <textarea className='form-control' value={editContent} onChange={e => setEditContent(e.target.value)} placeholder='Content'></textarea>
+                            </div>
                         </div>
-                </div>
-                <div className='noticard-body'>
-                    <div className='noticard-title' style={{color:'black', fontWeight:'bold', fontSize:'16px'}}>
-                        {title} {
-                            (userData && userData.role !== 'student') && (
+                    </Modal>
+
+                    <div className='row'>
+                    <div className='col-10'>
+                        <div className='noticard-header row pl-3'>
+                            <div style={{color:'gray', fontSize:'14px'}}>
+                                [{props.falcutyname}]
+                            </div>
+                                <div style={{color:'gray', fontSize:'14px', paddingLeft:'5px'}}>
+                                    {props.date}
+                                </div>
+                        </div>
+                        <div className='noticard-body'>
+                            <div className='noticard-title' style={{color:'black', fontWeight:'bold', fontSize:'16px'}}>
+                                {title}                
+                            </div>
+                            <div className='noticard-content' style={{color:'gray', fontSize:'15px'}}>
+                                {desc}
+                            </div>
+                            <div className="reading-link" onClick={props.seedetail}>Click to see detail</div>
+                        </div>
+                    </div>
+                    <div className='col-2'>
+                    {
+                        (userData && userData.role !== 'student') && (
+                            <div style={{marginTop:'35%'}}>
                                 <span>
-                                    <AiOutlineEdit className='ml-2 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
-                                    <ImBin className='ml-2 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>
-                                </span>                        
-                            )
-                        }                  
+                                    <AiOutlineEdit className='mr-2 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
+                                    <span style={{borderLeft:'1px solid lightgray'}}>
+                                        <ImBin className='ml-2 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>    
+                                    </span>                                
+                                </span>                   
+                            </div>
+                        )
+                    }
                     </div>
-                    <div className='noticard-content' style={{color:'gray', fontSize:'15px'}}>
-                        {desc}
-                    </div>
-                    {props.notiLink}
-                </div>                                            
-        </div>
+                </div>                
+                                                    
+            </div>  
         )        
     )
 }

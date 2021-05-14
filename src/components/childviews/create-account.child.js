@@ -1,16 +1,12 @@
 import React,{useEffect, useState} from 'react'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
+import {  
     useRouteMatch,
-    useHistory,
-    Link
+    useHistory, 
 } from 'react-router-dom'
 
 import { Checkbox, Space, Spin } from 'antd';
 import axios from 'axios'
-import AccManagerPage from './account-manager.child'
+// import AccManagerPage from './account-manager.child'
 import { RiSendPlaneFill } from "react-icons/ri";
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
@@ -104,11 +100,7 @@ const CreateAccountPage = (props) => {
                 }                
             })
             .catch( e => {
-                console.error(e)
-                // if(e.response.status===401){
-                //     await props.logOut()
-                //     history.push('/login')
-                // }                
+                console.error(e)                        
             })
         }
         setBtnState(false)
@@ -130,10 +122,7 @@ const CreateAccountPage = (props) => {
         }
     }
 
-    return(
-        <Router>
-            <Switch>
-                <Route path={`${path}`} exact>
+    return(      
                     <div className='child-page'>
                         <h5 className='child-header'>
                             CREATE ACCOUNT
@@ -159,7 +148,7 @@ const CreateAccountPage = (props) => {
                                             <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
                                         </div>
                                         <div className='form-group'>
-                                            <div>Head to <Link className='link' to={`${url}/accountmanager`}>Account manager</Link></div>                                     
+                                            <div>Head to <span className='reading-link' onClick={() => history.push(`${url}/accountmanager`)}>Account management</span></div>                                            
                                         </div>
 
                                     </div>
@@ -190,13 +179,7 @@ const CreateAccountPage = (props) => {
                                 </form>
                             </div>
                         </div>
-                    </div>
-                </Route>
-                <Route path={`${path}/accountmanager`}>
-                    <AccManagerPage link={<div style={{margin: '4px'}}>Can't find one? <Link className='link' to={`${url}`}>Create account</Link></div>}></AccManagerPage>
-                </Route>
-            </Switch>
-        </Router>
+                    </div>    
     )
 }
 

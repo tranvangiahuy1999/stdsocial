@@ -66,12 +66,8 @@ const PersonalPage = (props) => {
                 setUserData(res.data.data)
             }
         })
-        .catch(async e => {
-            console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+        .catch( e => {
+            console.error(e)            
         })
     }
 
@@ -86,15 +82,11 @@ const PersonalPage = (props) => {
                 if(res.data.code===0){                    
                     setNewfeedData(res.data.data)
                 }
+                setLoading(false)
             })
-            .catch(async e => {
-                console.error(e)
-                if(e.response.status===401){
-                    await props.logOut()
-                    history.push('/login')
-                }
-            })
-            setLoading(false)
+            .catch( e => {
+                console.error(e)                
+            })        
         }
     }        
 
@@ -149,12 +141,8 @@ const PersonalPage = (props) => {
                     })
                 }
             })
-            .catch(async e => {
-                console.error(e)
-                if(e.response.status===401){
-                    await props.logOut()
-                    history.push('/login')
-                }
+            .catch(e => {
+                console.error(e)                
             })
         }
         else {
@@ -203,23 +191,13 @@ const PersonalPage = (props) => {
                 })
             }
         })
-        .catch(async e => {
-            console.error(e)
-            if(e.response.status===401){
-                await props.logOut()
-                history.push('/login')
-            }
+        .catch( e => {
+            console.error(e)            
         })
     }
 
     return(
-        (loading)?(
-            <div style={{textAlign:'center'}}>
-                <Space size="middle" style={{marginTop:'100px'}}>
-                    <Spin size="large" />
-                </Space>
-            </div>
-        ):(
+        
             <div className='personal-page'>
             <div className='mr-3 ml-3'>
                 <div className='personal-head row'>
@@ -293,6 +271,13 @@ const PersonalPage = (props) => {
                             >
                         </StatusPost>
                         {
+                            (loading)?(
+                                <div style={{textAlign:'center'}}>
+                                    <Space size="middle" style={{marginTop:'20px'}}>
+                                        <Spin size="large" />
+                                    </Space>
+                                </div>
+                            ):(
                             (newfeedData && newfeedData.length > 0)?(
                                 newfeedData.map((value, index) => (                                       
                                     <StatusCard
@@ -323,14 +308,13 @@ const PersonalPage = (props) => {
                             <div className='empty-data'>
                                 <div className='empty-text'>There are no data to show</div>
                             </div>
-                        )
+                        ))
                         }
                     </div>                                                            
                 </div>
             </div>
         </div>
-        )        
-    )
+        )            
 }
 
 function mapStateToProps(state) {
