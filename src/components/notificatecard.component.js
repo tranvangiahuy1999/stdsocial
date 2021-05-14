@@ -150,7 +150,7 @@ const NotiCard = (props) => {
                     </Modal>
 
                     <div className='row'>
-                    <div className='col-10'>
+                    <div className='col-9'>
                         <div className='noticard-header row pl-3'>
                             <div style={{color:'gray', fontSize:'14px'}}>
                                 [{props.falcutyname}]
@@ -169,16 +169,16 @@ const NotiCard = (props) => {
                             <div className="reading-link" onClick={props.seedetail}>Click to see detail</div>
                         </div>
                     </div>
-                    <div className='col-2'>
+                    <div className='col-3'>
                     {
                         (userData && userData.role !== 'student') && (
-                            <div style={{marginTop:'35%'}}>
-                                <span>
-                                    <AiOutlineEdit className='mr-2 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
-                                    <span style={{borderLeft:'1px solid lightgray'}}>
-                                        <ImBin className='ml-2 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>    
-                                    </span>                                
-                                </span>                   
+                            <div style={{marginTop:'20px', float:'right'}}>
+                                <div>
+                                    <AiOutlineEdit className='mr-1 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
+                                </div>
+                                <div>
+                                    <ImBin className='mr-1 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>
+                                </div>                                                                                                                                                                                                                
                             </div>
                         )
                     }

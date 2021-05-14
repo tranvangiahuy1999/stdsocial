@@ -17,7 +17,7 @@ import CommentChild from './comment-child.component'
 import axios from 'axios'
 import { io } from "socket.io-client";
 
-const count = 5
+const count = 3
 
 export default class StatusCard extends React.Component {
     constructor(){
