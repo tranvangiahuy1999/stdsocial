@@ -21,7 +21,7 @@ const Newfeed = (props) =>  {
     const [loadingNoti, setLoadingNoti] = useState(true)
     
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
-    const [hasMore, setHasMore] = useState(true)    
+    const [hasMore, setHasMore] = useState(true) 
 
     const {width, height} = useWindowDimensions()
     const history = useHistory()
@@ -34,11 +34,11 @@ const Newfeed = (props) =>  {
         getNewfeed(count)
         configureSocket()
         
-        window.addEventListener('scroll', handleInfiniteOnLoad)
-        return () => window.removeEventListener('scroll', handleInfiniteOnLoad);        
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 500))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 500));
     }, [])    
 
-    const openNotification = (role) => {        
+    const openNotification = (role) => {
         notification.open({
           message: 'Notification',
           description: `You have new notification from ${role}`,
@@ -46,6 +46,16 @@ const Newfeed = (props) =>  {
           icon: <SmileOutlined style={{ color: '#108ee9' }} />,
         });
     };
+
+    const debounce = (func, delay) => {
+        let inDebounce;
+        return function() {
+        clearTimeout(inDebounce);
+        inDebounce = setTimeout(() => {
+        func.apply(this, arguments);
+            }, delay);
+        }
+    }
 
     function handleInfiniteOnLoad(){        
         if (document.documentElement.scrollTop + window.innerHeight === document.documentElement.scrollHeight ){
@@ -150,6 +160,7 @@ const Newfeed = (props) =>  {
                                 newfeedData.map((value, index) => (                                       
                                     <StatusCard
                                         key={value._id}
+                                        directToWall={() => history.push(`/home/personalwall/${value.user._id}`)}
                                         avatar={value.user.avatar?value.user.avatar:''}
                                         current_avatar={userData?userData.avatar:''}
                                         username={value.user.user_name}
@@ -167,7 +178,7 @@ const Newfeed = (props) =>  {
                                             alert.show('Deleted success!', {
                                                 type:'success'
                                         })}}
-                                        role={(userData) && userData.role}                                    
+                                        role={(userData) && userData.role}                                
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>
@@ -190,7 +201,7 @@ const Newfeed = (props) =>  {
                                 <div className='empty-text'>There are no posts left</div>
                             </div>
                         )
-                    }                             
+                    }                          
                 </div>
             </div>
             {

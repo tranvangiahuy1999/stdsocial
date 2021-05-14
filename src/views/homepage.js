@@ -148,7 +148,7 @@ const Homepage = (props) => {
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
                             logOutHandle={logOutHandle}                            
                             usersession={
-                            <Link to={`${url}/personalwall/${12}`}>
+                            <Link to={`${url}/personalwall/${(userData) && userData.id}`}>
                                 <div className='userwall row mr-1' onClick={props.userwallredirect}>
                                     <Avatar src={userData?userData.avatar:''} alt="avatar" ></Avatar>
                                     <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{userData?userData.user_name:''}</div>

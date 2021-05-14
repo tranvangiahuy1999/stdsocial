@@ -562,3 +562,8 @@
   left: 0px;
   top:80px
 }
+
+.username-direct:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

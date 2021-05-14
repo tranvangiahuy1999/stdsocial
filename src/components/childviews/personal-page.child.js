@@ -9,7 +9,7 @@ import { FaRegEdit, FaRegSave, FaBirthdayCake, FaUsers, FaTransgender } from "re
 import {getToken} from '../../actions/index'
 import { AiFillCamera, AiOutlineCheck,  AiOutlineClose, AiFillPhone} from "react-icons/ai";
 import { useAlert } from 'react-alert';
-import { useHistory } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
@@ -18,28 +18,66 @@ const PersonalPage = (props) => {
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
     const [changeUsernameState, setChangeUsernameState] = useState(false)
-    const [personalInfo, setPersonalInfo] = useState() 
+    const [personalInfo, setPersonalInfo] = useState()
+    const [isYour, setIsYour] = useState(false)
 
     const [loading, setLoading] = useState(true)
-    const history = useHistory()
+
+    const [loadingNewfeed, setLoadingNewfeed] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
+
     const alert = useAlert()
-    const [page, setPage] = useState(1)
+
+    var newfeeddata = [], count = 1
+
+    let { id } = useParams()
 
     const {width, height} = useWindowDimensions()
 
     useEffect(() => {
-        getCurrentUserData()        
+        getCurrentUserData()
+        getPersonalNewfeed(1)
+        getUserInformation()
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 500))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 500));      
     }, [])
 
-    useEffect(() => {
-        getPersonalNewfeed(1)
-        if(userData && userData.role === 'student' ){
-            getUserInformation()
+    useEffect(() => {        
+        if(userData) {
+            if(id === userData.id){
+                setIsYour(true)
+            }                    
         }
     }, [userData])
 
-    function getUserInformation(){        
-            axios.get(`${process.env.REACT_APP_IP}/account/user/${userData.id}`, {
+    const debounce = (func, delay) => {
+        let inDebounce;
+        return function() {
+        clearTimeout(inDebounce);
+        inDebounce = setTimeout(() => {
+        func.apply(this, arguments);
+            }, delay);
+        }
+    }
+
+    function handleInfiniteOnLoad(){        
+        if (document.documentElement.scrollTop + window.innerHeight === document.documentElement.scrollHeight ){
+            setLoadingNewfeed(true)
+            count += 1
+            getPersonalNewfeed(count)        
+        }
+    }
+
+    function getUserInformation(){
+        let userid = undefined            
+
+            if(isYour) {
+                userid = userData.id
+            } else {
+                userid = id
+            }
+
+            axios.get(`${process.env.REACT_APP_IP}/account/user/${userid}`, {
                 headers: {
                     'Authorization' : 'Bearer ' + props.token
                 }
@@ -55,7 +93,7 @@ const PersonalPage = (props) => {
             })
     }
 
-    function getCurrentUserData(){
+    function getCurrentUserData(){        
         axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
@@ -72,22 +110,32 @@ const PersonalPage = (props) => {
     }
 
     async function getPersonalNewfeed(page){
-        if(await userData){
-            axios.get(`${process.env.REACT_APP_IP}/newfeed/yourfeed/${userData.id}/${page}`, {
-            headers: {
-                'Authorization' : 'Bearer ' + props.token
+        let userid = undefined            
+            if(isYour) {
+                userid = userData.id
+            } else {
+                userid = id
             }
-            })
-            .then((res) => {                            
-                if(res.data.code===0){                    
-                    setNewfeedData(res.data.data)
+
+            axios.get(`${process.env.REACT_APP_IP}/newfeed/yourfeed/${userid}/${page}`, {
+                headers: {
+                    'Authorization' : 'Bearer ' + props.token
                 }
+            })
+            .then((res) => {                                    
+                if(res.data.code===0){
+                    newfeeddata = newfeeddata.concat(res.data.data)                
+                    setNewfeedData(newfeeddata)
+                }
+                else {
+                    setHasMore(false)
+                }                
                 setLoading(false)
+                setLoadingNewfeed(false)
             })
             .catch( e => {
                 console.error(e)                
             })        
-        }
     }        
 
     function changeAvatarHandler(){
@@ -157,7 +205,7 @@ const PersonalPage = (props) => {
     }
 
     function changeUsernameHandle(){
-        setChangeUsernameText(userData?userData.user_name:'')
+        setChangeUsernameText(personalInfo?personalInfo.user_name:'')
         setChangeUsernameState(true)
     }
 
@@ -176,8 +224,7 @@ const PersonalPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {
-            console.log(res)
+        .then(res => {            
             if(res.data.code === 0){
                 alert.show('Username changed', {
                     type: 'success'
@@ -196,21 +243,19 @@ const PersonalPage = (props) => {
         })
     }
 
-    return(
-        
+    return(        
             <div className='personal-page'>
             <div className='mr-3 ml-3'>
                 <div className='personal-head row'>
                     {
                         (previewFile)?
                         (
-                            <Avatar className='ml-4' src={previewFile} size={80} style={{opacity:'0.6'}}></Avatar>
+                            <Avatar className='ml-4' src={previewFile} size={100} style={{opacity:'0.6'}}></Avatar>
                         ):
-                        (
-                            <Avatar className='ml-4' src={userData?userData.avatar:''} size={80}></Avatar>
+                        (                            
+                            <Avatar className='ml-4' src={personalInfo?personalInfo.avatar:''} size={100}></Avatar>
                         )
-                    }                    
-                    <AiFillCamera onClick={changeAvatarHandler} className='bg-dark' color='white' size='22px' style={{borderRadius:'50%', marginLeft:'-10px', zIndex:'1'}}></AiFillCamera>
+                    }
                     <div>
                         {
                             (changeUsernameState)?(
@@ -221,55 +266,58 @@ const PersonalPage = (props) => {
                                 </div>
                             ):(
                                 <div>
-                                    {userData?userData.user_name:''}
-                                    <FaRegEdit onClick={changeUsernameHandle} className='clickable-icon-dark ml-2' size='22px' color='white'></FaRegEdit>                                    
-                                </div>
-                            )
-                        }                        
-                    </div>
-                    <input id='change-avatar' type='file' name='image' accept="image/png, image/jpeg" onChange={_handleChange} style={{display:'none'}}></input>
-                    {
-                        (previewFile) && (
-                            <div className='row' style={{padding:'2px'}}>
-                                <AiOutlineCheck className='text-primary clickable-icon-dark' onClick={uploadAvatar} color='white' size='20px'></AiOutlineCheck>
-                                <AiOutlineClose className='text-danger clickable-icon-dark ml-2' onClick={cancelUploadAvatar} color='white' size='20px'></AiOutlineClose>                                
-                            </div> 
-                        )
-                    }
-                </div>
-                <div className='row pt-4'>
-                {
-                        (userData && userData.role !== 'student')?(
-                            <></>
-                        ):(
-                            <div className={width < 768?'col-12':'col-4'}>
-                                <div className='intro-zone'>
-                                    <div className='intro-header'>Introduce</div>
+                                    {personalInfo?personalInfo.user_name:''}
                                     {
-                                        (personalInfo)?(
-                                            <div>
-                                                <div className='m-2' style={{fontSize:'16px'}}><FaUsers className='mr-1' color='gray' size='20px'/> Faculty: {(personalInfo.faculty[0].length>0)?personalInfo.faculty[0]:`Not set`}</div>
-                                                <div className='m-2' style={{fontSize:'16px'}}><FaBirthdayCake className='mr-1' color='gray' size='20px'/> Birthday: {(personalInfo.birth.length>0)?personalInfo.birth:`Not set`}</div>
-                                                <div className='m-2' style={{fontSize:'16px'}}><FaTransgender className='mr-1' color='gray' size='20px'/> Gender: {(personalInfo.gender.length>0)?personalInfo.gender:`Not set`}</div>
-                                                <div className='m-2' style={{fontSize:'16px'}}><AiFillPhone className='mr-1' color='gray' size='20px'/> Phone: {(personalInfo.phone.length>0)?personalInfo.phone:`Not set`}</div>
-                                            </div>
-                                        ):(
-                                            <div className='empty-data'>
-                                                <div className='empty-text'>Don't have any data</div>
-                                            </div>
+                                        (isYour)&&(
+                                            <FaRegEdit onClick={changeUsernameHandle} className='clickable-icon-dark ml-2' size='22px' color='white'></FaRegEdit>
                                         )
                                     }                                    
                                 </div>
-                            </div>
+                                )
+                            }                        
+                    </div>
+                    {                        
+                        (isYour)&&(
+                            <div className='row'>
+                                <AiFillCamera onClick={changeAvatarHandler} className='clickable-icon-dark mt-2' color='white' size='24px'></AiFillCamera>                               
+                                <input id='change-avatar' type='file' name='image' accept="image/png, image/jpeg" onChange={_handleChange} style={{display:'none'}}></input>
+                                {
+                                    (previewFile) && (
+                                        <div className='row' style={{padding:'2px'}}>
+                                            <AiOutlineCheck className='text-primary clickable-icon-dark mt-2' onClick={uploadAvatar} color='white' size='20px'></AiOutlineCheck>
+                                            <AiOutlineClose className='text-danger clickable-icon-dark ml-2 mt-2' onClick={cancelUploadAvatar} color='white' size='20px'></AiOutlineClose>                                
+                                        </div> 
+                                    )
+                                }
+                            </div>                      
                         )
-                    }                  
-                    <div className={(width < 768 || (userData && userData.role !== 'student'))?'col-12':'col-8'}>
-                        <StatusPost
-                            avatar={userData?userData.avatar:''}
-                            username={userData?userData.user_name:''}
-                            posted={newPostHandle}
-                            >
-                        </StatusPost>
+                    }
+                </div>                                
+                <div className='row pt-4'>          
+                    <div className={width < 768?'col-12':'col-4'}>
+                        <div className='intro-zone'>
+                            <div className='intro-header'>
+                                Introduce
+                            </div>                                                                   
+                                <div>
+                                    <div className='m-2' style={{fontSize:'16px'}}><FaUsers className='mr-1' color='gray' size='20px'/> Faculty: {(personalInfo)?personalInfo.faculty[0]:`Not set`}</div>
+                                    <div className='m-2' style={{fontSize:'16px'}}><FaBirthdayCake className='mr-1' color='gray' size='20px'/> Birthday: {(personalInfo)?personalInfo.birth:`Not set`}</div>
+                                    <div className='m-2' style={{fontSize:'16px'}}><FaTransgender className='mr-1' color='gray' size='20px'/> Gender: {(personalInfo)?personalInfo.gender:`Not set`}</div>
+                                    <div className='m-2' style={{fontSize:'16px'}}><AiFillPhone className='mr-1' color='gray' size='20px'/> Phone: {(personalInfo)?personalInfo.phone:`Not set`}</div>
+                                </div>                                                                                                   
+                        </div>
+                    </div>                                    
+                    <div className={width < 768?'col-12':'col-8'}>
+                        {
+                            (isYour) && (
+                                <StatusPost
+                                    avatar={userData?userData.avatar:''}
+                                    username={userData?userData.user_name:''}
+                                    posted={newPostHandle}
+                                    >
+                                </StatusPost>
+                            )
+                        }
                         {
                             (loading)?(
                                 <div style={{textAlign:'center'}}>
@@ -281,21 +329,19 @@ const PersonalPage = (props) => {
                             (newfeedData && newfeedData.length > 0)?(
                                 newfeedData.map((value, index) => (                                       
                                     <StatusCard
-                                        key={value._id}
+                                        key={value._id}                                        
                                         avatar={value.user.avatar?value.user.avatar:''}
                                         current_avatar={userData?userData.avatar:''}
                                         username={value.user.user_name}
                                         date={value.date.split('T')[0]}
                                         textcontent={value.content}
                                         linkyoutube={value.linkyoutube}
-                                        imgcontent= {value.image}
-                                        likecount={value.likecount}
-                                        commentcount={value.commentcount}                            
+                                        imgcontent= {value.image}                                                              
                                         likelist={value.likelist?value.likelist:[]} 
                                         commentlist={value.commentlist?value.commentlist:[]}                          
                                         user_id={userData?userData.id:''}
                                         user_post_id={value.user._id}
-                                        post_id={value._id}             
+                                        post_id={value._id}    
                                         token={props.token}
                                         alertshow={()=> {
                                             alert.show('Deleted success!', {
@@ -310,10 +356,25 @@ const PersonalPage = (props) => {
                             </div>
                         ))
                         }
-                    </div>                                                            
-                </div>
+                        {loadingNewfeed && hasMore && (
+                            <div style={{textAlign:'center', margin:'30px'}} >
+                            <Space size="middle">
+                                <Spin />
+                            </Space>
+                        </div>
+                        )}
+
+                        {
+                            !hasMore && (
+                                <div className='empty-data'>
+                                    <div className='empty-text'>There are no posts left</div>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>                                                        
             </div>
-        </div>
+        </div>        
         )            
 }
 

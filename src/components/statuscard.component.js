@@ -313,7 +313,10 @@ export default class StatusCard extends React.Component {
     }
 
     onLoadMore() {
-        
+        this.setState({
+            loading: true,
+            cmtlist: this.state.cmtdata.concat([...new Array(count)].map(() => ({ loading: true, name: {} }))),
+        });
     }
 
     render(){        
@@ -345,30 +348,30 @@ export default class StatusCard extends React.Component {
 
                         <Modal title="Update status" visible={this.state.editStatusState} onOk={this.handleEditOk} onCancel={this.handleEditCancel}>
                             
-                                <div className='stp-post' style={{width:'100%'}}>
-                                    <textarea className='post-text p-2' rows='3' style={{width:'100%', border:'none', outline:'none'}} onChange={e => this.setState({edittext :e.target.value})} value={this.state.edittext} placeholder={`Wanna change something?`}></textarea>
-                                    <div className='stp-preview row ml-2'>
-                                        {
-                                            this.state.ytState && (<div style={{width:'100%', justifyContent:'center', display:'flex', marginRight:'22px'}}>
-                                                <input type='text' value={this.state.editytlink} onChange={e => this.setState({editytlink: e.target.value})} placeholder='Paste youtube video url here' style={{outline:'none', border:'none', width:'80%', color:'rgb(2, 117, 216)', textAlign:'center'}}></input>
-                                            </div>)
-                                        }
-                                        {this.state.previewFile && (
-                                            <div>
-                                                <img className='ml-3' src={this.state.previewFile} alt='chosen' style={{height:'180px', borderRadius:'4px'}}/> 
-                                                <ImBin className='ml-2 clickable-icon' color='gray' size='22px' onClick={this.deleteImageHandle}></ImBin>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className='row stp-action'>
+                        <div className='stp-post' style={{width:'100%'}}>
+                                <textarea className='post-text p-2' rows='3' style={{width:'100%', border:'none', outline:'none'}} onChange={e => this.setState({edittext :e.target.value})} value={this.state.edittext} placeholder={`Wanna change something?`}></textarea>
+                                <div className='stp-preview row ml-2'>
+                                    {
+                                        this.state.ytState && (<div style={{width:'100%', justifyContent:'center', display:'flex', marginRight:'22px'}}>
+                                            <input type='text' value={this.state.editytlink} onChange={e => this.setState({editytlink: e.target.value})} placeholder='Paste youtube video url here' style={{outline:'none', border:'none', width:'80%', color:'rgb(2, 117, 216)', textAlign:'center'}}></input>
+                                        </div>)
+                                    }
+                                    {this.state.previewFile && (
                                         <div>
-                                            <MdInsertPhoto className='clickable-icon mr-2' color='rgba(79,78,75,255)' size='24px' onClick={this.imageBtnHandle}></MdInsertPhoto>
-                                            <input id='update-img' type='file' name='image' style={{display:'none'}} onChange={this.fileChangeHandle} accept="image/png, image/jpeg"/>
+                                            <img className='ml-3' src={this.state.previewFile} alt='chosen' style={{height:'180px', borderRadius:'4px'}}/> 
+                                            <ImBin className='ml-2 clickable-icon' color='gray' size='22px' onClick={this.deleteImageHandle}></ImBin>
                                         </div>
-                                        <div>
-                                            <AiFillYoutube onClick={this.youtubeUpload} className='clickable-icon mr-4' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
-                                        </div>                                        
-                                    </div>                                    
+                                    )}
+                                </div>
+                                <div className='row stp-action'>
+                                    <div>
+                                        <MdInsertPhoto className='clickable-icon mr-2' color='rgba(79,78,75,255)' size='24px' onClick={this.imageBtnHandle}></MdInsertPhoto>
+                                        <input id='update-img' type='file' name='image' style={{display:'none'}} onChange={this.fileChangeHandle} accept="image/png, image/jpeg"/>
+                                    </div>
+                                    <div>
+                                        <AiFillYoutube onClick={this.youtubeUpload} className='clickable-icon mr-4' color='rgba(79,78,75,255)' size='26px'></AiFillYoutube>
+                                    </div>                                        
+                                </div>                                    
                         </div>                            
                         </Modal>
 
@@ -377,7 +380,7 @@ export default class StatusCard extends React.Component {
                                 <img src={this.props.avatar} width='30px' height='30px'></img>
                             </div>
                             <div className='col-9' style={{margin:'auto'}}>
-                                <div className='text-primary ml-1' style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>                                
+                                <div className='text-primary username-direct ml-1' onClick={this.props.directToWall} style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>                                
                                 <div className='row ml-0 ml-1'>
                                     <div style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</div>
                                     <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
