@@ -104,8 +104,8 @@ const Homepage = (props) => {
         }
     }
 
-    async function getCurrentUserData(){
-        await axios.get(`${process.env.REACT_APP_IP}/account/current`, {
+    function getCurrentUserData(){
+        axios.get(`${process.env.REACT_APP_IP}/account/current`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }

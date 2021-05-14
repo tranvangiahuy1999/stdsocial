@@ -68,6 +68,7 @@ export default class StatusCard extends React.Component {
         this.updateHandle = this.updateHandle.bind(this)
 
         this.onLoadMore  = this.onLoadMore.bind(this)  
+        this.updateList  = this.updateList.bind(this)
     }
 
     componentDidMount(){                
@@ -89,6 +90,19 @@ export default class StatusCard extends React.Component {
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
         })             
+    }   
+
+    componentDidUpdate(prevProps) {
+        if(this.props.commentlist !== prevProps.commentlist)
+        {
+          this.updateList();
+        }
+    }
+
+    updateList(){        
+        this.setState({
+            cmtlist: this.props.commentlist,
+        })
     }
 
     showModal = () => {
@@ -134,8 +148,7 @@ export default class StatusCard extends React.Component {
             })
             .catch(e => {
                 console.error(e)
-            })
-        // }                       
+            })                          
     }
 
     cmtHandle(){

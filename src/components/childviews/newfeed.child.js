@@ -10,7 +10,6 @@ import { io } from "socket.io-client";
 import { notification, Spin, Space } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
-// import InfiniteScroll from 'react-infinite-scroller';
 
 const Newfeed = (props) =>  {
     const [userData, setUserData] = useState() 
@@ -33,8 +32,8 @@ const Newfeed = (props) =>  {
         getUserData()
         getNewfeed()        
         
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));
     }, [])
 
     useEffect(() => {
@@ -44,7 +43,9 @@ const Newfeed = (props) =>  {
                 popNoti(data)
             }
         })
-        socket.on('new_comment', (data) => console.log('newcomment',data))
+        socket.on('new_comment', (data) => {
+            newCommentHandler(data)
+        })
         return () => {
             socket.off('new_notification');
             socket.off("new_comment");
@@ -70,6 +71,18 @@ const Newfeed = (props) =>  {
         }
     }
 
+    function newCommentHandler(data){                      
+        if(newfeeddata.length > 0){                   
+            newfeeddata.some((item, index) => {                                
+                if(item._id === data.data.id_post){
+                    newfeeddata[index].commentlist.push(data.data.cmt_data[0])                    
+                    setNewfeedData(newfeeddata)                    
+                }
+                return
+            })
+        }
+    }
+
     function handleInfiniteOnLoad(){        
         if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100 && !loadingNewfeed){
             setLoadingNewfeed(true)
@@ -80,7 +93,7 @@ const Newfeed = (props) =>  {
 
     function popNoti(data) {                              
         openNotification(data.role)
-        setNotiData([data].concat(notidata))                
+        setNotiData([data].concat(notidata))
     }
 
     function getNotiData() {        
@@ -125,7 +138,8 @@ const Newfeed = (props) =>  {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {                   
+        .then(res => {
+            console.log(res)              
             if(res.data.code === 0){
                 newfeeddata = newfeeddata.concat(res.data.data)
                 setNewfeedData(newfeeddata)                    
@@ -176,8 +190,8 @@ const Newfeed = (props) =>  {
                                         date={value.date.split('T')[0]}
                                         textcontent={value.content}
                                         linkyoutube={value.linkyoutube}
-                                        imgcontent= {value.image}                                                              
-                                        likelist={value.likelist} 
+                                        imgcontent= {value.image}                                                        
+                                        likelist={value.likelist}
                                         commentlist={value.commentlist}                          
                                         user_id={userData?userData.id:''}
                                         user_post_id={value.user._id}

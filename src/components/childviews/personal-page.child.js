@@ -26,7 +26,7 @@ const PersonalPage = (props) => {
     const [userPageExist, setUserPageExist] = useState(true)
 
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
-    const [hasMore, setHasMore] = useState(true)
+    const [hasMore, setHasMore] = useState(true)    
 
     const alert = useAlert()
 
@@ -39,10 +39,10 @@ const PersonalPage = (props) => {
     useEffect(() => {
         getCurrentUserData()
         getPersonalNewfeed(1)
-        getUserInformation()
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 500))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 500));      
-    }, [])
+        getUserInformation()      
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));      
+    }, [])   
 
     useEffect(() => {        
         if(userData) {
@@ -84,8 +84,7 @@ const PersonalPage = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {   
-                console.log(res)             
+            .then(res => {                                
                 if(res.data.code===0){
                     setPersonalInfo(res.data.data)
                 } else {
