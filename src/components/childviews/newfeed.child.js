@@ -71,7 +71,7 @@ const Newfeed = (props) =>  {
     }
 
     function handleInfiniteOnLoad(){        
-        if (document.documentElement.scrollTop + window.innerHeight === document.documentElement.scrollHeight ){
+        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100){
             setLoadingNewfeed(true)
             count += 1
             getNewfeed(count)        

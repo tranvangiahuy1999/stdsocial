@@ -60,8 +60,8 @@ const PersonalPage = (props) => {
         }
     }
 
-    function handleInfiniteOnLoad(){        
-        if (document.documentElement.scrollTop + window.innerHeight === document.documentElement.scrollHeight ){
+    function handleInfiniteOnLoad(){
+        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100){
             setLoadingNewfeed(true)
             count += 1
             getPersonalNewfeed(count)        
@@ -69,7 +69,7 @@ const PersonalPage = (props) => {
     }
 
     function getUserInformation(){
-        let userid = undefined            
+        let userid = undefined
 
             if(isYour) {
                 userid = userData.id

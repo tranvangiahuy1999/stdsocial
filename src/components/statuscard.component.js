@@ -88,9 +88,7 @@ export default class StatusCard extends React.Component {
             textcontent: this.props.textcontent,
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
-        })
-        
-        console.log(`loop`)        
+        })             
     }
 
     showModal = () => {
