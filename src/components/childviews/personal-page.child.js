@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Avatar, Space, Spin } from 'antd';
+import { Avatar, Space, Spin, Result } from 'antd';
 import {connect} from 'react-redux';
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
@@ -22,6 +22,8 @@ const PersonalPage = (props) => {
     const [isYour, setIsYour] = useState(false)
 
     const [loading, setLoading] = useState(true)
+
+    const [userPageExist, setUserPageExist] = useState(true)
 
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
     const [hasMore, setHasMore] = useState(true)
@@ -86,6 +88,8 @@ const PersonalPage = (props) => {
                 console.log(res)             
                 if(res.data.code===0){
                     setPersonalInfo(res.data.data)
+                } else {
+                    setUserPageExist(false)
                 }
             })
             .catch( e => {
@@ -243,7 +247,8 @@ const PersonalPage = (props) => {
         })
     }
 
-    return(        
+    return(     
+        (userPageExist)?(
             <div className='personal-page'>
             <div className='mr-3 ml-3'>
                 <div className='personal-head row'>
@@ -374,7 +379,14 @@ const PersonalPage = (props) => {
                     </div>
                 </div>                                                        
             </div>
-        </div>        
+        </div>
+        ):(
+            <Result
+                status="404"
+                title="404"
+                subTitle="Sorry, the page you visited does not exist."                
+            />
+        )                       
         )            
 }
 
