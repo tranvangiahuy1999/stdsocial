@@ -40,9 +40,8 @@ const Homepage = (props) => {
     let history = useHistory();
     let { path, url } = useRouteMatch();    
 
-    useEffect(async () => {              
-        await getCurrentUserData()  
-        console.log(props.token)    
+    useEffect( () => {              
+        getCurrentUserData()          
     }, [])    
 
     function setCompRoute(role){
@@ -163,7 +162,7 @@ const Homepage = (props) => {
                             <div>
                             <Sidebar
                                 sidebar={
-                                    <SideBar
+                                    <SideBar                                    
                                         avatar={userData?userData.avatar:''}
                                         username={userData?userData.user:''}
                                         sidebarchild={(route) && route.map((value, index)=> (                                            
@@ -184,7 +183,7 @@ const Homepage = (props) => {
                                     sidebarchild={(route) && route.map((value, index)=> (
                                         <div key={index}>
                                             <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
-                                        </div>                                                                                                                           
+                                        </div>                                                                                                         
                                     ))}                                                                            
                                 ></SideBar>
                             </div>

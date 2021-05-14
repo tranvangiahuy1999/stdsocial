@@ -102,6 +102,14 @@
   width: 23%;
 }
 
+.sidebar-lib {
+  position: fixed;
+  top: 90px;
+  padding: 10px;
+  margin-left: 14px;
+  border-radius: 10px;
+}
+
 .stp-container {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   border-radius: 10px;
@@ -113,7 +121,7 @@
   margin: 2px;
 }
 
-.sidebar .sidebar-btn {
+.sidebar-btn {
   border: none;
   width: 100%;
   text-align: start;
@@ -122,7 +130,7 @@
   align-content: center;  
 }
 
-.sidebar .sidebar-btn:hover {
+.sidebar-btn:hover {
   border-radius: 10px;
   background-color: lightgray;
 }

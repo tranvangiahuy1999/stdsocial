@@ -5,7 +5,7 @@ const SideBar = (props) => {
     const {width, height} = useWindowDimensions()        
 
         return(    
-                <div className="sidebar bg-white">                        
+                <div className={width > 768 ?"sidebar bg-white":"sidebar-lib bg-white"}>                        
                     <div>
                         <div className='component-title'>
                             SHORTCUTS

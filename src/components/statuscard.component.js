@@ -15,7 +15,6 @@ import { Menu, Dropdown, Modal, List, Skeleton } from 'antd';
 import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'
 import axios from 'axios'
-import { io } from "socket.io-client";
 
 const count = 3
 
@@ -68,18 +67,15 @@ export default class StatusCard extends React.Component {
         this.handleUpdate = this.handleUpdate.bind(this)
         this.updateHandle = this.updateHandle.bind(this)
 
-        this.onLoadMore  = this.onLoadMore.bind(this)        
+        this.onLoadMore  = this.onLoadMore.bind(this)  
     }
 
-    componentDidMount(){
-        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});
-        socket.on('new_comment', (data) => console.log('newcomment',data))  
-        
+    componentDidMount(){                
         if (this.props.likelist.some(e => e.id_user === this.props.user_id)) {
             this.setState({
                 like: true
             })
-        }        
+        }
         
         this.setState({
             likecount: this.props.likelist.length,
@@ -93,7 +89,9 @@ export default class StatusCard extends React.Component {
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
         })
-    }    
+        
+        console.log(`loop`)        
+    }
 
     showModal = () => {
         this.setState({

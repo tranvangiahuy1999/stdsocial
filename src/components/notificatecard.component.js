@@ -178,7 +178,7 @@ const NotiCard = (props) => {
                                 </div>
                                 <div>
                                     <ImBin className='mr-1 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>
-                                </div>                                                                                                                                                                                                                
+                                </div>                                                                                                                                                                                
                             </div>
                         )
                     }

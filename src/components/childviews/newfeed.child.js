@@ -31,12 +31,25 @@ const Newfeed = (props) =>  {
     useEffect(() => {                
         getNotiData()
         getUserData()
-        getNewfeed(count)
-        configureSocket()
+        getNewfeed(count)        
         
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 500))
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 500));
-    }, [])    
+    }, [])
+
+    useEffect(() => {
+        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});        
+        socket.on('new_notification', (data) => {                 
+            if(userdata && notidata && userdata.faculty.includes(data.role) && userdata.role === 'student'){
+                popNoti(data)
+            }
+        })
+        socket.on('new_comment', (data) => console.log('newcomment',data))
+        return () => {
+            socket.off('new_notification');
+            socket.off("new_comment");
+        }
+    }, [])
 
     const openNotification = (role) => {
         notification.open({
@@ -63,16 +76,7 @@ const Newfeed = (props) =>  {
             count += 1
             getNewfeed(count)        
         }
-    }
-
-    function configureSocket(){
-        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});        
-        socket.on('new_notification', (data) => {                 
-            if(userdata && notidata && userdata.faculty.includes(data.role) && userdata.role === 'student'){
-                popNoti(data)
-            }                         
-        })                  
-    }
+    }    
 
     function popNoti(data) {                              
         openNotification(data.role)
@@ -93,7 +97,7 @@ const Newfeed = (props) =>  {
             setLoadingNoti(false)
         })
         .catch(async e => {
-            console.log(e)            
+            console.error(e)            
         })        
     }
 
@@ -110,7 +114,7 @@ const Newfeed = (props) =>  {
             }            
         })
         .catch( e => {
-            console.log(e)           
+            console.error(e)           
         })
     }
 
@@ -158,18 +162,18 @@ const Newfeed = (props) =>  {
                         ):(
                             (newfeedData && newfeedData.length > 0)?(
                                 newfeedData.map((value, index) => (                                       
-                                    <StatusCard
-                                        key={value._id}
+                                    <StatusCard                                        
                                         directToWall={() => history.push(`/home/personalwall/${value.user._id}`)}
-                                        avatar={value.user.avatar?value.user.avatar:''}
+                                        key={value._id}                                        
+                                        avatar={value.user.avatar}
                                         current_avatar={userData?userData.avatar:''}
                                         username={value.user.user_name}
                                         date={value.date.split('T')[0]}
                                         textcontent={value.content}
                                         linkyoutube={value.linkyoutube}
                                         imgcontent= {value.image}                                                              
-                                        likelist={value.likelist?value.likelist:[]} 
-                                        commentlist={value.commentlist?value.commentlist:[]}                          
+                                        likelist={value.likelist} 
+                                        commentlist={value.commentlist}                          
                                         user_id={userData?userData.id:''}
                                         user_post_id={value.user._id}
                                         post_id={value._id}    
@@ -178,7 +182,7 @@ const Newfeed = (props) =>  {
                                             alert.show('Deleted success!', {
                                                 type:'success'
                                         })}}
-                                        role={(userData) && userData.role}                                
+                                        role={(userData) && userData.role}                                                                      
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>
