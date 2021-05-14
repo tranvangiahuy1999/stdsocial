@@ -110,10 +110,10 @@ const NavBar = (props) =>  {
                 <Modal title="Change your password" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <form>
                         <div className='form-group'>
-                            <input className='form-control' type='password' value={pwd} onChange={e => setpwd(e.target.value)} placeholder='Enter new password'></input>
+                            <input autoComplete="nope" className='form-control' type='password' value={pwd} onChange={e => setpwd(e.target.value)} placeholder='Enter new password'></input>
                         </div>
                         <div className='form-group'>
-                            <input className='form-control' type='password' value={repwd} onChange={e => setRepwd(e.target.value)} placeholder='Re-enter new password'></input>
+                            <input autoComplete="nope" className='form-control' type='password' value={repwd} onChange={e => setRepwd(e.target.value)} placeholder='Re-enter new password'></input>
                         </div>
                     </form>
                 </Modal>
