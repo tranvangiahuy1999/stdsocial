@@ -127,7 +127,7 @@ const Newfeed = (props) =>  {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {            
+        .then(res => {                     
             if(res.data.code === 0){
                 userdata = res.data.data                
                 setAvatar(res.data.data.avatar)
@@ -202,7 +202,7 @@ const Newfeed = (props) =>  {
                                         imgcontent= {value.image}                                                        
                                         likelist={value.likelist}
                                         commentlist={value.commentlist}                          
-                                        user_id={userData?userData.id:''}
+                                        user_id={userData?userData._id:''}
                                         user_post_id={value.user._id}
                                         post_id={value._id}    
                                         token={props.token}

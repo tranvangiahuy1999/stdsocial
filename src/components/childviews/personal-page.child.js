@@ -41,19 +41,19 @@ const PersonalPage = (props) => {
     const {width, height} = useWindowDimensions()
 
     useEffect(() => {
-        getCurrentUserData()
-        getPersonalNewfeed(1)             
+        getCurrentUserData()                   
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));      
     }, [])
 
     useEffect(()=> {        
         getUserInformation()
+        getPersonalNewfeed(count)
     }, [props.token])
 
     useEffect(() => {        
         if(userData) {
-            if(id === userData.id){
+            if(id === userData._id){
                 setIsYour(true)
             }                    
         }
@@ -81,7 +81,7 @@ const PersonalPage = (props) => {
         let userid = undefined
 
             if(isYour) {
-                userid = userData.id
+                userid = userData._id
             } else {
                 userid = id
             }
@@ -91,7 +91,8 @@ const PersonalPage = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {                                
+            .then(res => {         
+                console.log(res, userid)                       
                 if(res.data.code===0){
                     setPersonalInfo(res.data.data)                    
                     setAvatar(res.data.data.avatar)
@@ -124,7 +125,7 @@ const PersonalPage = (props) => {
     async function getPersonalNewfeed(page){
         let userid = undefined            
             if(isYour) {
-                userid = userData.id
+                userid = userData._id
             } else {
                 userid = id
             }
@@ -352,7 +353,7 @@ const PersonalPage = (props) => {
                                         imgcontent= {value.image}                                                              
                                         likelist={value.likelist?value.likelist:[]} 
                                         commentlist={value.commentlist?value.commentlist:[]}                          
-                                        user_id={userData?userData.id:''}
+                                        user_id={userData?userData._id:''}
                                         user_post_id={value.user._id}
                                         post_id={value._id}    
                                         token={props.token}
@@ -390,6 +391,7 @@ const PersonalPage = (props) => {
         </div>
         ):(
             <Result
+                className='mt-5'
                 status="404"
                 title="404"
                 subTitle="Sorry, the page you visited does not exist."                

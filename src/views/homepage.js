@@ -115,15 +115,12 @@ const Homepage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {            
+        .then(res => {                    
             if(res.data.code === 0){                                
                 setUserData(res.data.data)
                 setCompRoute(res.data.data.role)
                 setAvatar(res.data.data.avatar)
-                setUsername(res.data.data.user_name)
-
-                console.log(res.data.data.user_name)
-                console.log(props.token)
+                setUsername(res.data.data.user_name)                
 
                 if(res.data.data.faculty.length < 1 && res.data.data.role === 'student'){
                     alert.show('Your account is not registed', {
@@ -158,7 +155,7 @@ const Homepage = (props) => {
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
                             logOutHandle={logOutHandle}                            
                             usersession={
-                            <Link to={`${url}/personalwall/${(userData) && userData.id}`}>
+                            <Link to={`${url}/personalwall/${(userData) && userData._id}`}>
                                 <div className='userwall row mr-1' onClick={props.userwallredirect}>
                                     <Avatar src={avatar} alt="avatar" ></Avatar>
                                     <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
