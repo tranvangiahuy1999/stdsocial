@@ -16,6 +16,9 @@ const Newfeed = (props) =>  {
     const [newfeedData, setNewfeedData] = useState([])
     const [notiData, setNotiData] = useState([])
 
+    const [avatar, setAvatar] = useState('')
+    const [username, setUsername] = useState('')
+
     const [loading, setLoading] = useState(true)
     const [loadingNoti, setLoadingNoti] = useState(true)
     
@@ -51,6 +54,10 @@ const Newfeed = (props) =>  {
             socket.off("new_comment");
         }
     }, [])
+
+    useEffect(() => {
+        getUserData()
+    }, [props.token])
 
     const openNotification = (role) => {
         notification.open({
@@ -122,8 +129,10 @@ const Newfeed = (props) =>  {
         })
         .then(res => {            
             if(res.data.code === 0){
-                userdata = res.data.data            
-                setUserData(res.data.data)                
+                userdata = res.data.data                
+                setAvatar(res.data.data.avatar)
+                setUsername(res.data.data.user_name)        
+                setUserData(res.data.data)
             }            
         })
         .catch( e => {
@@ -166,8 +175,8 @@ const Newfeed = (props) =>  {
         <div className='col-15 row newfeed-page' id='ele'>                  
             <div className={(width < 768)?'col-12 p-0':'col-8 p-0'}>        
                 <StatusPost
-                    avatar={userData?userData.avatar:''}
-                    username={userData?userData.user_name:''}
+                    avatar={avatar}
+                    username={username}
                     posted={newPostHandle}           
                     ></StatusPost>
                 <div className='post-data'>

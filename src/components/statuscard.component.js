@@ -462,7 +462,7 @@ export default class StatusCard extends React.Component {
                                                         avatar={value.user_id.avatar}
                                                         content={value.comment}
                                                         datetime={value.date.split('T')[0]}
-                                                        cmt_id={value._id}
+                                                        cmt_id={value.cmt_id}
                                                         user_cmt_id={value.user_id._id}
                                                         user_id={this.props.user_id}
                                                         user_role={this.props.role}

@@ -14,6 +14,10 @@ import { useParams } from 'react-router-dom';
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
     const [newfeedData, setNewfeedData] = useState([])
+
+    const [avatar, setAvatar] = useState('')
+    const [username, setUsername] = useState('')
+
     const [fileInput, setFileInput] = useState('')
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
@@ -38,11 +42,14 @@ const PersonalPage = (props) => {
 
     useEffect(() => {
         getCurrentUserData()
-        getPersonalNewfeed(1)
-        getUserInformation()      
+        getPersonalNewfeed(1)             
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));      
-    }, [])   
+    }, [])
+
+    useEffect(()=> {        
+        getUserInformation()
+    }, [props.token])
 
     useEffect(() => {        
         if(userData) {
@@ -86,7 +93,9 @@ const PersonalPage = (props) => {
             })
             .then(res => {                                
                 if(res.data.code===0){
-                    setPersonalInfo(res.data.data)
+                    setPersonalInfo(res.data.data)                    
+                    setAvatar(res.data.data.avatar)
+                    setUsername(res.data.data.user_name)
                 } else {
                     setUserPageExist(false)
                 }
@@ -257,7 +266,7 @@ const PersonalPage = (props) => {
                             <Avatar className='ml-4' src={previewFile} size={100} style={{opacity:'0.6'}}></Avatar>
                         ):
                         (                            
-                            <Avatar className='ml-4' src={personalInfo?personalInfo.avatar:''} size={100}></Avatar>
+                            <Avatar className='ml-4' src={avatar} size={100}></Avatar>
                         )
                     }
                     <div>
@@ -270,7 +279,7 @@ const PersonalPage = (props) => {
                                 </div>
                             ):(
                                 <div>
-                                    {personalInfo?personalInfo.user_name:''}
+                                    {username}
                                     {
                                         (isYour)&&(
                                             <FaRegEdit onClick={changeUsernameHandle} className='clickable-icon-dark ml-2' size='22px' color='white'></FaRegEdit>
@@ -315,8 +324,8 @@ const PersonalPage = (props) => {
                         {
                             (isYour) && (
                                 <StatusPost
-                                    avatar={userData?userData.avatar:''}
-                                    username={userData?userData.user_name:''}
+                                    avatar={avatar}
+                                    username={username}
                                     posted={newPostHandle}
                                     >
                                 </StatusPost>

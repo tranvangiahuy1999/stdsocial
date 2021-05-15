@@ -32,6 +32,10 @@ import AccManagerPage from '../components/childviews/account-manager.child'
 const Homepage = (props) => {    
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [userData, setUserData] = useState()
+
+    const [avatar, setAvatar] = useState('')
+    const [username, setUsername] = useState('')
+
     const [route, setRoute] = useState(null)
     const alert = useAlert()
 
@@ -40,9 +44,10 @@ const Homepage = (props) => {
     let history = useHistory();
     let { path, url } = useRouteMatch();    
 
-    useEffect( () => {              
+    useEffect( () => {
+        console.log('called')
         getCurrentUserData()          
-    }, [])    
+    }, [props.token])    
 
     function setCompRoute(role){
         if(role === 'admin') {
@@ -111,9 +116,15 @@ const Homepage = (props) => {
             }
         })
         .then(res => {            
-            if(res.data.code === 0){
+            if(res.data.code === 0){                                
                 setUserData(res.data.data)
                 setCompRoute(res.data.data.role)
+                setAvatar(res.data.data.avatar)
+                setUsername(res.data.data.user_name)
+
+                console.log(res.data.data.user_name)
+                console.log(props.token)
+
                 if(res.data.data.faculty.length < 1 && res.data.data.role === 'student'){
                     alert.show('Your account is not registed', {
                         type:'error'
@@ -149,8 +160,8 @@ const Homepage = (props) => {
                             usersession={
                             <Link to={`${url}/personalwall/${(userData) && userData.id}`}>
                                 <div className='userwall row mr-1' onClick={props.userwallredirect}>
-                                    <Avatar src={userData?userData.avatar:''} alt="avatar" ></Avatar>
-                                    <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{userData?userData.user_name:''}</div>
+                                    <Avatar src={avatar} alt="avatar" ></Avatar>
+                                    <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
                                 </div>
                             </Link>}
                             user_role={userData?userData.role:''}

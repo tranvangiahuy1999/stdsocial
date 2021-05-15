@@ -29,16 +29,14 @@ const CommentChild = (props) => {
 
     }
 
-    function deleteCommentHandle(){
-        console.log(props.token)
+    function deleteCommentHandle(){        
         if(props.cmt_id){            
             axios.put(`${process.env.REACT_APP_IP}/newfeed/delete/comment/${props.cmt_id}`, {}, {
                 headers: {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {
-                console.log(res)
+            .then(res => {                
                 if(res.data.code === 0){
                     setCommentDeleteState(true)
                 }
