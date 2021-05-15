@@ -494,7 +494,7 @@
 }
 
 .acc-manager-body {
-  height: 390px;
+  height: 390px;  
   overflow-y: scroll;  
   overflow-x: hidden;  
 }
@@ -507,7 +507,7 @@
 .acc-row {
   border-bottom: 1px solid lightgray;
   padding-top: 4px;
-  padding-bottom: 4px;  
+  padding-bottom: 4px;   
 }
 
 .acc-filter {

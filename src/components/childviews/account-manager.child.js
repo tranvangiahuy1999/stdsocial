@@ -25,6 +25,7 @@ const AccManagerPage = (props) => {
             }
         })
         .then(res => {
+            console.log(res)
             if(res.data.code===0){
                 setAccountList(res.data.data)
             }
@@ -48,8 +49,7 @@ const AccManagerPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then( res => {
-            console.log(res)
+        .then( res => {            
             if(res.data.code === 0){
                 setAccountList(res.data.data)
             }             
@@ -65,7 +65,7 @@ const AccManagerPage = (props) => {
                     ACCOUNT LIST
                 </h5>
                 <div className='child-body'>
-                    <div className='col-12' >                                       
+                    <div className='col-12' >                                      
                         <div className='row acc-filter p-2'>
                             <label>Find by user:</label>
                             <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} onChange={searchHandle}></input>                            
@@ -96,7 +96,7 @@ const AccManagerPage = (props) => {
                         ):(
                             (accountList && accountList.length > 0)?(
                                 accountList.map((value, index) => (
-                                    <AccRow key={value._id} user_id={value._id} acc_id={value._id} user={value.user} user_name={value.user_name} faculty={value.faculty.length}></AccRow>
+                                    <AccRow key={value._id} user_id={value._id} acc_id={value._id} user={value.user} user_name={value.user_name} faculty={value.faculty.length} deleted={value.deleted}></AccRow>
                                 ))
                             ):(
                                 <div className='empty-data'>

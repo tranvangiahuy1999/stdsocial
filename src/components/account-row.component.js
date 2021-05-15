@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaUndoAlt } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import axios from 'axios';
 import {connect} from 'react-redux'
@@ -133,9 +133,25 @@ const AccRow = (props) => {
 
     return(
         (deleteState)?(
-            <></>
+            <div className='row acc-row' style={{backgroundColor:'lightgray'}}>            
+
+            <div className='col-3'>{props.user}</div>
+            <div className='col-3'>
+                <div className='ml-1'>
+                    {props.user_name}
+                </div>
+            </div>
+            <div className='col-3'>
+                <div className='ml-2'>
+                    {props.faculty}
+                </div>
+            </div>
+            <div className='col-3'>
+                <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo'></FaUndoAlt>                          
+            </div>
+        </div>
         ):(
-            <div className='row acc-row col-14'>
+            <div className='row acc-row' style={{backgroundColor:props.deleted?'lightgray':'white'}}>
 
             <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                 Are you sure you want to delete this account? <span style={{color:'red'}}>*There is no running back!</span>
@@ -164,12 +180,18 @@ const AccRow = (props) => {
                 </div>
             </div>
             <div className='col-3'>
-                <div className='ml-2'>
-                    <FaRegEdit className='clickable-icon' size='20px' color='gray' onClick={showEditModal}></FaRegEdit>
-                    <span>
-                        <ImBin className='ml-3 clickable-icon' size='20px' color='gray' onClick={showDelModal}></ImBin>
-                    </span>
-                </div>
+                {
+                    props.deleted?(
+                        <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo'></FaUndoAlt>
+                    ):(
+                        <div className='ml-2'>
+                            <FaRegEdit className='clickable-icon' size='20px' color='gray' title='edit' onClick={showEditModal}></FaRegEdit>
+                            <span>
+                                <ImBin className='ml-3 clickable-icon' size='20px' color='gray' title='delete' onClick={showDelModal}></ImBin>
+                            </span>
+                        </div>
+                    )
+                }                
             </div>
         </div>
         )        
