@@ -68,7 +68,7 @@ export default class StatusCard extends React.Component {
         this.updateHandle = this.updateHandle.bind(this)
 
         this.onLoadMore  = this.onLoadMore.bind(this)  
-        // this.updateList  = this.updateList.bind(this)
+        this.updateList  = this.updateList.bind(this)
     }
 
     componentDidMount(){                
@@ -90,28 +90,23 @@ export default class StatusCard extends React.Component {
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
         })             
-    }
+    }   
 
-    componentWillReceiveProps(nextProps) {
-        console.log('call')
-        if (nextProps.commentlist !== this.state.cmtlist) {
-            this.setState(({cmtlist: nextProps.commentlist }));
+    componentDidUpdate(prevProps) {        
+        if(this.props.newcmt && this.props.newcmt !== prevProps.newcmt) {
+            let newcmtlist = this.state.cmtdata            
+            newcmtlist.push(this.props.newcmt.cmt_data[0])            
+            this.updateList(newcmtlist)
         }
     }
 
-    // componentDidUpdate(prevProps) {
-    //     console.log('call')
-    //     if(this.props.commentlist !== prevProps.commentlist) {
-    //       this.updateList();
-    //     }
-    // }
-
-    // updateList(){        
-    //     this.setState({
-    //         cmtlist: this.props.commentlist,
-    //         commentcount: this.props.commentlist.length,
-    //     })
-    // }
+    updateList(newcmtlist){        
+        this.setState({
+            cmtdata: newcmtlist,
+            commentcount: newcmtlist.length,
+        })
+        
+    }
 
     showModal = () => {
         this.setState({
@@ -322,8 +317,7 @@ export default class StatusCard extends React.Component {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
             })
-            .then(res => {
-                console.log(res)
+            .then(res => {                
                 if(res.data.code===0){
                     this.setState({
                         editStatusState: false,

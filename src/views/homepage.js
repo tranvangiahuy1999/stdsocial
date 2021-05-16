@@ -44,8 +44,7 @@ const Homepage = (props) => {
     let history = useHistory();
     let { path, url } = useRouteMatch();    
 
-    useEffect( () => {
-        console.log('called')
+    useEffect( () => {        
         getCurrentUserData()          
     }, [props.token])    
 

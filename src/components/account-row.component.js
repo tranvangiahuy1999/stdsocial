@@ -131,6 +131,10 @@ const AccRow = (props) => {
         })
     }
 
+    function rerollAccount(){
+        
+    }
+
     return(
         (deleteState)?(
             <div className='row acc-row' style={{backgroundColor:'lightgray'}}>            
@@ -147,7 +151,7 @@ const AccRow = (props) => {
                 </div>
             </div>
             <div className='col-3'>
-                <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo'></FaUndoAlt>                          
+                <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo' onClick={rerollAccount}></FaUndoAlt>                          
             </div>
         </div>
         ):(
@@ -182,7 +186,7 @@ const AccRow = (props) => {
             <div className='col-3'>
                 {
                     props.deleted?(
-                        <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo'></FaUndoAlt>
+                        <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo' onClick={rerollAccount}></FaUndoAlt>
                     ):(
                         <div className='ml-2'>
                             <FaRegEdit className='clickable-icon' size='20px' color='gray' title='edit' onClick={showEditModal}></FaRegEdit>

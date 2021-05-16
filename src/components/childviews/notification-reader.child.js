@@ -52,8 +52,7 @@ const NotiReader = (props) => {
             <div className='child-body'>
                 <h3 className='reading-title'>{title}</h3>
                 <div className='reading-date'>{faculty}/<span>{date}</span></div>            
-                <div className='reading-content'>                
-                    {content}
+                <div className='reading-content' dangerouslySetInnerHTML={{ __html: content }}>                    
                 </div>
             </div>
         </div>        

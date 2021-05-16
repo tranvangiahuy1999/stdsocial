@@ -4,20 +4,25 @@ import axios from 'axios'
 import Dropdown from 'react-dropdown';
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
-import { useHistory } from 'react-router';
+
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 const CreateNoti = (props) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [content, setContent] = useState('')
-    const [falcuty, setFalcuty] = useState([])
+    const [falcuty, setFalcuty] = useState([])   
 
     const [btnState, setBtnState] = useState(false)
 
-    const alert = useAlert() 
-    const history = useHistory()
+    const alert = useAlert()
 
-    const [selectedOption, setSelectedOption] = useState(null)    
+    const editorConfiguration = {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ]
+    };  
+
+    const [selectedOption, setSelectedOption] = useState(null)
 
     useEffect(()=> {                 
         getCurrentUser()
@@ -41,11 +46,7 @@ const CreateNoti = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)            
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            console.error(e)                       
         })
     }
 
@@ -88,12 +89,7 @@ const CreateNoti = (props) => {
                 }                
             })
             .catch( e => {
-                console.error(e)
-                
-            //     if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+                console.error(e)      
             })
             setBtnState(false)
         }
@@ -121,7 +117,26 @@ const CreateNoti = (props) => {
                         <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Search by falcuty" /> 
                     </div>
                     <div className='form-group'>
-                        <textarea className='form-control' rows='6' value={content} onChange={e => setContent(e.target.value)} placeholder='Write something here'></textarea>
+                        <CKEditor
+                            editor={ ClassicEditor }
+                            data={content}
+                            config={editorConfiguration}                                                                               
+                            onReady={ editor => {
+                                // You can store the "editor" and use when it is needed.
+                                editor.editing.view.change(writer => {
+                                    writer.setStyle(
+                                      "height",
+                                      "200px",
+                                      editor.editing.view.document.getRoot()
+                                    );
+                                  });
+                            } }
+                            onChange={ ( event, editor ) => {
+                                const data = editor.getData();
+                                setContent(data)
+                            } }                            
+                        />
+                        {/* <textarea className='form-control' rows='6' value={content} onChange={e => setContent(e.target.value)} placeholder='Write something here'></textarea> */}
                     </div>
                     <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Post</button>                    
                                             

@@ -23,7 +23,9 @@ const Newfeed = (props) =>  {
     const [loadingNoti, setLoadingNoti] = useState(true)
     
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
-    const [hasMore, setHasMore] = useState(true) 
+    const [hasMore, setHasMore] = useState(true)
+
+    const [newcmt, setNewCmt] = useState()
 
     const {width, height} = useWindowDimensions()
     const history = useHistory()
@@ -48,6 +50,7 @@ const Newfeed = (props) =>  {
         })
         socket.on('new_comment', (data) => {
             newCommentHandler(data)
+
         })
         return () => {
             socket.off('new_notification');
@@ -78,16 +81,8 @@ const Newfeed = (props) =>  {
         }
     }
 
-    function newCommentHandler(data){                      
-        if(newfeeddata.length > 0){                   
-            newfeeddata.some((item, index) => {                                
-                if(item._id === data.data.id_post){
-                    newfeeddata[index].commentlist.push(data.data.cmt_data[0])                    
-                    setNewfeedData(newfeeddata)                    
-                }
-                return
-            })
-        }
+    function newCommentHandler(data){
+        setNewCmt(data.data)        
     }
 
     function handleInfiniteOnLoad(){        
@@ -210,7 +205,8 @@ const Newfeed = (props) =>  {
                                             alert.show('Deleted success!', {
                                                 type:'success'
                                         })}}
-                                        role={(userData) && userData.role}                                                                      
+                                        role={(userData) && userData.role}
+                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}                                                                                                                                                   
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>
