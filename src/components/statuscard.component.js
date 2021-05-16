@@ -26,8 +26,7 @@ export default class StatusCard extends React.Component {
             cmtState: false,
             deleteStatusState: false,
             editStatusState: false,
-            modalshow: false,
-            edittext: '',
+            modalshow: false,            
             likecount: 0,
             commentcount: 0,
             likelist: [],
@@ -187,7 +186,7 @@ export default class StatusCard extends React.Component {
             edittext: this.state.textcontent,
             editytlink: this.state.linkyoutube,
             previewFile: this.state.imgcontent,            
-        })
+        })        
         
         if(this.state.linkyoutube && this.state.linkyoutube.length > 0){
             this.setState({
@@ -265,8 +264,8 @@ export default class StatusCard extends React.Component {
         })       
     }
 
-    handleUpdate(){
-        if(this.state.edittext.length > 0 || this.state.editytlink.length > 0 || this.state.previewFile){
+    handleUpdate(){                    
+        if(this.state.edittext.length > 0 || (this.state.editytlink && this.state.editytlink.length > 0) || this.state.fileInput){
             this.updateHandle()
         }
     }
@@ -374,7 +373,7 @@ export default class StatusCard extends React.Component {
                         <Modal title="Update status" visible={this.state.editStatusState} onOk={this.handleEditOk} onCancel={this.handleEditCancel}>
                             
                         <div className='stp-post' style={{width:'100%'}}>
-                                <textarea className='post-text p-2' rows='3' style={{width:'100%', border:'none', outline:'none'}} onChange={e => this.setState({edittext :e.target.value})} value={this.state.edittext} placeholder={`Wanna change something?`}></textarea>
+                                <textarea className='post-text p-2' rows='3' style={{width:'100%', border:'none', outline:'none'}} onChange={e => this.setState({edittext: e.target.value})} value={this.state.edittext} placeholder={`Wanna change something?`}></textarea>
                                 <div className='stp-preview row ml-2'>
                                     {
                                         this.state.ytState && (<div style={{width:'100%', justifyContent:'center', display:'flex', marginRight:'22px'}}>
