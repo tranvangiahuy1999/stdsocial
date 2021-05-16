@@ -62,8 +62,7 @@ const StatusPost =(props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {
-                console.log(res)                              
+            .then(res => {                                            
                 if(res.data.code === 0){                
                     setText('')
                     setFileInput('')

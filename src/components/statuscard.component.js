@@ -68,7 +68,7 @@ export default class StatusCard extends React.Component {
         this.updateHandle = this.updateHandle.bind(this)
 
         this.onLoadMore  = this.onLoadMore.bind(this)  
-        this.updateList  = this.updateList.bind(this)
+        // this.updateList  = this.updateList.bind(this)
     }
 
     componentDidMount(){                
@@ -90,20 +90,28 @@ export default class StatusCard extends React.Component {
             imgcontent: this.props.imgcontent,
             linkyoutube: this.props.linkyoutube,
         })             
-    }   
+    }
 
-    componentDidUpdate(prevProps) {
-        if(this.props.commentlist !== prevProps.commentlist)
-        {
-          this.updateList();
+    componentWillReceiveProps(nextProps) {
+        console.log('call')
+        if (nextProps.commentlist !== this.state.cmtlist) {
+            this.setState(({cmtlist: nextProps.commentlist }));
         }
     }
 
-    updateList(){        
-        this.setState({
-            cmtlist: this.props.commentlist,
-        })
-    }
+    // componentDidUpdate(prevProps) {
+    //     console.log('call')
+    //     if(this.props.commentlist !== prevProps.commentlist) {
+    //       this.updateList();
+    //     }
+    // }
+
+    // updateList(){        
+    //     this.setState({
+    //         cmtlist: this.props.commentlist,
+    //         commentcount: this.props.commentlist.length,
+    //     })
+    // }
 
     showModal = () => {
         this.setState({
@@ -183,11 +191,10 @@ export default class StatusCard extends React.Component {
             editStatusState: true,
             edittext: this.state.textcontent,
             editytlink: this.state.linkyoutube,
-            previewFile: this.state.imgcontent,
-            fileInput: this.state.imgcontent
+            previewFile: this.state.imgcontent,            
         })
         
-        if(this.state.editytlink){
+        if(this.state.linkyoutube && this.state.linkyoutube.length > 0){
             this.setState({
                 ytState: true,                
             })
@@ -224,10 +231,10 @@ export default class StatusCard extends React.Component {
         }
     }
 
-    fileChangeHandle(e){
+    fileChangeHandle(e){        
         const file = e.target.files[0]
         this.setState({
-            fileInput: file,            
+            fileInput: file,       
         })
         this._previewFile(file)
     }
@@ -285,19 +292,23 @@ export default class StatusCard extends React.Component {
             await formData.append('content', this.state.edittext)
 
             axios.put(api, formData, {
-                headers:{        
+                headers:{
                     'Content-Type': 'multipart/form-data',
                     'Authorization' : 'Bearer ' + this.props.token
                 }
             })
-            .then(res => {
-                console.log(res)
+            .then(res => {                
                 if(res.data.code===0){
                     this.setState({
                         editStatusState: false,
                         textcontent: res.data.data.content,
                         imgcontent: res.data.data.image,
                         linkyoutube: res.data.data.linkyoutube,
+                        edittext: '',
+                        ytState: false,
+                        editytlink: '',
+                        fileInput: '',
+                        previewFile: null,
                     })
                 }
             })
@@ -319,19 +330,17 @@ export default class StatusCard extends React.Component {
                         textcontent: res.data.data.content,
                         imgcontent: res.data.data.image,
                         linkyoutube: res.data.data.linkyoutube,
+                        edittext: '',
+                        ytState: false,
+                        editytlink: '',
+                        fileInput: '',
+                        previewFile: null,
                     })
                     
                 }
             })
             .catch(e => console.error(e))
-        }
-        this.setState({
-            edittext: '',
-            ytState: false,
-            editytlink: '',
-            fileInput: '',
-            previewFile: null,
-        })
+        }       
     }
 
     onLoadMore() {

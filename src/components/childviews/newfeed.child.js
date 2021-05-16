@@ -201,7 +201,7 @@ const Newfeed = (props) =>  {
                                         linkyoutube={value.linkyoutube}
                                         imgcontent= {value.image}                                                        
                                         likelist={value.likelist}
-                                        commentlist={value.commentlist}                          
+                                        commentlist={value.commentlist}       
                                         user_id={userData?userData._id:''}
                                         user_post_id={value.user._id}
                                         post_id={value._id}    
