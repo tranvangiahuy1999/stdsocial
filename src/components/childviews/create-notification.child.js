@@ -19,7 +19,7 @@ const CreateNoti = (props) => {
     const alert = useAlert()
 
     const editorConfiguration = {
-        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ]
+        toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
     };  
 
     const [selectedOption, setSelectedOption] = useState(null)
