@@ -574,4 +574,5 @@
 .username-direct:hover {
   text-decoration: underline;
   cursor: pointer;
+  width: fit-content;
 }
