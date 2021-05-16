@@ -2,7 +2,6 @@ import './stylesheet/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-dropdown/style.css';
 import 'antd/dist/antd.css';
-import 'draft-js/dist/Draft.css';
 
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
