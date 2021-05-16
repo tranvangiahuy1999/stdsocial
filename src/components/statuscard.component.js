@@ -202,7 +202,12 @@ export default class StatusCard extends React.Component {
 
     handleEditCancel(){
         this.setState({
-            editStatusState:false
+            editStatusState:false,
+            edittext: '',
+            ytState: false,
+            editytlink: '',
+            fileInput: '',
+            previewFile: null,
         })
     }        
 
@@ -265,7 +270,7 @@ export default class StatusCard extends React.Component {
     }
 
     handleUpdate(){                    
-        if(this.state.edittext.length > 0 || (this.state.editytlink && this.state.editytlink.length > 0) || this.state.fileInput){
+        if(this.state.edittext.length > 0 || (this.state.editytlink && this.state.editytlink.length > 0) || this.state.previewFile){
             this.updateHandle()
         }
     }
