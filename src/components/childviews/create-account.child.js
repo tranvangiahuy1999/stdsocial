@@ -134,15 +134,15 @@ const CreateAccountPage = (props) => {
                                         <h6>Create Faculty account</h6>
                                         <div className='form-group'>
                                             <label>Username</label>
-                                            <input autoComplete="nope" value={username} onChange={v => setUsername(v.target.value)} className='form-control' placeholder='Enter username' required></input>
+                                            <input autoComplete="off" value={username} onChange={v => setUsername(v.target.value)} className='form-control' placeholder='Enter username' required></input>
                                         </div>
                                         <div className='form-group'>
                                             <label>Password</label>
-                                            <input autoComplete="nope" type='password' value={pwd} onChange={v => setPwd(v.target.value)} className='form-control' placeholder='Enter password' required></input>
+                                            <input autoComplete="off" type='password' value={pwd} onChange={v => setPwd(v.target.value)} className='form-control' placeholder='Enter password' required></input>
                                         </div>
                                         <div className='form-group'>
                                             <label>Re-enter password</label>
-                                            <input autoComplete="nope" type='password' value={repwd} onChange={v => setRePwd(v.target.value)} className='form-control' placeholder='Re-enter password' required></input>
+                                            <input autoComplete="off" type='password' value={repwd} onChange={v => setRePwd(v.target.value)} className='form-control' placeholder='Re-enter password' required></input>
                                         </div>
                                         <div className='form-group'>
                                             <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            

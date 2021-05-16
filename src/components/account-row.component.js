@@ -160,10 +160,10 @@ const AccRow = (props) => {
             <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
                 <div>                    
                     <div className='form-group'>
-                        <input autoComplete="nope" className='form-control' type='password' value={pwd} onChange={e => setPwd(e.target.value)} placeholder='Password'></input>
+                        <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setPwd(e.target.value)} placeholder='Password'></input>
                     </div>
                     <div className='form-group'>
-                        <input autoComplete="nope" className='form-control' type='password' value={rePwd} onChange={e => setRePwd(e.target.value)} placeholder='Re-password'></input>
+                        <input autoComplete="off" className='form-control' type='password' value={rePwd} onChange={e => setRePwd(e.target.value)} placeholder='Re-password'></input>
                     </div>                    
                 </div>
             </Modal>

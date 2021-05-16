@@ -180,9 +180,19 @@ export default class StatusCard extends React.Component {
 
     showEditModal() {           
         this.setState({
-            editStatusState:true,
-            edittext: this.state.textcontent
+            editStatusState: true,
+            edittext: this.state.textcontent,
+            editytlink: this.state.linkyoutube,
+            previewFile: this.state.imgcontent,
+            fileInput: this.state.imgcontent
         })
+        
+        if(this.state.editytlink){
+            this.setState({
+                ytState: true,                
+            })
+        }
+        
     }
 
     handleEditOk(){
@@ -233,6 +243,9 @@ export default class StatusCard extends React.Component {
     }
 
     youtubeUpload(){
+        if(this.state.imgcontent){
+            return
+        }
         this.setState({
             previewFile: null,
             fileInput: ''
@@ -247,7 +260,7 @@ export default class StatusCard extends React.Component {
         }
         this.setState({
             ytState: true
-        })        
+        })       
     }
 
     handleUpdate(){
