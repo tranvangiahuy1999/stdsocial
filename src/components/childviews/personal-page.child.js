@@ -10,6 +10,7 @@ import {getToken} from '../../actions/index'
 import { AiFillCamera, AiOutlineCheck,  AiOutlineClose, AiFillPhone} from "react-icons/ai";
 import { useAlert } from 'react-alert';
 import { useParams } from 'react-router-dom';
+import { io } from "socket.io-client";
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
@@ -26,7 +27,7 @@ const PersonalPage = (props) => {
     const [isYour, setIsYour] = useState(false)
 
     const [loading, setLoading] = useState(true)
-
+    const [newcmt, setNewCmt] = useState()
     const [userPageExist, setUserPageExist] = useState(true)
 
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
@@ -58,6 +59,20 @@ const PersonalPage = (props) => {
             }                    
         }
     }, [userData])
+
+    useEffect(() => {
+        const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});            
+        socket.on('new_comment', (data) => {
+            newCommentHandler(data)
+        })
+        return () => {            
+            socket.off("new_comment");
+        }
+    }, [])
+
+    function newCommentHandler(data){
+        setNewCmt(data.data)        
+    }
 
     const debounce = (func, delay) => {
         let inDebounce;
@@ -362,6 +377,7 @@ const PersonalPage = (props) => {
                                                 type:'success'
                                         })}}
                                         role={(userData.role) && userData.role}
+                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
                                     ></StatusCard>))
                             )
                         :(
