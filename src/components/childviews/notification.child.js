@@ -187,7 +187,7 @@ const NotiPage = (props) => {
                                 <form>
                                     <div>
                                         <div className="form-group col-12">                                
-                                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='Search by tittle' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
+                                            <input className='form-control' style={{padding: '4px', width:'100%'}} placeholder='Search by title' value={searchNotiTitle} onChange={v => setSearchNotiTitle(v.target.value)} ></input>    
                                         </div>                                     
                                     </div>
                                     <div className='row col-12'>
