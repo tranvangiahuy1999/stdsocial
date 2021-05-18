@@ -424,7 +424,7 @@ export default class StatusCard extends React.Component {
                             {                                                            
                                 (this.state.textcontent && this.state.textcontent.length > 0) && (                                    
                                     <div className='mb-2'>
-                                        <div className='stc-text' dangerouslySetInnerHTML={{ __html: this.state.textcontent }}>{this.state.textcontent}</div>
+                                        <div className='stc-text'>{this.state.textcontent}</div>
                                     </div>
                                 )                                
                             }

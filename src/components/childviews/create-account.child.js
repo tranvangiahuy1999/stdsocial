@@ -131,7 +131,7 @@ const CreateAccountPage = (props) => {
                             <div className='col-12' style={{margin:'auto'}}>                                
                                 <form className='row' onSubmit={createAccount}>
                                     <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
-                                        <h6>Create Faculty account</h6>
+                                        <h6>Create faculty account</h6>
                                         <div className='form-group'>
                                             <label>Username</label>
                                             <input autoComplete="off" value={username} onChange={v => setUsername(v.target.value)} className='form-control' placeholder='Enter username' required></input>
@@ -148,13 +148,13 @@ const CreateAccountPage = (props) => {
                                             <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
                                         </div>
                                         <div className='form-group'>
-                                            <div>Head to <span className='reading-link' onClick={() => history.push(`${url}/accountmanager`)}>Account management</span></div>                                            
+                                            <div style={{fontSize: '16px'}}>Go to <span className='reading-link text-primary' onClick={() => history.push(`${url}/accountmanager`)}>site management account</span></div>                                            
                                         </div>
 
                                     </div>
-                                    <div className='col-6 selectboxmap'>
+                                    <div className='col-6'>
                                         <h6>Choose faculty you want to add</h6>
-                                        <div>
+                                        <div className='selectboxmap'>
                                             <div className='p-2 ml-4' styles={{backgroundColor:'rgba(241,242,246,255)'}}>                                        
                                                 {
                                                     (loading)?(

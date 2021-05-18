@@ -11,6 +11,11 @@
   scroll-behavior: smooth;
 }
 
+.reading-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .form-container img {
   width: 100px;
   height: auto;
@@ -414,7 +419,7 @@
 }
 
 .selectboxmap {
-  height: 450px;
+  height: 400px;
   overflow-y: scroll;
 }
 .reading-title{
