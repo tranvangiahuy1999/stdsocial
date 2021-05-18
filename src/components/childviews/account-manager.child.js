@@ -66,11 +66,10 @@ const AccManagerPage = (props) => {
                 </h5>
                 <div className='child-body'>
                     <div className='col-12' >                                      
-                        <div className='row acc-filter p-2'>
-                            <label>Find by user:</label>
-                            <input className='ml-2' style={{borderRadius:'4px', border:'1px solid gray', outline:'none'}} onChange={searchHandle}></input>                            
+                        <div className='row acc-filter p-2'>                            
+                            <input className='ml-2 form-control' style={{borderRadius:'4px', border:'1px solid gray', outline:'none', padding: '16px'}} placeholder="Find by username" onChange={searchHandle}></input>                            
                         </div>
-                        <div style={{paddingTop: '6px', paddingBottom:'6px'}} >Can't find one? <span className='reading-link' onClick={() => history.push(`/home/createaccount`)}>Create here</span>.</div>
+                        <div style={{paddingTop: '6px', paddingBottom:'6px', fontSize: '16px'}} >Can't find any?<span className='reading-link text-primary' onClick={() => history.push(`/home/createaccount`)}> create new here</span></div>
                         <div className='row acc-manager-head'>
                             <div className='table-text col-3'>
                                 User
