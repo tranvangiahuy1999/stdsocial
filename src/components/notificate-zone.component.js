@@ -26,8 +26,8 @@ const NotiZone = (props) => {
                     props.notiData.map((value, index) => (
                         <NotiCard
                             key={value._id}
-                            borderStyle={index%2===0?'3px solid rgba(69,190,235,255)':'3px solid gray'}
-                            backgroundStyle={index%2===0?'rgba(201,231,254,255)':'white'}                    
+                            borderStyle={index%2===0?'5px solid rgba(150,204,108,255)':'5px solid rgba(118,201,190,255)'}
+                            textStyle={index%2===0?'rgba(150,204,108,255)':'rgba(118,201,190,255)'}                   
                             notiClickHandle={notiClickHandle}
                             falcutyname={value.role}
                             date={value.date.split('T')[0]}

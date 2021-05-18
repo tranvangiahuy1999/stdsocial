@@ -86,7 +86,7 @@
 }
 
 .notizone-container title {
-  font-size: larger;
+  font-size: large;
 }
 
 .notizone-header {
@@ -112,11 +112,7 @@
 
 .stp-container {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  border-radius: 10px;
-}
-
-.stp-container {
-  border-radius: 4px;
+  border-radius: 20px;  
   padding: 2px;
   margin: 2px;
 }
@@ -130,9 +126,9 @@
   align-content: center;  
 }
 
-.sidebar-btn:hover {
-  border-radius: 10px;
-  background-color: lightgray;
+.sidebar-btn:hover {    
+  background-color: rgba(201,231,254,255);
+  border-left: 3px solid rgba(69,190,235,255);
 }
 
 .stp-container .avatar, .navbar .avatar, .comment-row img {
@@ -140,14 +136,18 @@
 }
 
 .stp-post {
-  border-radius: 4px;  
+  border-radius: 16px;  
   border: 1px solid lightgray;
 }
 
 .stp-action {
   align-items: center;
   margin: 4px;
-  justify-content: flex-end;
+  justify-content: flex-end;    
+}
+
+.stp-preview {
+  width: 100%;  
 }
 
 .stp-action .btn{
@@ -162,8 +162,9 @@
 .stp-container .post-text {  
   border: none;
   outline: none;
-  width: 100%;
-  overflow-y: hidden;
+  margin: 6px;
+  width: 95%;
+  overflow-y: hidden;  
 }
 
 .stc-header img {
@@ -264,10 +265,7 @@
 
 .noti-card {
   padding: 4px;
-}
-
-.noti-card:hover {  
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.16);
+  cursor: pointer;
 }
 
 .empty-data {
@@ -378,7 +376,7 @@
 
 .fadeOut{
   opacity:0;
-  transition: width 1s 1s, height 1s 1s, opacity 1s;
+  transition: all 250ms linear 2s;
 
 }
 
@@ -390,7 +388,7 @@
 .child-body {
   border-radius: 2px;
   background-color: white;
-  padding: 10px;
+  padding: 8px;
 }
 
 .child-header {
@@ -440,18 +438,6 @@
   padding: 16px;
 }
 
-.reading-link {
-  color: blue;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.reading-link:hover {
-  color: rgb(113, 113, 255);
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .child-page, .newfeed-page {
   justify-content: center;
   padding: 14px;
@@ -468,8 +454,10 @@
   font-weight: 500;
   font-size: 18px;
   padding-left: 6px;
-  margin: 6px;
-  border-bottom: 2px solid green;
+  margin: 6px;  
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  border-image: linear-gradient(45deg, rgb(0,143,104), rgb(250,224,66)) 1;  
 }
 
 .userwall:hover {
@@ -548,16 +536,12 @@
 
 .intro-zone {
   background-color: white;  
-  padding: 10px;
-  border-radius: 10px;  
-}
-
-.intro-header {
-  color: black;
-  font-weight: bold;
-  font-size: larger;
-  padding: 6px;
-  border-bottom: 2px solid green;
+  padding: 8px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(white,white) padding-box, /*this is your grey background*/
+    linear-gradient(to right, #9c20aa, #fb3570) border-box;
 }
 
 .cmttab:hover {
@@ -571,8 +555,13 @@
   top:80px
 }
 
+.username-direct {
+  font-weight: bold;
+  padding: 2px;
+  width: fit-content;
+}
+
 .username-direct:hover {
   text-decoration: underline;
-  cursor: pointer;
-  width: fit-content;
+  cursor: pointer;  
 }

@@ -135,15 +135,13 @@ const Newfeed = (props) =>  {
         })
     }
 
-    function getNewfeed(){
-        console.log(count)    
+    function getNewfeed(){         
         axios.get(`${process.env.REACT_APP_IP}/newfeed/${count}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {
-            console.log(res)              
+        .then(res => {                     
             if(res.data.code === 0){
                 newfeeddata = newfeeddata.concat(res.data.data)
                 setNewfeedData(newfeeddata)                    

@@ -5,12 +5,15 @@ import {connect} from 'react-redux';
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
 import useWindowDimensions from '../useWindowDimensions'
-import { FaRegEdit, FaRegSave, FaBirthdayCake, FaUsers, FaTransgender } from "react-icons/fa";
 import {getToken} from '../../actions/index'
-import { AiFillCamera, AiOutlineCheck,  AiOutlineClose, AiFillPhone} from "react-icons/ai";
 import { useAlert } from 'react-alert';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
+
+import { FaRegEdit, FaRegSave } from "react-icons/fa";
+import { AiFillCamera, AiOutlineCheck,  AiOutlineClose, AiOutlineUser} from "react-icons/ai";
+import { BiCake, BiPhone} from "react-icons/bi";
+import { IoTransgenderSharp } from "react-icons/io5";
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()    
@@ -19,7 +22,7 @@ const PersonalPage = (props) => {
     const [avatar, setAvatar] = useState('')
     const [username, setUsername] = useState('')
 
-    const [fileInput, setFileInput] = useState('')
+    const [fileInput, setFileInput] = useState(null)
     const [previewFile, setPreviewFile] = useState(null)
     const [changeUsernameText, setChangeUsernameText] = useState('')
     const [changeUsernameState, setChangeUsernameState] = useState(false)
@@ -167,6 +170,7 @@ const PersonalPage = (props) => {
     }        
 
     function changeAvatarHandler(){
+        setChangeUsernameState(false)
         const input = document.getElementById('change-avatar')
         if(input){
             input.click()
@@ -234,6 +238,8 @@ const PersonalPage = (props) => {
 
     function changeUsernameHandle(){
         setChangeUsernameText(personalInfo?personalInfo.user_name:'')
+        setPreviewFile(null)
+        setFileInput(null)
         setChangeUsernameState(true)
     }
 
@@ -290,8 +296,8 @@ const PersonalPage = (props) => {
                             (changeUsernameState)?(
                                 <div>
                                     <input type='text' value={changeUsernameText} onChange={e => setChangeUsernameText(e.target.value)} placeholder='Change username' style={{outline:'none', border:'none', backgroundColor:'transparent', fontWeight:'500px'}}></input>
-                                    <FaRegSave onClick={renameAccount} className='clickable-icon-dark ml-2' size='22px' color='white'></FaRegSave>
-                                    <AiOutlineClose onClick={() => setChangeUsernameState(false)} className='clickable-icon-dark ml-2' size='22px' color='white'></AiOutlineClose>
+                                    <FaRegSave onClick={renameAccount} className='clickable-icon-dark ml-2 text-primary' size='22px'></FaRegSave>
+                                    <AiOutlineClose onClick={() => setChangeUsernameState(false)} className='clickable-icon-dark ml-2 text-danger' size='22px'></AiOutlineClose>
                                 </div>
                             ):(
                                 <div>
@@ -313,8 +319,8 @@ const PersonalPage = (props) => {
                                 {
                                     (previewFile) && (
                                         <div className='row' style={{padding:'2px'}}>
-                                            <AiOutlineCheck className='text-primary clickable-icon-dark mt-2' onClick={uploadAvatar} color='white' size='20px'></AiOutlineCheck>
-                                            <AiOutlineClose className='text-danger clickable-icon-dark ml-2 mt-2' onClick={cancelUploadAvatar} color='white' size='20px'></AiOutlineClose>                                
+                                            <AiOutlineCheck className='clickable-icon-dark mt-2 text-primary' onClick={uploadAvatar} size='20px'></AiOutlineCheck>
+                                            <AiOutlineClose className='clickable-icon-dark ml-2 mt-2 text-danger' onClick={cancelUploadAvatar} size='20px'></AiOutlineClose>                                
                                         </div> 
                                     )
                                 }
@@ -325,14 +331,49 @@ const PersonalPage = (props) => {
                 <div className='row pt-4'>          
                     <div className={width < 768?'col-12':'col-4'}>
                         <div className='intro-zone'>
-                            <div className='intro-header'>
+                            <div className='component-title'>
                                 Introduce
                             </div>                                                                   
                                 <div>
-                                    <div className='m-2' style={{fontSize:'16px'}}><FaUsers className='mr-1' color='gray' size='20px'/> Faculty: {(personalInfo)?personalInfo.faculty[0]:`Not set`}</div>
-                                    <div className='m-2' style={{fontSize:'16px'}}><FaBirthdayCake className='mr-1' color='gray' size='20px'/> Birthday: {(personalInfo)?personalInfo.birth:`Not set`}</div>
-                                    <div className='m-2' style={{fontSize:'16px'}}><FaTransgender className='mr-1' color='gray' size='20px'/> Gender: {(personalInfo)?personalInfo.gender:`Not set`}</div>
-                                    <div className='m-2' style={{fontSize:'16px'}}><AiFillPhone className='mr-1' color='gray' size='20px'/> Phone: {(personalInfo)?personalInfo.phone:`Not set`}</div>
+                                    <div className='m-2 row' style={{fontSize:'16px'}}>
+                                        <AiOutlineUser className='mr-2' color='orange' size='34px' style={{marginTop:'auto', marginBottom:'auto'}}/>
+                                        <div>
+                                            <div>Faculty</div>
+                                            <div>
+                                                <div style={{color:'gray', fontWeight:'500'}}>{(personalInfo && personalInfo.faculty[0])?personalInfo.faculty[0]:`Not set`}</div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+
+                                    <div className='m-2 row' style={{fontSize:'16px'}}>
+                                        <BiCake className='mr-2' color='orange' size='34px' style={{marginTop:'auto', marginBottom:'auto'}}/>
+                                        <div>
+                                            <div>Birthday</div>
+                                            <div>
+                                                <div style={{color:'gray', fontWeight:'500'}}>{(personalInfo && personalInfo.birth)?personalInfo.birth:`Not set`}</div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+
+                                    <div className='m-2 row' style={{fontSize:'16px'}}>
+                                        <IoTransgenderSharp className='mr-2' color='orange' size='34px' style={{marginTop:'auto', marginBottom:'auto'}}/>
+                                        <div>
+                                            <div>Gender</div>
+                                            <div>
+                                                <div style={{color:'gray', fontWeight:'500'}}>{(personalInfo && personalInfo.gender)?personalInfo.gender:`Not set`}</div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+
+                                    <div className='m-2 row' style={{fontSize:'16px'}}>
+                                        <BiPhone className='mr-2' color='orange' size='34px' style={{marginTop:'auto', marginBottom:'auto'}}/>
+                                        <div>
+                                            <div>Phone</div>
+                                            <div>
+                                                <div style={{color:'gray', fontWeight:'500'}}>{(personalInfo && personalInfo.phone)?personalInfo.phone:`Not set`}</div>
+                                            </div>
+                                        </div>                                        
+                                    </div>                                                                    
                                 </div>                                                                                                   
                         </div>
                     </div>                                    
@@ -376,7 +417,7 @@ const PersonalPage = (props) => {
                                             alert.show('Deleted success!', {
                                                 type:'success'
                                         })}}
-                                        role={(userData.role) && userData.role}
+                                        role={(userData) && userData.role}
                                         newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
                                     ></StatusCard>))
                             )

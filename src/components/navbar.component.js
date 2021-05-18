@@ -4,29 +4,24 @@ import { BiLogOut } from "react-icons/bi";
 import { BsCaretDownFill } from "react-icons/bs";
 import { AiOutlineSetting } from "react-icons/ai";
 import { Menu, Dropdown, Button } from 'antd';
-import logo from '../resources/logo-tdtu.png'
 import useWindowDimensions from './useWindowDimensions'
 import { Modal } from 'antd';
 import axios from 'axios'
 import {connect} from 'react-redux'
-import {useAlert} from 'react-alert'
+import { useAlert } from 'react-alert';
 
 const NavBar = (props) =>  {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [pwd, setpwd] = useState('');
     const [repwd, setRepwd] = useState('');
     const {width, height} = useWindowDimensions()
-    const alert = useAlert()
+    const alert = useAlert()   
 
     const showModal = () => {
         setpwd('')
         setRepwd('')
         setIsModalVisible(true);
-      };
-    
-    const handleOk = () => {
-        onSubmitPwd()        
-    };
+    };      
     
     const handleCancel = () => {
         setIsModalVisible(false);
@@ -37,15 +32,15 @@ const NavBar = (props) =>  {
     function onSubmitPwd(){
         if(pwd !== repwd){
             alert.show('Password and re-password does not match', {
-                type:'error'
-            })
+                type: 'error'
+            })                     
             return
         }
 
         if(pwd.length < 6){
             alert.show('Password at least 6 character', {
-                type:'error'
-            })
+                type: 'error'
+            })                 
             return
         }
 
@@ -59,14 +54,14 @@ const NavBar = (props) =>  {
         .then(res => {            
             if(res.data.code === 0){
                 alert.show('Password has changed', {
-                    type:'success'
-                })
+                    type: 'success'
+                })                               
                 setIsModalVisible(false)
             }
             else {
                 alert.show(res.data.message, {
-                    type:'error'
-                })
+                    type: 'error'
+                })                              
             }
         })
         .catch(e=> console.error(e))
@@ -98,7 +93,7 @@ const NavBar = (props) =>  {
                         )
                     }
                     <div className='logo-title'>
-                        <img className='align-self-center ml-3' src={logo} alt="tdtu-logo"/>                        
+                        {props.navbarlogo}                        
                     </div>
                 </div>
                 <div className='row mr-1'>
@@ -107,7 +102,7 @@ const NavBar = (props) =>  {
                         <Button shape='circle'><BsCaretDownFill color='gray' size="16px"></BsCaretDownFill></Button>
                     </Dropdown>
                 </div>
-                <Modal title="Change your password" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <Modal title="Change your password" visible={isModalVisible} onOk={onSubmitPwd} onCancel={handleCancel}>
                     <form>
                         <div className='form-group'>
                             <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setpwd(e.target.value)} placeholder='Enter new password'></input>

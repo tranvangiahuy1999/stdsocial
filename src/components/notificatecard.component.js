@@ -18,7 +18,8 @@ const NotiCard = (props) => {
     const [editTitle, setEditTitle] = useState('')
     const [editDesc, setEditDesc] = useState('')
     const [editContent, setEditContent] = useState('')
-    
+    const [hoverState, setHoverState] = useState(false)
+
     const alert= useAlert()
 
     useEffect(() => {
@@ -120,6 +121,7 @@ const NotiCard = (props) => {
             console.error(e)
         })
     }
+    
 
     return(
         (deleteState)?(
@@ -127,7 +129,7 @@ const NotiCard = (props) => {
                 <div className='empty-text'>Deleted notification</div>
             </div>
         ):(      
-                <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: props.backgroundStyle}}>    
+                <div className='noti-card m-1' onClick={props.seedetail} style={{borderLeft: props.borderStyle, backgroundColor: hoverState?'white':'rgba(248,248,248,255)'}} onMouseEnter={() => setHoverState(true)} onMouseLeave={() => setHoverState(false)}>    
                     <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                         Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
                     </Modal>
@@ -148,43 +150,42 @@ const NotiCard = (props) => {
                             </div>
                         </div>
                     </Modal>
-
-                    <div className='row'>
-                    <div className='col-9'>
-                        <div className='noticard-header row pl-3'>
-                            <div style={{color:'gray', fontSize:'14px'}}>
-                                [{props.falcutyname}]
-                            </div>
-                                <div style={{color:'gray', fontSize:'14px', paddingLeft:'5px'}}>
-                                    {props.date}
+                    <div className='ml-3 p-1'>
+                        {
+                            hoverState?(
+                                <div className='row'>
+                                    <div className='col-9'>
+                                        <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
+                                            {title}
+                                        </div>
+                                        <div style={{color:'gray'}}>
+                                            {desc}
+                                        </div>
+                                        <div style={{color:'lightgray', fontSize: '14px'}}>
+                                            {props.date}<span>/ {props.falcutyname}</span>                                        
+                                        </div>
+                                    </div>
+                                    <div className='col-3 mt-auto mb-auto' style={{textAlign:'right'}}>
+                                        <button className='btn btn-primary mr-1' style={{textAlign:'center'}}>
+                                            <AiOutlineEdit onClick={showEditModal} size='17px' color='white'></AiOutlineEdit>                                    
+                                        </button>    
+                                        <button className='btn btn-danger mr-2' style={{textAlign:'center'}}>
+                                            <ImBin onClick={showDelModal} size='15px' color='white'></ImBin>
+                                        </button>                                                                                                         
+                                    </div>
                                 </div>
-                        </div>
-                        <div className='noticard-body'>
-                            <div className='noticard-title' style={{color:'black', fontWeight:'bold', fontSize:'16px'}}>
-                                {title}                
-                            </div>
-                            <div className='noticard-content' style={{color:'gray', fontSize:'15px'}}>
-                                {desc}
-                            </div>
-                            <div className="reading-link" onClick={props.seedetail}>Click to see detail</div>
-                        </div>
-                    </div>
-                    <div className='col-3'>
-                    {
-                        (userData && userData.role !== 'student') && (
-                            <div style={{marginTop:'20px', float:'right'}}>
-                                <div>
-                                    <AiOutlineEdit className='mr-1 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
-                                </div>
-                                <div>
-                                    <ImBin className='mr-1 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>
-                                </div>                                                                                                                                                                                
-                            </div>
-                        )
-                    }
-                    </div>
-                </div>                
-                                                    
+                            ):(                                
+                                    <div>
+                                        <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
+                                            {title}
+                                        </div>                                    
+                                        <div style={{color:'gray', fontSize: '14px'}}>
+                                            {props.date}<span>/ {props.falcutyname}</span>
+                                        </div>
+                                    </div>                                                                
+                            )
+                        }                                                                
+                    </div>                    
             </div>  
         )        
     )

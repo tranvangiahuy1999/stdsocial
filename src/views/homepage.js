@@ -2,13 +2,11 @@ import React, {useState, useEffect} from 'react'
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    useRouteMatch,
+    Route,    
     useHistory,
-    Link,    
+    Link  
 } from 'react-router-dom'
-import {useAlert} from 'react-alert'
-
+import logo from '../resources/logo-tdtu.png'
 import Sidebar from "react-sidebar";
 import NavBar from '../components/navbar.component'
 import SideBar from "../components/sidebar.component"
@@ -22,7 +20,8 @@ import axios from 'axios'
 import {connect} from 'react-redux';
 import {LOGOUT} from '../constants/index'
 import {
-    Avatar, 
+    Avatar,
+    message 
     } from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
@@ -36,13 +35,11 @@ const Homepage = (props) => {
     const [avatar, setAvatar] = useState('')
     const [username, setUsername] = useState('')
 
-    const [route, setRoute] = useState(null)
-    const alert = useAlert()
+    const [route, setRoute] = useState(null)    
 
     const {width, height} = useWindowDimensions()
 
-    let history = useHistory();
-    let { path, url } = useRouteMatch();    
+    let history = useHistory();    
 
     useEffect( () => {        
         getCurrentUserData()          
@@ -53,22 +50,22 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
+                    route: '/home',
                     icon: <FaHome className='mb-1' size="22px" color='gray'/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
+                    route: `/home/notification`,
                     icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
                 },
                 {
-                    name: 'Post notificate',
-                    route: `${url}/postnotificate`,
+                    name: 'Post notification',
+                    route: `/home/postnotification`,
                     icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
                 },
                 {
                     name: 'Create account',
-                    route: `${url}/createaccount`,
+                    route: `/home/createaccount`,
                     icon: <FaUserPlus className='mb-1' size="22px" color='gray'/>,
                 },        
             ])
@@ -77,17 +74,17 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
+                    route: '/home',
                     icon: <FaHome className='mb-1' size="22px" color='gray'/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
+                    route: `/home/notification`,
                     icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
                 },
                 {
-                    name: 'Post notificate',
-                    route: `${url}/postnotificate`,
+                    name: 'Post notification',
+                    route: `/home/postnotification`,
                     icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
                 },                  
             ])
@@ -96,12 +93,12 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
+                    route: '/home',
                     icon: <FaHome className='mb-1' size="22px" color='gray'/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
+                    route: `/home/notification`,
                     icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
                 }                    
             ])
@@ -122,9 +119,7 @@ const Homepage = (props) => {
                 setUsername(res.data.data.user_name)                
 
                 if(res.data.data.faculty.length < 1 && res.data.data.role === 'student'){
-                    alert.show('Your account is not registed', {
-                        type:'error'
-                    })
+                    message.error('Your account is not registed')                    
                     setTimeout(() => {
                         history.push('/register')
                     }, 3000)                    
@@ -140,9 +135,13 @@ const Homepage = (props) => {
         setSidebarOpen(open)
     }
  
-    async function logOutHandle(){
-        await props.logOut()
+    function logOutHandle(){
+        props.logOut()
         history.push('/login') 
+    }
+
+    function logoHome(){
+        return <Link to='/home'></Link>
     }
 
         return(            
@@ -152,9 +151,14 @@ const Homepage = (props) => {
                     <div>
                         <NavBar
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
-                            logOutHandle={logOutHandle}                            
+                            logOutHandle={logOutHandle}
+                            navbarlogo={
+                                <Link to='/home'>
+                                    <img style={{cursor:'pointer'}} className='align-self-center ml-3' src={logo} alt="tdtu-logo"/>
+                                </Link>
+                            }                        
                             usersession={
-                            <Link to={`${url}/personalwall/${(userData) && userData._id}`}>
+                            <Link to={`/home/personalwall/${(userData) && userData._id}`}>
                                 <div className='userwall row mr-1' onClick={props.userwallredirect}>
                                     <Avatar src={avatar} alt="avatar" ></Avatar>
                                     <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
@@ -199,28 +203,28 @@ const Homepage = (props) => {
                     <div className={width < 768?'home-body col-12':'home-body col-9'}>                
                         <Switch>                            
                             <Route
-                                path={`${path}`}                    
+                                path={`/home`}                    
                                 exact={true}             
                             >
-                                <Newfeed notilink={<Link to={`${url}/notification`}>See all</Link>}></Newfeed>
+                                <Newfeed notilink={<Link to={`/home/notification`}>See all</Link>}></Newfeed>
                             </Route>                                                
                             <Route
-                                path={`${path}/notification`}                                    
+                                path={`/home/notification`}                                    
                                 component={NotiPage}
                                 exact
                             />
                             <Route
-                                path={`${path}/notification/:id`}
+                                path={`/home/notification/:id`}
                                 component={NotiReader}                                                              
                             />
                             <Route
-                                path={`${path}/personalwall/:id`}
+                                path={`/home/personalwall/:id`}
                                 component={PersonalPage}
                             />
                             {
                                 (userData && userData.role === 'user') && (
                                     <Route
-                                        path={`${path}/postnotificate`}                                    
+                                        path={`/home/postnotification`}                                    
                                         component={CreateNoti}
                                     />
                                 )
@@ -229,16 +233,16 @@ const Homepage = (props) => {
                                 (userData && userData.role === 'admin') && (
                                     <>
                                     <Route
-                                        path={`${path}/postnotificate`}                                    
+                                        path={`/home/postnotification`}                                    
                                         component={CreateNoti}
                                     />
                                     <Route
-                                        path={`${path}/createaccount`}                               
+                                        path={`/home/createaccount`}                               
                                         component={CreateAccountPage}
                                         exact
                                     />
                                     <Route
-                                        path={`${path}/createaccount/accountmanager`}                               
+                                        path={`/home/createaccount/accountmanager`}                               
                                         component={AccManagerPage}
                                     />                                
                                     </>

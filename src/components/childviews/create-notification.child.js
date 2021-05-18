@@ -55,10 +55,10 @@ const CreateNoti = (props) => {
     }
 
     async function onSubmit(e) {
-        e.preventDefault()        
-        if(selectedOption){
+        e.preventDefault()
+        if(title || content || desc || selectedOption){
             setBtnState(true)
-            await axios.post(`${process.env.REACT_APP_IP}/notification/add`,
+            axios.post(`${process.env.REACT_APP_IP}/notification/add`,
             {
                 'title': title,
                 'content': content,
@@ -69,9 +69,7 @@ const CreateNoti = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(async res => {
-
-                console.log(res)
+            .then(res => {                
                 if(res.data.code === 0){
                     setTitle('')
                     setDesc('')
@@ -84,26 +82,26 @@ const CreateNoti = (props) => {
                 } else {                
                     alert.show(res.data.message, {
                         type: 'error'
-                    })
-
-                }                
+                    })            
+                }      
+                setBtnState(false)          
             })
             .catch( e => {
-                console.error(e)      
+                console.error(e)
+                setBtnState(false)     
             })
-            setBtnState(false)
-        }
+        }   
         else {
-            alert.show(`Please pick one of the faculty`, {
+            alert.show(`Please fill the form above`, {
                 type: 'error'
             })        
-        }
+        }        
     }
 
     return(
         <div className='child-page'>
             <h5 className='child-header'>
-                POST NOTIFICATON
+                POST NOTIFICATION
             </h5>
             <div className='child-body'>
                 <form onSubmit={onSubmit}>
