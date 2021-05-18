@@ -129,7 +129,7 @@ const NotiCard = (props) => {
                 <div className='empty-text'>Deleted notification</div>
             </div>
         ):(      
-                <div className='noti-card m-1' onClick={props.seedetail} value='See detail' style={{borderLeft: props.borderStyle, backgroundColor: hoverState?'white':'rgba(248,248,248,255)'}} onMouseEnter={() => setHoverState(true)} onMouseLeave={() => setHoverState(false)}>    
+                <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: hoverState?'white':'rgba(248,248,248,255)'}} onMouseEnter={() => setHoverState(true)} onMouseLeave={() => setHoverState(false)}>    
                     <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                         Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
                     </Modal>
@@ -154,7 +154,7 @@ const NotiCard = (props) => {
                         {
                             hoverState?(
                                 <div className='row'>
-                                    <div className='col-9'>
+                                    <div className='col-9' onClick={props.seedetail}>
                                         <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
                                             {title}
                                         </div>
@@ -175,7 +175,7 @@ const NotiCard = (props) => {
                                     </div>
                                 </div>
                             ):(                                
-                                    <div>
+                                    <div onClick={props.seedetail}>
                                         <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
                                             {title}
                                         </div>                                    
