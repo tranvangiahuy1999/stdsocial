@@ -59,7 +59,7 @@ const Homepage = (props) => {
                     icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
                 },
                 {
-                    name: 'Post notification',
+                    name: 'Post notice',
                     route: `/home/postnotification`,
                     icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
                 },
@@ -83,7 +83,7 @@ const Homepage = (props) => {
                     icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
                 },
                 {
-                    name: 'Post notification',
+                    name: 'Post notice',
                     route: `/home/postnotification`,
                     icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
                 },                  
