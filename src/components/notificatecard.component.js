@@ -166,12 +166,18 @@ const NotiCard = (props) => {
                                         </div>
                                     </div>
                                     <div className='col-3 mt-auto mb-auto' style={{textAlign:'right'}}>
-                                        <button className='btn btn-primary mr-1' style={{textAlign:'center'}}>
-                                            <AiOutlineEdit onClick={showEditModal} size='17px' color='white'></AiOutlineEdit>                                    
-                                        </button>    
-                                        <button className='btn btn-danger mr-2' style={{textAlign:'center'}}>
-                                            <ImBin onClick={showDelModal} size='15px' color='white'></ImBin>
-                                        </button>                                                                                                         
+                                        {
+                                            (userData && userData.role !== 'student') && (
+                                                <div>
+                                                    <button className='btn btn-primary mr-1' style={{textAlign:'center'}}>
+                                                        <AiOutlineEdit onClick={showEditModal} size='17px' color='white'></AiOutlineEdit>                                    
+                                                    </button>    
+                                                    <button className='btn btn-danger mr-2' style={{textAlign:'center'}}>
+                                                        <ImBin onClick={showDelModal} size='15px' color='white'></ImBin>
+                                                    </button>
+                                                </div>
+                                            )
+                                        }                                                                                                                                              
                                     </div>
                                 </div>
                             ):(                                
