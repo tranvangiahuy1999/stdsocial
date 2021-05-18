@@ -49,7 +49,7 @@ const NotiPage = (props) => {
 
     function onSelectChange(value) {
         setSearchFalcuty(value)        
-    }  
+    }
 
     async function getPage(page){        
         setCurrentPage(page)
@@ -163,8 +163,7 @@ const NotiPage = (props) => {
         .then(res => {            
             if(res.data.code === 0){
                 let array = ['All']
-                res.data.data.map((value) => {array.push(value.nameRole)})
-                console.log(array)
+                res.data.data.map((value) => {array.push(value.nameRole)})                
                 setFalcuty(array)
             } else {
                 alert.show(res.data.message, {
@@ -218,7 +217,7 @@ const NotiPage = (props) => {
                                                             ))
                                                         )
                                                     }                                             
-                                            </Select>                                                                  
+                                            </Select>                                                                 
                                         </div>                        
                                         <div className="col-4 p-0">
                                             <div style={{textAlign:'right'}}>
