@@ -101,7 +101,7 @@ const CreateNoti = (props) => {
     return(
         <div className='child-page'>
             <h5 className='child-header'>
-                POST NOTIFICATION
+                POST NOTICE
             </h5>
             <div className='child-body'>
                 <form onSubmit={onSubmit}>
