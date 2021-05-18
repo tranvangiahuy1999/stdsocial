@@ -5,6 +5,12 @@ import {Modal} from 'antd'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { useAlert } from 'react-alert';
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+const editorConfiguration = {
+    toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
+};
 
 const NotiCard = (props) => {    
     const [userData, getUserData] = useState()
@@ -146,7 +152,24 @@ const NotiCard = (props) => {
                                 <input className='form-control' value={props.falcutyname} disabled={true} placeholder='Faculty'></input>
                             </div>
                             <div className='form-group'>
-                                <textarea className='form-control' value={editContent} onChange={e => setEditContent(e.target.value)} placeholder='Content'></textarea>
+                                <CKEditor
+                                    editor={ ClassicEditor }
+                                    data={editContent}
+                                    config={editorConfiguration}                                                                               
+                                    onReady={ editor => {                                
+                                        editor.editing.view.change(writer => {
+                                            writer.setStyle(
+                                            "height",
+                                            "200px",
+                                            editor.editing.view.document.getRoot()
+                                            );
+                                        });
+                                    } }
+                                    onChange={ ( event, editor ) => {
+                                        const data = editor.getData();
+                                        setEditContent(data)
+                                    } }                            
+                                />                                
                             </div>
                         </div>
                     </Modal>

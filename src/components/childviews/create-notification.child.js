@@ -10,6 +10,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 const { Option } = Select;
 
+const editorConfiguration = {
+    toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
+};
+
 const CreateNoti = (props) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
@@ -21,10 +25,6 @@ const CreateNoti = (props) => {
     const [btnState, setBtnState] = useState(false)
 
     const alert = useAlert()
-
-    const editorConfiguration = {
-        toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
-    };
 
     function onSelectChange(value) {
         setSearchFalcuty(value)        

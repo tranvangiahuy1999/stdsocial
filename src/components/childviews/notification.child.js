@@ -84,34 +84,37 @@ const NotiPage = (props) => {
         }
     }
 
-    async function submitFilter(page){        
+    async function submitFilter(page){
+        let faculty = ''     
         if(searchFalcuty === 'All'){
-           setSearchFalcuty('')
+            faculty = ''
+        } else {
+            faculty = searchFalcuty
         }
         setSendBtnState(true)
 
-        setFindData({title: searchNotiTitle, faculty: searchFalcuty, date: startDate})
+        setFindData({title: searchNotiTitle, faculty: faculty, date: startDate})
         setCurrentSearchPage(page)        
         
         let api = `${process.env.REACT_APP_IP}/notification/dateSort/${startDate}/${endDate}/${page}`
 
-        if(searchNotiTitle.length > 0 || searchFalcuty.length > 0 || startDate.length > 0){
-            if(searchNotiTitle.length > 0 && searchFalcuty.length > 0 && startDate.length > 0){
-                api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${searchFalcuty}/${startDate}/${endDate}/${page}`
+        if(searchNotiTitle.length > 0 || faculty.length > 0 || startDate.length > 0){
+            if(searchNotiTitle.length > 0 && faculty.length > 0 && startDate.length > 0){
+                api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${faculty}/${startDate}/${endDate}/${page}`
             }
             else if(searchNotiTitle.length > 0) {
-                if(searchFalcuty.length > 0 ){
-                    api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${searchFalcuty}/${page}`                    
+                if(faculty.length > 0 ){
+                    api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${faculty}/${page}`                    
                 } else if(startDate.length > 0){
                     api = `${process.env.REACT_APP_IP}/notification/title-date/${searchNotiTitle}/${startDate}/${endDate}/${page}`                   
                 } else {
                     api = `${process.env.REACT_APP_IP}/notification/search/${searchNotiTitle}/${page}`                                        }
                 }
-                else if(searchFalcuty.length > 0){
+                else if(faculty.length > 0){
                     if(startDate.length > 0){
-                        api = `${process.env.REACT_APP_IP}/notification/role-date/${searchFalcuty}/${startDate}/${endDate}/${page}`                    
+                        api = `${process.env.REACT_APP_IP}/notification/role-date/${faculty}/${startDate}/${endDate}/${page}`                    
                     } else {
-                        api = `${process.env.REACT_APP_IP}/notification/faculty/${searchFalcuty}/${page}`                    
+                        api = `${process.env.REACT_APP_IP}/notification/faculty/${faculty}/${page}`                    
                     }
                 }            
             } else {
