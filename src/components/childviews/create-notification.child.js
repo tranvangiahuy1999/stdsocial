@@ -155,8 +155,9 @@ const CreateNoti = (props) => {
                             } }                            
                         />                        
                     </div>
-                    <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Post</button>                    
-                                            
+                    <div style={{textAlign:'center'}}>
+                        <button disabled={btnState} className="btn btn-primary" style={{width: '50%'}}><RiSendPlaneFill size='18px' color='white'></RiSendPlaneFill> Post notice</button>                                            
+                    </div>
                 </form>
             </div>
         </div>
