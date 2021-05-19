@@ -124,9 +124,11 @@ const CreateAccountPage = (props) => {
     return(      
                     <div className='child-page'>
                         <h5 className='child-header'>
-                            CREATE ACCOUNT                            
-                                <button className='m-2 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ border:'2px solid rgba(62,101,233,255)', borderRadius:'25px', color:'rgba(62,101,233,255)', fontSize: '16px', float:'right', position:'relative'}}><RiUserSettingsLine size='16px' color='rgba(62,101,233,255)'></RiUserSettingsLine> Management</button>                            
-                        </h5>
+                            CREATE ACCOUNT 
+                            <div style={{textAlign:'right'}}>
+                            <button className='m-1 p-2 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ border:'2px solid rgba(62,101,233,255)', borderRadius:'25px', color:'rgba(62,101,233,255)', fontSize: '16px', position:'relative'}}><RiUserSettingsLine size='18px' color='rgba(62,101,233,255)'></RiUserSettingsLine> User management</button>
+                        </div>                                                                                   
+                        </h5>                        
                         <div className='child-body'>                            
                             <div className='col-12' style={{margin:'auto'}}>                                                              
                                 <form className='row' onSubmit={createAccount}>

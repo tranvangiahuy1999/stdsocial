@@ -403,6 +403,7 @@
   color: rgba(62,101,233,255);
   background-color: white;
   text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .paging {
@@ -430,8 +431,7 @@
 }
 
 .direct-btn {
-  background-color: white;
-  padding: 5px;
+  background-color: white;  
 }
 
 .direct-btn:hover {
