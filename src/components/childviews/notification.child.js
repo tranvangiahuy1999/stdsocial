@@ -7,7 +7,7 @@ import {
 import { Pagination, Spin, Space, DatePicker, Select } from 'antd';
 import NotiCard from '../notificatecard.component'
 import "react-datepicker/dist/react-datepicker.css";
-import { RiDeleteBin6Line, RiSendPlaneFill } from "react-icons/ri";
+import { RiDeleteBin6Line, RiSearchEyeLine } from "react-icons/ri";
 import axios from 'axios'
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
@@ -224,8 +224,8 @@ const NotiPage = (props) => {
                                         </div>                        
                                         <div className="col-4 p-0">
                                             <div style={{textAlign:'right'}}>
-                                                <button type='button' className='btn btn-danger' onClick={cleanAll}><RiDeleteBin6Line size='16px' color='white'></RiDeleteBin6Line></button>
-                                                <button disabled={sendBtnState} type='button' className='btn btn-primary ml-2' onClick={() => submitFilter(1)}><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill></button>
+                                                <button type='button' className='btn btn-danger' onClick={cleanAll}><RiDeleteBin6Line size='18px' color='white'></RiDeleteBin6Line></button>
+                                                <button disabled={sendBtnState} type='button' className='btn btn-primary ml-2' onClick={() => submitFilter(1)}><RiSearchEyeLine size='19px' color='white'></RiSearchEyeLine></button>
                                             </div>
                                         </div>                                         
                                     </div>

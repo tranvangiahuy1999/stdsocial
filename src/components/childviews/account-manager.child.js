@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import AccRow from '../account-row.component'
+import AccRow from '../account-item.component'
 import axios from 'axios'
 import { useAlert } from 'react-alert'
 import {Spin, Space} from 'antd'

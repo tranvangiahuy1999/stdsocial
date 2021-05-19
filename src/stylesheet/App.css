@@ -128,12 +128,14 @@
   text-align: start;
   padding: 10px;
   background-color: white;
-  align-content: center;  
+  align-content: center;
+  color: gray;
 }
 
 .sidebar-btn:hover {    
   background-color: rgba(201,231,254,255);
   border-left: 3px solid rgba(69,190,235,255);
+  color: rgba(62,101,233,255);
 }
 
 .stp-container .avatar, .navbar .avatar, .comment-row img {
@@ -398,7 +400,7 @@
 
 .child-header {
   padding: 8px;
-  color: gray;
+  color: rgba(62,101,233,255);
   background-color: white;
   text-align: center;
 }
@@ -419,9 +421,23 @@
 }
 
 .selectboxmap {
-  height: 400px;
+  height: 290px;
+  overflow: hidden;
+}
+
+.selectboxmap:hover {
   overflow-y: scroll;
 }
+
+.direct-btn {
+  background-color: white;
+  padding: 5px;
+}
+
+.direct-btn:hover {
+  background-color: rgba(201,231,254,255);
+}
+
 .reading-title{
   color: rgb(0, 0, 228);
   text-align: center;

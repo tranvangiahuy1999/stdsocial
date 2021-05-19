@@ -51,22 +51,22 @@ const Homepage = (props) => {
                 {
                     name: 'Homepage',
                     route: '/home',
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
                     route: `/home/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 },
                 {
                     name: 'Post notice',
                     route: `/home/postnotification`,
-                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px"/>,
                 },
                 {
                     name: 'Create account',
                     route: `/home/createaccount`,
-                    icon: <FaUserPlus className='mb-1' size="22px" color='gray'/>,
+                    icon: <FaUserPlus className='mb-1' size="22px"/>,
                 },        
             ])
         }
@@ -75,17 +75,17 @@ const Homepage = (props) => {
                 {
                     name: 'Homepage',
                     route: '/home',
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
                     route: `/home/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 },
                 {
                     name: 'Post notice',
                     route: `/home/postnotification`,
-                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px"/>,
                 },                  
             ])
         }
@@ -94,12 +94,12 @@ const Homepage = (props) => {
                 {
                     name: 'Homepage',
                     route: '/home',
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
                     route: `/home/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 }                    
             ])
         }
@@ -178,7 +178,7 @@ const Homepage = (props) => {
                                         username={userData?userData.user:''}
                                         sidebarchild={(route) && route.map((value, index)=> (                                            
                                             <div key={index}>
-                                                <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                                <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
                                             </div>                                         
                                         ))}
                                     ></SideBar>}
@@ -193,7 +193,7 @@ const Homepage = (props) => {
                                     username={userData?userData.user:''}
                                     sidebarchild={(route) && route.map((value, index)=> (
                                         <div key={index}>
-                                            <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                            <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
                                         </div>                                                                                                         
                                     ))}                                                                            
                                 ></SideBar>

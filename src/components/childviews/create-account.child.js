@@ -6,8 +6,7 @@ import {
 
 import { Checkbox, Space, Spin } from 'antd';
 import axios from 'axios'
-// import AccManagerPage from './account-manager.child'
-import { RiSendPlaneFill } from "react-icons/ri";
+import { RiUserAddLine, RiUserSettingsLine } from "react-icons/ri";
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
 
@@ -125,10 +124,11 @@ const CreateAccountPage = (props) => {
     return(      
                     <div className='child-page'>
                         <h5 className='child-header'>
-                            CREATE ACCOUNT
+                            CREATE ACCOUNT                            
+                                <button className='m-2 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ border:'2px solid rgba(62,101,233,255)', borderRadius:'25px', color:'rgba(62,101,233,255)', fontSize: '16px', float:'right', position:'relative'}}><RiUserSettingsLine size='16px' color='rgba(62,101,233,255)'></RiUserSettingsLine> Management</button>                            
                         </h5>
                         <div className='child-body'>                            
-                            <div className='col-12' style={{margin:'auto'}}>                                
+                            <div className='col-12' style={{margin:'auto'}}>                                                              
                                 <form className='row' onSubmit={createAccount}>
                                     <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
                                         <h6>Create faculty account</h6>
@@ -145,12 +145,8 @@ const CreateAccountPage = (props) => {
                                             <input autoComplete="off" type='password' value={repwd} onChange={v => setRePwd(v.target.value)} className='form-control' placeholder='Re-enter password' required></input>
                                         </div>
                                         <div className='form-group'>
-                                            <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
+                                            <button disabled={btnState} className="btn btn-primary"><RiUserAddLine size='16px' color='white'></RiUserAddLine> Create</button>                                            
                                         </div>
-                                        <div className='form-group'>
-                                            <div style={{fontSize: '16px'}}>Go to <span className='reading-link text-primary' onClick={() => history.push(`${url}/accountmanager`)}>site management account</span></div>                                            
-                                        </div>
-
                                     </div>
                                     <div className='col-6'>
                                         <h6>Choose faculty you want to add</h6>
@@ -170,7 +166,7 @@ const CreateAccountPage = (props) => {
                                                                 <Checkbox onChange={checkHandle} value={value.nameRole}>{value.nameRole}</Checkbox>                                                        
                                                             </div>
                                                         )):
-                                                        <div>No falcuty has shown</div>
+                                                        <div>No faculty has shown</div>
                                                     )
                                                 }
                                             </div>

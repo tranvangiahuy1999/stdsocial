@@ -8,7 +8,7 @@ const SideBar = (props) => {
                 <div className={width > 768 ?"sidebar bg-white":"sidebar-lib bg-white"}>                        
                     <div>
                         <div className='component-title'>
-                            SHORTCUTS
+                            DASHBOARD
                         </div>
                         {props.sidebarchild}                        
                     </div>
