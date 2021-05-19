@@ -39,6 +39,8 @@ const Homepage = (props) => {
 
     const {width, height} = useWindowDimensions()
 
+    const [newsfeedReloadState, setNewsfeedReloadState] = useState(false)
+
     let history = useHistory();    
 
     useEffect( () => {        
@@ -153,7 +155,7 @@ const Homepage = (props) => {
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
                             logOutHandle={logOutHandle}
                             navbarlogo={
-                                <Link to='/home'>
+                                <Link to='/home' onClick={() => setNewsfeedReloadState(!newsfeedReloadState)}>
                                     <img style={{cursor:'pointer'}} className='align-self-center ml-3' src={logo} alt="tdtu-logo"/>
                                 </Link>
                             }                        
@@ -178,13 +180,19 @@ const Homepage = (props) => {
                                         username={userData?userData.user:''}
                                         sidebarchild={(route) && route.map((value, index)=> (                                            
                                             <div key={index}>
-                                                <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                                <Link to={value.route} onClick={() => {
+                                                    if(index === 0){
+                                                        setNewsfeedReloadState(!newsfeedReloadState)
+                                                    }
+                                                }}>
+                                                    <button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button>
+                                                </Link>                                                        
                                             </div>                                         
                                         ))}
                                     ></SideBar>}
                                     open={sidebarOpen}
                                     onSetOpen={onSetSidebarOpen}
-                                    styles={{ sidebar: { background: "white", width: "180px" ,position: 'fixed', top: 0}}}/>                    
+                                    styles={{ sidebar: { background: "white", width: "180px" ,position: 'fixed', top: 0}}}                                    />                    
                             </div>
                         ):(
                             <div className='col-3'>
@@ -193,7 +201,13 @@ const Homepage = (props) => {
                                     username={userData?userData.user:''}
                                     sidebarchild={(route) && route.map((value, index)=> (
                                         <div key={index}>
-                                            <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                            <Link to={value.route} onClick={() => {
+                                                    if(index === 0){
+                                                        setNewsfeedReloadState(!newsfeedReloadState)
+                                                    }
+                                                }}>
+                                                    <button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button>
+                                            </Link>                                                        
                                         </div>                                                                                                         
                                     ))}                                                                            
                                 ></SideBar>
@@ -206,7 +220,7 @@ const Homepage = (props) => {
                                 path={`/home`}                    
                                 exact={true}             
                             >
-                                <Newfeed notilink={<Link to={`/home/notification`}>See all</Link>}></Newfeed>
+                                <Newfeed reloadNewsfeed={newsfeedReloadState} notilink={<Link to={`/home/notification`}>See all</Link>}></Newfeed>
                             </Route>                                                
                             <Route
                                 path={`/home/notification`}                                    

@@ -34,12 +34,19 @@ const Newfeed = (props) =>  {
 
     useEffect(() => {                
         getNotiData()
-        getUserData()
-        getNewfeed()        
+        getUserData()             
         
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
     }, [])
+
+    useEffect(()=> {        
+        window.scrollTo(0, 0)
+        setLoading(true)
+        newfeeddata=[]
+        count = 1
+        getNewfeed()
+    }, [props.reloadNewsfeed])
 
     useEffect(() => {
         const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});        
@@ -86,9 +93,8 @@ const Newfeed = (props) =>  {
     }
 
     function handleInfiniteOnLoad(){        
-        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100 && !loadingNewfeed){
-            setLoadingNewfeed(true)
-            count += 1                       
+        if (document.documentElement.scrollTop + window.innerHeight + 1 >= document.documentElement.scrollHeight){
+            setLoadingNewfeed(true)            
             getNewfeed()        
         }
     }    
@@ -107,7 +113,7 @@ const Newfeed = (props) =>  {
         .then(res => {            
             if(res.data.code === 0){                
                 notidata = res.data.data
-                setNotiData(res.data.data)                
+                setNotiData(res.data.data)
             }
             setLoadingNoti(false)
         })
@@ -150,6 +156,7 @@ const Newfeed = (props) =>  {
             }
             setLoading(false)
             setLoadingNewfeed(false)
+            count += 1
         })
         .catch(e => {
             console.error(e)            

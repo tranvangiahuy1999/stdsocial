@@ -46,8 +46,8 @@ const PersonalPage = (props) => {
 
     useEffect(() => {
         getCurrentUserData()                   
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));      
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));      
     }, [])
 
     useEffect(()=> {        
@@ -88,9 +88,8 @@ const PersonalPage = (props) => {
     }
 
     function handleInfiniteOnLoad(){
-        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100){
-            setLoadingNewfeed(true)
-            count += 1
+        if (document.documentElement.scrollTop + window.innerHeight + 1 >= document.documentElement.scrollHeight){
+            setLoadingNewfeed(true)            
             getPersonalNewfeed(count)        
         }
     }
@@ -114,7 +113,7 @@ const PersonalPage = (props) => {
                 if(res.data.code===0){
                     setPersonalInfo(res.data.data)                    
                     setAvatar(res.data.data.avatar)
-                    setUsername(res.data.data.user_name)
+                    setUsername(res.data.data.user_name)                    
                 } else {
                     setUserPageExist(false)
                 }
@@ -163,6 +162,7 @@ const PersonalPage = (props) => {
                 }                
                 setLoading(false)
                 setLoadingNewfeed(false)
+                count += 1
             })
             .catch( e => {
                 console.error(e)                
