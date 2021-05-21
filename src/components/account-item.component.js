@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react'
+
 import { FaRegEdit, FaUndoAlt } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
+import { BsThreeDotsVertical } from "react-icons/bs";
+
 import axios from 'axios';
 import {connect} from 'react-redux'
-import {Modal} from 'antd'
+import { Modal, Avatar, Dropdown, Menu } from 'antd'
 import { useAlert } from 'react-alert';
 
-const AccRow = (props) => {
+const UserCard = (props) => {
     const [deleteModalState, setDeleteModalState] = useState(false);
-    const [deleteState, setDeleteState] = useState(false)
+    const [deleteState, setDeleteState] = useState(props.deleted)
     const [faculty, setFaculty] = useState([])
     
     const [pwd, setPwd] = useState('')
@@ -20,7 +23,7 @@ const AccRow = (props) => {
 
     useEffect(() => {
         getRole()
-    }, [])
+    }, [])    
 
     const showDelModal = () => {        
         setDeleteModalState(true);
@@ -70,7 +73,7 @@ const AccRow = (props) => {
     }
 
     function deleteHandle(){
-        axios.delete(`${process.env.REACT_APP_IP}/admin/user/${props.acc_id}`, {
+        axios.delete(`${process.env.REACT_APP_IP}/admin/user/${props.user_id}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
@@ -135,71 +138,65 @@ const AccRow = (props) => {
         
     }
 
-    return(
-        (deleteState)?(
-            <div className='row acc-row' style={{backgroundColor:'lightgray'}}>            
+    const menu = (                                
+                (deleteState)?(
+                    <Menu>                   
+                        <Menu.Item>
+                            <div style={{color:'gray'}} onClick={rerollAccount}><FaUndoAlt className='mr-1' color='gray' size='16px'></FaUndoAlt> Reroll</div>
+                        </Menu.Item>
+                    </Menu>                    
+                ):(
+                    <Menu>
+                        <Menu.Item>
+                            <div style={{color:'gray'}} onClick={showEditModal}><FaRegEdit className='mr-1' color='gray' size='16px'></FaRegEdit> Edit</div>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <div style={{color:'gray'}} onClick={showDelModal}><ImBin className='mr-1' color='gray' size='16px'></ImBin> Delete</div>
+                        </Menu.Item> 
+                    </Menu>
+                )                                    
+    );
 
-            <div className='col-3'>{props.user}</div>
-            <div className='col-3'>
-                <div className='ml-1'>
-                    {props.user_name}
-                </div>
-            </div>
-            <div className='col-3'>
-                <div className='ml-2'>
-                    {props.faculty}
-                </div>
-            </div>
-            <div className='col-3'>
-                <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo' onClick={rerollAccount}></FaUndoAlt>                          
-            </div>
-        </div>
-        ):(
-            <div className='row acc-row' style={{backgroundColor:props.deleted?'lightgray':'white'}}>
+    return(       
+            <div>
+                <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
+                    Are you sure you want to delete this account? <span style={{color:'red'}}>*There is no running back!</span>
+                </Modal>
 
-            <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
-                Are you sure you want to delete this account? <span style={{color:'red'}}>*There is no running back!</span>
-            </Modal>
-
-            <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
-                <div>                    
-                    <div className='form-group'>
-                        <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setPwd(e.target.value)} placeholder='Password'></input>
-                    </div>
-                    <div className='form-group'>
-                        <input autoComplete="off" className='form-control' type='password' value={rePwd} onChange={e => setRePwd(e.target.value)} placeholder='Re-password'></input>
-                    </div>                    
-                </div>
-            </Modal>
-
-            <div className='col-3'>{props.user}</div>
-            <div className='col-3'>
-                <div className='ml-1'>
-                    {props.user_name}
-                </div>
-            </div>
-            <div className='col-3'>
-                <div className='ml-2'>
-                    {props.faculty}
-                </div>
-            </div>
-            <div className='col-3'>
-                {
-                    props.deleted?(
-                        <FaUndoAlt className='ml-4 clickable-icon' size='18px' color='gray' title='undo' onClick={rerollAccount}></FaUndoAlt>
-                    ):(
-                        <div className='ml-2'>
-                            <FaRegEdit className='clickable-icon' size='20px' color='gray' title='edit' onClick={showEditModal}></FaRegEdit>
-                            <span>
-                                <ImBin className='ml-3 clickable-icon' size='20px' color='gray' title='delete' onClick={showDelModal}></ImBin>
-                            </span>
+                <Modal title="Update account" visible={editModalState} onOk={handleEditOk} onCancel={handleEditCancel}>
+                    <div>                    
+                        <div className='form-group'>
+                            <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setPwd(e.target.value)} placeholder='Password'></input>
                         </div>
-                    )
-                }                
-            </div>
+                        <div className='form-group'>
+                            <input autoComplete="off" className='form-control' type='password' value={rePwd} onChange={e => setRePwd(e.target.value)} placeholder='Re-password'></input>
+                        </div>                    
+                    </div>
+                </Modal>
+
+                <div className='row user-card m-2' style={{backgroundColor: deleteState?'lightgray':'white'}}>
+                    <div className='col-md-1 col-lg-1 col-2 p-1' style={{backgroundColor: deleteState?'gray':props.backgroundColor, textAlign:'center', borderTopLeftRadius:'10px', borderBottomLeftRadius:'10px'}}>
+                        <Avatar src={props.avatar}></Avatar>
+                    </div>
+                    <div className='col-md-10 col-lg-10 col-7 p-2'>
+                        <div style={{color: deleteState?'gray':props.color, fontSize: '17px'}}>{props.user}</div>
+                        <div style={{color: 'gray' ,fontSize:'14px'}}>
+                            {
+                                (deleteState)?                                
+                                    'tài khoản không khả dụng'
+                                :
+                                    props.user_name                            
+                            }
+                        </div>
+                    </div>
+                    <div className='col-md-1 col-lg-1 col-2 p-1' style={{textAlign:'right', margin:'auto'}}>
+                        <Dropdown overlay={menu} placement="bottomRight" arrow>
+                            <BsThreeDotsVertical className='clickable-icon' color='gray' size='16px'></BsThreeDotsVertical>
+                        </Dropdown>
+                    </div>
+                </div>            
         </div>
-        )        
-    )
+        )    
 }
 
 function mapStateToProps(state){
@@ -208,4 +205,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(AccRow)
+export default connect(mapStateToProps)(UserCard)

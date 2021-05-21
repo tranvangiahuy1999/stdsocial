@@ -21,7 +21,8 @@ import {connect} from 'react-redux';
 import {LOGOUT} from '../constants/index'
 import {
     Avatar,
-    message 
+    message,
+    Skeleton 
     } from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
@@ -161,10 +162,16 @@ const Homepage = (props) => {
                             }                        
                             usersession={
                             <Link to={`/home/personalwall/${(userData) && userData._id}`}>
-                                <div className='userwall row mr-1' onClick={props.userwallredirect}>
-                                    <Avatar src={avatar} alt="avatar" ></Avatar>
-                                    <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
-                                </div>
+                                {
+                                    userData?(
+                                        <div className='userwall row mr-1' onClick={props.userwallredirect}>
+                                            <Avatar src={avatar} alt="avatar" ></Avatar>
+                                            <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
+                                        </div>
+                                    ):(
+                                        <Skeleton avatar active></Skeleton>
+                                    )
+                                }                                
                             </Link>}
                             user_role={userData?userData.role:''}
                         ></NavBar>

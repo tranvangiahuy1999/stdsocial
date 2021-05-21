@@ -10,7 +10,7 @@ import { MdInsertPhoto } from "react-icons/md";
 
 import { BiComment } from "react-icons/bi";
 import ReactPlayer from 'react-player/youtube'
-import { Menu, Dropdown, Modal, List, Skeleton } from 'antd';
+import { Menu, Dropdown, Modal } from 'antd';
 
 import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'

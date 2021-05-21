@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Avatar, Space, Spin, Result } from 'antd';
+import { Avatar, Space, Spin, Result, Skeleton } from 'antd';
 import {connect} from 'react-redux';
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
@@ -427,21 +427,21 @@ const PersonalPage = (props) => {
                             </div>
                         ))
                         }
-                        {loadingNewfeed && hasMore && (
-                            <div style={{textAlign:'center', margin:'30px'}} >
-                            <Space size="middle">
-                                <Spin />
-                            </Space>
-                        </div>
+                        {(loadingNewfeed && hasMore) ? (
+                            <div className='mt-4'>
+                                <Skeleton avatar paragraph={{ rows: 3 }} active />                                            
+                            </div>                    
+                        ): (
+                            <div style={{height: '100px'}}>
+                                {
+                                    (!hasMore) && (
+                                        <div className='empty-data'>
+                                            <div className='empty-text'>There are no posts left</div>
+                                        </div>
+                                    )
+                                }                            
+                            </div>
                         )}
-
-                        {
-                            !hasMore && (
-                                <div className='empty-data'>
-                                    <div className='empty-text'>There are no posts left</div>
-                                </div>
-                            )
-                        }
                     </div>
                 </div>                                                        
             </div>

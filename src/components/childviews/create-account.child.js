@@ -126,7 +126,7 @@ const CreateAccountPage = (props) => {
                         <h5 className='child-header'>
                             CREATE ACCOUNT 
                             <div style={{textAlign:'right'}}>
-                            <button className='m-1 p-2 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ border:'2px solid rgba(62,101,233,255)', borderRadius:'25px', color:'rgba(62,101,233,255)', fontSize: '16px', position:'relative'}}><RiUserSettingsLine size='18px' color='rgba(62,101,233,255)'></RiUserSettingsLine> User management</button>
+                            <button className='m-1 p-1 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ borderRadius:'25px', fontSize: '16px', position:'relative'}}><RiUserSettingsLine size='18px'></RiUserSettingsLine> User management</button>
                         </div>                                                                                   
                         </h5>                        
                         <div className='child-body'>                            

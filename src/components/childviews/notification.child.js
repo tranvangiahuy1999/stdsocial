@@ -6,7 +6,6 @@ import {
 
 import { Pagination, Spin, Space, DatePicker, Select } from 'antd';
 import NotiCard from '../notificatecard.component'
-import "react-datepicker/dist/react-datepicker.css";
 import { RiDeleteBin6Line, RiSearchEyeLine } from "react-icons/ri";
 import axios from 'axios'
 import {connect} from 'react-redux'

@@ -7,7 +7,7 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-import { notification, Spin, Space } from 'antd';
+import { notification, Spin, Space, Skeleton } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
 
@@ -26,6 +26,7 @@ const Newfeed = (props) =>  {
     const [hasMore, setHasMore] = useState(true)
 
     const [newcmt, setNewCmt] = useState()
+    const [newlike, setNewLike] = useState()
 
     const {width, height} = useWindowDimensions()
     const history = useHistory()
@@ -57,11 +58,15 @@ const Newfeed = (props) =>  {
         })
         socket.on('new_comment', (data) => {
             newCommentHandler(data)
+        })
 
+        socket.on('new_likelist', (data) =>{
+            newLikeHandler(data)
         })
         return () => {
             socket.off('new_notification');
             socket.off("new_comment");
+            socket.off('new_likelist');
         }
     }, [])
 
@@ -90,6 +95,11 @@ const Newfeed = (props) =>  {
 
     function newCommentHandler(data){
         setNewCmt(data.data)        
+    }
+
+    function newLikeHandler(data) {
+        console.log(data)
+        setNewLike(data)        
     }
 
     function handleInfiniteOnLoad(){        
@@ -211,7 +221,8 @@ const Newfeed = (props) =>  {
                                                 type:'success'
                                         })}}
                                         role={(userData) && userData.role}
-                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}                                                                                                                                                   
+                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
+
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>
@@ -220,21 +231,21 @@ const Newfeed = (props) =>  {
                             
                         )                                                                                                                                                                   
                     }
-                    {loadingNewfeed && hasMore && (
-                        <div style={{textAlign:'center', margin:'30px'}} >
-                        <Space size="middle">
-                            <Spin />
-                        </Space>
-                    </div>
-                    )}
-
-                    {
-                        !hasMore && (
-                            <div className='empty-data'>
-                                <div className='empty-text'>There are no posts left</div>
-                            </div>
-                        )
-                    }                          
+                    {(loadingNewfeed && hasMore) ? (
+                        <div className='mt-4'>
+                            <Skeleton avatar paragraph={{ rows: 3 }} active />                                            
+                        </div>                    
+                    ): (
+                        <div style={{height: '100px'}}>
+                            {
+                                (!hasMore) && (
+                                    <div className='empty-data'>
+                                        <div className='empty-text'>There are no posts left</div>
+                                    </div>
+                                )
+                            }                            
+                        </div>
+                    )}                                    
                 </div>
             </div>
             {
