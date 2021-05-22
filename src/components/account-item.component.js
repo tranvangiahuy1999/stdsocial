@@ -135,7 +135,7 @@ const UserCard = (props) => {
     }
 
     function rerollAccount(){
-        
+        // axios.get(`${process.env.REACT_APP_IP}/admin/`)
     }
 
     const menu = (                                
