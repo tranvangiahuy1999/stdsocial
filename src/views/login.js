@@ -47,7 +47,7 @@ const LoginView = (props) => {
             }
         })
         .catch(e => {
-            console.log(e)
+            console.error(e)
         })
     }
 

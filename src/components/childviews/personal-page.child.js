@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import { Avatar, Space, Spin, Result, Skeleton } from 'antd';
+import { Avatar, Result, Skeleton } from 'antd';
 import {connect} from 'react-redux';
 import StatusPost from '../statuspost.component'
 import StatusCard from '../statuscard.component'
@@ -31,6 +31,7 @@ const PersonalPage = (props) => {
 
     const [loading, setLoading] = useState(true)
     const [newcmt, setNewCmt] = useState()
+    const [newlike, setNewLike] = useState()
     const [userPageExist, setUserPageExist] = useState(true)
 
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
@@ -68,14 +69,14 @@ const PersonalPage = (props) => {
         socket.on('new_comment', (data) => {
             newCommentHandler(data)
         })
+        socket.on('new_likelist', (data) =>{
+            newLikeHandler(data)
+        })
         return () => {            
             socket.off("new_comment");
+            socket.off('new_likelist');
         }
-    }, [])
-
-    function newCommentHandler(data){
-        setNewCmt(data.data)        
-    }
+    }, [])    
 
     const debounce = (func, delay) => {
         let inDebounce;
@@ -93,6 +94,14 @@ const PersonalPage = (props) => {
             getPersonalNewfeed(count)        
         }
     }
+    
+    function newCommentHandler(data){
+        setNewCmt(data.data)        
+    }
+
+    function newLikeHandler(data) {        
+        setNewLike(data.data)        
+    }
 
     function getUserInformation(){
         let userid = undefined
@@ -108,8 +117,7 @@ const PersonalPage = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {         
-                console.log(res, userid)                       
+            .then(res => {                                              
                 if(res.data.code===0){
                     setPersonalInfo(res.data.data)                    
                     setAvatar(res.data.data.avatar)
@@ -390,10 +398,11 @@ const PersonalPage = (props) => {
                         }
                         {
                             (loading)?(
-                                <div style={{textAlign:'center'}}>
-                                    <Space size="middle" style={{marginTop:'20px'}}>
-                                        <Spin size="large" />
-                                    </Space>
+                                <div >
+                                    <Skeleton avatar active paragraph={4}></Skeleton>
+                                    <Skeleton avatar active paragraph={4}></Skeleton>
+                                    <Skeleton avatar active paragraph={4}></Skeleton>
+                                    <Skeleton avatar active paragraph={4}></Skeleton>
                                 </div>
                             ):(
                             (newfeedData && newfeedData.length > 0)?(
@@ -419,6 +428,7 @@ const PersonalPage = (props) => {
                                         })}}
                                         role={(userData) && userData.role}
                                         newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
+                                        newlike={(newlike && newlike.like_post === value._id)?newlike:''}
                                     ></StatusCard>))
                             )
                         :(

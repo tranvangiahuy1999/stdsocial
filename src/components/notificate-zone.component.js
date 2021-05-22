@@ -1,7 +1,7 @@
 import React from 'react'
 import NotiCard from './notificatecard.component'
 import {connect} from 'react-redux'
-import { Spin, Space } from 'antd';
+import { Skeleton } from 'antd';
 
 const NotiZone = (props) => {
     function notiClickHandle(){
@@ -16,10 +16,11 @@ const NotiZone = (props) => {
             <div className='notizone-body'>            
                 {
                     (props.loading)?(
-                        <div style={{textAlign:'center', margin:'30px'}}>
-                            <Space size="middle">
-                                <Spin size='default' />
-                            </Space>
+                        <div>
+                            <Skeleton active paragraph={2}></Skeleton>
+                            <Skeleton active paragraph={2}></Skeleton>
+                            <Skeleton active paragraph={2}></Skeleton>
+                            <Skeleton active paragraph={2}></Skeleton>
                         </div>
                     ):(
                     props.notiData && props.notiData.length > 0?

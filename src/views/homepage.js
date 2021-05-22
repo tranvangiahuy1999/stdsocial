@@ -130,7 +130,11 @@ const Homepage = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)            
+            console.error(e)
+            if(e.response.status === 401){
+                props.logOut()
+                history.push('/login')
+            }        
         })
     }
 

@@ -7,7 +7,7 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-import { notification, Spin, Space, Skeleton } from 'antd';
+import { notification, Skeleton } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
 
@@ -97,9 +97,8 @@ const Newfeed = (props) =>  {
         setNewCmt(data.data)        
     }
 
-    function newLikeHandler(data) {
-        console.log(data)
-        setNewLike(data)        
+    function newLikeHandler(data) {        
+        setNewLike(data.data)        
     }
 
     function handleInfiniteOnLoad(){        
@@ -169,7 +168,7 @@ const Newfeed = (props) =>  {
             count += 1
         })
         .catch(e => {
-            console.error(e)            
+            console.error(e)                 
         })          
     }
     
@@ -192,10 +191,11 @@ const Newfeed = (props) =>  {
                 <div className='post-data'>
                     {
                         (loading)?(
-                            <div style={{textAlign:'center', margin:'30px'}} >
-                                <Space size="middle">
-                                    <Spin size="large" />
-                                </Space>
+                            <div className='mt-4'>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>                      
                             </div>
                         ):(
                             (newfeedData && newfeedData.length > 0)?(
@@ -222,7 +222,7 @@ const Newfeed = (props) =>  {
                                         })}}
                                         role={(userData) && userData.role}
                                         newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
-
+                                        newlike={(newlike && newlike.like_post === value._id)?newlike:''}
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>

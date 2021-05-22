@@ -16,8 +16,6 @@ import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'
 import axios from 'axios'
 
-const count = 3
-
 export default class StatusCard extends React.Component {
     constructor(){
         super()
@@ -66,7 +64,8 @@ export default class StatusCard extends React.Component {
         this.updateHandle = this.updateHandle.bind(this)
 
         this.onLoadMore  = this.onLoadMore.bind(this)  
-        this.updateList  = this.updateList.bind(this)
+        this.socketUpdateComment  = this.socketUpdateComment.bind(this)
+        this.socketUpdateLike  = this.socketUpdateLike.bind(this)
     }
 
     componentDidMount(){                
@@ -94,16 +93,37 @@ export default class StatusCard extends React.Component {
         if(this.props.newcmt && this.props.newcmt !== prevProps.newcmt) {
             let newcmtlist = this.state.cmtdata            
             newcmtlist.push(this.props.newcmt.cmt_data[0])            
-            this.updateList(newcmtlist)
+            this.socketUpdateComment(newcmtlist)
+        }
+
+        if(this.props.newlike && this.props.newlike !== prevProps.newlike) {            
+            this.socketUpdateLike(this.props.newlike)
         }
     }
 
-    updateList(newcmtlist){        
+    socketUpdateLike(newlikedata) {
+        if (newlikedata.like_list.some(e => e.id_user === this.props.user_id)) {
+            this.setState({
+                like: true
+            })
+        } else {
+            this.setState({
+                like: false
+            })
+        }
+
+
         this.setState({
-            cmtdata: newcmtlist,
-            commentcount: newcmtlist.length,
+            likecount: newlikedata.like_list.length,
+            likelist: newlikedata.like_list
         })
-        
+    }
+
+    socketUpdateComment(newcmtdata){        
+        this.setState({
+            cmtdata: newcmtdata,
+            commentcount: newcmtdata.length,
+        })        
     }
 
     showModal = () => {
@@ -125,29 +145,13 @@ export default class StatusCard extends React.Component {
         })        
     };
 
-    likeHandle(){        
+    likeHandle(){                
             axios.put(`${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
-            })
-            .then((res) => {
-                if(res.data.code === 0){
-                    if(this.state.like){
-                        this.setState({
-                            likecount: this.state.likecount -= 1
-                        })
-                    } else {
-                        this.setState({
-                            likecount: this.state.likecount += 1
-                        })
-                    }        
-                    this.setState({
-                        like: !this.state.like
-                    })
-                }
-            })
-            .catch(e => {
+            })            
+            .catch(e => {                
                 console.error(e)
             })                          
     }
@@ -337,10 +341,7 @@ export default class StatusCard extends React.Component {
     }
 
     onLoadMore() {
-        this.setState({
-            loading: true,
-            cmtlist: this.state.cmtdata.concat([...new Array(count)].map(() => ({ loading: true, name: {} }))),
-        });
+
     }
 
     render(){        
