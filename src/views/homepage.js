@@ -45,8 +45,7 @@ const Homepage = (props) => {
     let history = useHistory();    
 
     useEffect( () => {        
-        getCurrentUserData()
-        console.log(props.token)        
+        getCurrentUserData()          
     }, [props.token])    
 
     function setCompRoute(role){
@@ -226,7 +225,7 @@ const Homepage = (props) => {
                             </div>
                         )
                     }
-                    <div className={width < 768?'home-body col-12':'home-body col-9'}>                
+                    <div className={width < 768?'home-body col-12 p-0':'home-body col-9 p-0'}>                
                         <Switch>                            
                             <Route
                                 path={`/home`}                    

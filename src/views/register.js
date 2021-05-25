@@ -70,6 +70,16 @@ const RegisterPage = (props) => {
             return
         }
 
+        let now = new Date()
+        let yearnow = now.getFullYear()
+
+        if(yearnow - datetime.getFullYear() < 18){
+            alert.show('Your age is not suitable', {
+                type:'error'
+            })
+            return
+        }
+
         setBtnState(true)        
 
         axios.put(`${process.env.REACT_APP_IP}/account/update/user`,{

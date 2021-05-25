@@ -59,7 +59,7 @@ const CreateNoti = (props) => {
     async function onSubmit(e) {
         e.preventDefault()
         if(title && content && desc && searchFalcuty !== 'All'){
-            setBtnState(true)
+            setBtnState(true)            
             axios.post(`${process.env.REACT_APP_IP}/notification/add`,
             {
                 'title': title,
@@ -71,7 +71,8 @@ const CreateNoti = (props) => {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(res => {                
+            .then(res => {
+                console.log(res)            
                 if(res.data.code === 0){
                     setTitle('')
                     setDesc('')
@@ -81,7 +82,7 @@ const CreateNoti = (props) => {
                         type:'success'
                     })                    
 
-                } else {                
+                } else {                                 
                     alert.show(res.data.message, {
                         type: 'error'
                     })            
