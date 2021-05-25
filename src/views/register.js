@@ -53,10 +53,10 @@ const RegisterPage = (props) => {
         })
         .catch( e => {
             console.error(e)
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            if(e.response.status === 401){
+                props.logOut()
+                history.push('/login')
+            }
         })
     }
 
@@ -82,8 +82,7 @@ const RegisterPage = (props) => {
                 'Authorization' : 'Bearer ' + props.token
             }            
         })
-        .then(res => {
-            console.log(res)
+        .then(res => {            
             if(res.data.code === 0){
                 props.getToken(res.data.token)
                 alert.show(res.data.message + '. Đang chuyển hướng...', {
@@ -102,11 +101,11 @@ const RegisterPage = (props) => {
         .catch( e => {
             alert.show('something wrong',{
                 type:'error'
-            })        
-            // if(e.response.status===401){
-            //     await props.logOut()
-            //     history.push('/login')
-            // }
+            })
+            if(e.response.status === 401){
+                props.logOut()
+                history.push('/login')
+            }          
         })
         setBtnState(false)
     }

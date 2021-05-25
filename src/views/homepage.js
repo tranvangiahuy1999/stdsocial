@@ -2,13 +2,11 @@ import React, {useState, useEffect} from 'react'
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    useRouteMatch,
+    Route,    
     useHistory,
-    Link,    
+    Link  
 } from 'react-router-dom'
-import {useAlert} from 'react-alert'
-
+import logo from '../resources/logo-tdtu.png'
 import Sidebar from "react-sidebar";
 import NavBar from '../components/navbar.component'
 import SideBar from "../components/sidebar.component"
@@ -22,7 +20,9 @@ import axios from 'axios'
 import {connect} from 'react-redux';
 import {LOGOUT} from '../constants/index'
 import {
-    Avatar, 
+    Avatar,
+    message,
+    Skeleton 
     } from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { RiNotificationBadgeFill, RiNotificationBadgeLine } from "react-icons/ri";
@@ -36,13 +36,13 @@ const Homepage = (props) => {
     const [avatar, setAvatar] = useState('')
     const [username, setUsername] = useState('')
 
-    const [route, setRoute] = useState(null)
-    const alert = useAlert()
+    const [route, setRoute] = useState(null)    
 
     const {width, height} = useWindowDimensions()
 
-    let history = useHistory();
-    let { path, url } = useRouteMatch();    
+    const [newsfeedReloadState, setNewsfeedReloadState] = useState(false)
+
+    let history = useHistory();    
 
     useEffect( () => {        
         getCurrentUserData()          
@@ -53,23 +53,23 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    route: '/home',
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    route: `/home/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 },
                 {
-                    name: 'Post notificate',
-                    route: `${url}/postnotificate`,
-                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                    name: 'Post notice',
+                    route: `/home/postnotification`,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px"/>,
                 },
                 {
                     name: 'Create account',
-                    route: `${url}/createaccount`,
-                    icon: <FaUserPlus className='mb-1' size="22px" color='gray'/>,
+                    route: `/home/createaccount`,
+                    icon: <FaUserPlus className='mb-1' size="22px"/>,
                 },        
             ])
         }
@@ -77,18 +77,18 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    route: '/home',
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    route: `/home/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 },
                 {
-                    name: 'Post notificate',
-                    route: `${url}/postnotificate`,
-                    icon: <RiNotificationBadgeLine className='mb-1' size="22px" color='gray'/>,
+                    name: 'Post notice',
+                    route: `/home/postnotification`,
+                    icon: <RiNotificationBadgeLine className='mb-1' size="22px"/>,
                 },                  
             ])
         }
@@ -96,13 +96,13 @@ const Homepage = (props) => {
             setRoute([
                 {
                     name: 'Homepage',
-                    route: url,
-                    icon: <FaHome className='mb-1' size="22px" color='gray'/>
+                    route: '/home',
+                    icon: <FaHome className='mb-1' size="22px"/>
                 },
                 {
                     name: 'Notification',
-                    route: `${url}/notification`,
-                    icon: <RiNotificationBadgeFill className='mb-1' size="22px" color='gray'/>,
+                    route: `/home/notification`,
+                    icon: <RiNotificationBadgeFill className='mb-1' size="22px"/>,
                 }                    
             ])
         }
@@ -122,9 +122,7 @@ const Homepage = (props) => {
                 setUsername(res.data.data.user_name)                
 
                 if(res.data.data.faculty.length < 1 && res.data.data.role === 'student'){
-                    alert.show('Your account is not registed', {
-                        type:'error'
-                    })
+                    message.error('Your account is not registed')                    
                     setTimeout(() => {
                         history.push('/register')
                     }, 3000)                    
@@ -132,7 +130,11 @@ const Homepage = (props) => {
             }
         })
         .catch( e => {
-            console.error(e)            
+            console.error(e)
+            if(e.response.status === 401){
+                props.logOut()
+                history.push('/login')
+            }        
         })
     }
 
@@ -140,9 +142,13 @@ const Homepage = (props) => {
         setSidebarOpen(open)
     }
  
-    async function logOutHandle(){
-        await props.logOut()
+    function logOutHandle(){
+        props.logOut()
         history.push('/login') 
+    }
+
+    function logoHome(){
+        return <Link to='/home'></Link>
     }
 
         return(            
@@ -152,13 +158,24 @@ const Homepage = (props) => {
                     <div>
                         <NavBar
                             sideBarHandle = {() => onSetSidebarOpen(!sidebarOpen)}                            
-                            logOutHandle={logOutHandle}                            
+                            logOutHandle={logOutHandle}
+                            navbarlogo={
+                                <Link to='/home' onClick={() => setNewsfeedReloadState(!newsfeedReloadState)}>
+                                    <img style={{cursor:'pointer'}} className='align-self-center ml-3' src={logo} alt="tdtu-logo"/>
+                                </Link>
+                            }                        
                             usersession={
-                            <Link to={`${url}/personalwall/${(userData) && userData._id}`}>
-                                <div className='userwall row mr-1' onClick={props.userwallredirect}>
-                                    <Avatar src={avatar} alt="avatar" ></Avatar>
-                                    <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
-                                </div>
+                            <Link to={`/home/personalwall/${(userData) && userData._id}`}>
+                                {
+                                    userData?(
+                                        <div className='userwall row mr-1' onClick={props.userwallredirect}>
+                                            <Avatar src={avatar} alt="avatar" ></Avatar>
+                                            <div className="align-self-center pl-2 pr-3 text-primary" style={{color: 'black', fontWeight:'bold'}}>{username}</div>
+                                        </div>
+                                    ):(
+                                        <Skeleton avatar active></Skeleton>
+                                    )
+                                }                                
                             </Link>}
                             user_role={userData?userData.role:''}
                         ></NavBar>
@@ -174,13 +191,19 @@ const Homepage = (props) => {
                                         username={userData?userData.user:''}
                                         sidebarchild={(route) && route.map((value, index)=> (                                            
                                             <div key={index}>
-                                                <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                                <Link to={value.route} onClick={() => {
+                                                    if(index === 0){
+                                                        setNewsfeedReloadState(!newsfeedReloadState)
+                                                    }
+                                                }}>
+                                                    <button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button>
+                                                </Link>                                                        
                                             </div>                                         
                                         ))}
                                     ></SideBar>}
                                     open={sidebarOpen}
                                     onSetOpen={onSetSidebarOpen}
-                                    styles={{ sidebar: { background: "white", width: "180px" ,position: 'fixed', top: 0}}}/>                    
+                                    styles={{ sidebar: { background: "white", width: "180px" ,position: 'fixed', top: 0}}}                                    />                    
                             </div>
                         ):(
                             <div className='col-3'>
@@ -189,7 +212,13 @@ const Homepage = (props) => {
                                     username={userData?userData.user:''}
                                     sidebarchild={(route) && route.map((value, index)=> (
                                         <div key={index}>
-                                            <Link to={value.route}><button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{color:'gray', fontSize:'17px'}}>{value.name}</span></button></Link>                                                        
+                                            <Link to={value.route} onClick={() => {
+                                                    if(index === 0){
+                                                        setNewsfeedReloadState(!newsfeedReloadState)
+                                                    }
+                                                }}>
+                                                    <button className="sidebar-btn pl-2">{value.icon}<span className='ml-2' style={{fontSize:'17px'}}>{value.name}</span></button>
+                                            </Link>                                                        
                                         </div>                                                                                                         
                                     ))}                                                                            
                                 ></SideBar>
@@ -199,28 +228,28 @@ const Homepage = (props) => {
                     <div className={width < 768?'home-body col-12':'home-body col-9'}>                
                         <Switch>                            
                             <Route
-                                path={`${path}`}                    
+                                path={`/home`}                    
                                 exact={true}             
                             >
-                                <Newfeed notilink={<Link to={`${url}/notification`}>See all</Link>}></Newfeed>
+                                <Newfeed reloadNewsfeed={newsfeedReloadState} notilink={<Link to={`/home/notification`}>See all</Link>}></Newfeed>
                             </Route>                                                
                             <Route
-                                path={`${path}/notification`}                                    
+                                path={`/home/notification`}                                    
                                 component={NotiPage}
                                 exact
                             />
                             <Route
-                                path={`${path}/notification/:id`}
+                                path={`/home/notification/:id`}
                                 component={NotiReader}                                                              
                             />
                             <Route
-                                path={`${path}/personalwall/:id`}
+                                path={`/home/personalwall/:id`}
                                 component={PersonalPage}
                             />
                             {
                                 (userData && userData.role === 'user') && (
                                     <Route
-                                        path={`${path}/postnotificate`}                                    
+                                        path={`/home/postnotification`}                                    
                                         component={CreateNoti}
                                     />
                                 )
@@ -229,16 +258,16 @@ const Homepage = (props) => {
                                 (userData && userData.role === 'admin') && (
                                     <>
                                     <Route
-                                        path={`${path}/postnotificate`}                                    
+                                        path={`/home/postnotification`}                                    
                                         component={CreateNoti}
                                     />
                                     <Route
-                                        path={`${path}/createaccount`}                               
+                                        path={`/home/createaccount`}                               
                                         component={CreateAccountPage}
                                         exact
                                     />
                                     <Route
-                                        path={`${path}/createaccount/accountmanager`}                               
+                                        path={`/home/createaccount/accountmanager`}                               
                                         component={AccManagerPage}
                                     />                                
                                     </>

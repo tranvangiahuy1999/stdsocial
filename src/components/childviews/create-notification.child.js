@@ -1,28 +1,34 @@
 import React, {useEffect, useState} from 'react'
 import { RiSendPlaneFill } from "react-icons/ri";
 import axios from 'axios'
-import Dropdown from 'react-dropdown';
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
+import { Select } from 'antd';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+const { Option } = Select;
+
+const editorConfiguration = {
+    toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
+};
 
 const CreateNoti = (props) => {
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [content, setContent] = useState('')
-    const [falcuty, setFalcuty] = useState([])   
+
+    const [searchFalcuty, setSearchFalcuty] = useState('All')
+    const [falcuty, setFalcuty] = useState()   
 
     const [btnState, setBtnState] = useState(false)
 
     const alert = useAlert()
 
-    const editorConfiguration = {
-        toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
-    };  
-
-    const [selectedOption, setSelectedOption] = useState(null)
+    function onSelectChange(value) {
+        setSearchFalcuty(value)        
+    }    
 
     useEffect(()=> {                 
         getCurrentUser()
@@ -36,9 +42,9 @@ const CreateNoti = (props) => {
         })
         .then(res => {            
             if(res.data.code === 0){
-                if(Array.isArray(res.data.data.faculty)) {
-                    setFalcuty(res.data.data.faculty)
-                }
+                let array = ['All']
+                res.data.data.faculty.map((value) => {array.push(value)})                
+                setFalcuty(array)                
             } else {
                 alert.show(res.data.message, {
                     type: 'error'
@@ -50,33 +56,27 @@ const CreateNoti = (props) => {
         })
     }
 
-    function handleChange(selectedOption) {
-        setSelectedOption(selectedOption)
-    }
-
     async function onSubmit(e) {
-        e.preventDefault()        
-        if(selectedOption){
+        e.preventDefault()
+        if(title && content && desc && searchFalcuty !== 'All'){
             setBtnState(true)
-            await axios.post(`${process.env.REACT_APP_IP}/notification/add`,
+            axios.post(`${process.env.REACT_APP_IP}/notification/add`,
             {
                 'title': title,
                 'content': content,
                 'description': desc,
-                'role': selectedOption.value
+                'role': searchFalcuty
             },{
                 headers: {
                     'Authorization' : 'Bearer ' + props.token
                 }
             })
-            .then(async res => {
-
-                console.log(res)
+            .then(res => {                
                 if(res.data.code === 0){
                     setTitle('')
                     setDesc('')
                     setContent('')
-                    
+                    setSearchFalcuty('All')
                     alert.show(res.data.message, {
                         type:'success'
                     })                    
@@ -84,26 +84,26 @@ const CreateNoti = (props) => {
                 } else {                
                     alert.show(res.data.message, {
                         type: 'error'
-                    })
-
-                }                
+                    })            
+                }      
+                setBtnState(false)          
             })
             .catch( e => {
-                console.error(e)      
+                console.error(e)
+                setBtnState(false)     
             })
-            setBtnState(false)
-        }
+        }   
         else {
-            alert.show(`Please pick one of the faculty`, {
+            alert.show(`Please fill the form above`, {
                 type: 'error'
             })        
-        }
+        }        
     }
 
     return(
         <div className='child-page'>
             <h5 className='child-header'>
-                POST NOTIFICATON
+                POST NOTICE
             </h5>
             <div className='child-body'>
                 <form onSubmit={onSubmit}>
@@ -114,15 +114,33 @@ const CreateNoti = (props) => {
                         <input className='form-control' value={desc} onChange={e => setDesc(e.target.value)} placeholder='Description'></input>
                     </div>
                     <div className='form-group'>
-                        <Dropdown options={falcuty} onChange={handleChange} value={selectedOption} placeholder="Search by falcuty" /> 
+                    <Select
+                        showSearch                                                
+                        style={{ width: '100%' }}
+                        defaultValue="All"
+                        placeholder="Select a faculty"
+                        optionFilterProp="children"
+                        onChange={onSelectChange}
+                        value={searchFalcuty}                                              
+                        filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        >
+                        {
+                            (falcuty && falcuty.length > 0) && (
+                                falcuty.map((value, index) => (
+                                    <Option key={index} value={value}>{value}</Option>
+                                ))
+                            )
+                        }                                             
+                    </Select>                        
                     </div>
                     <div className='form-group'>
                         <CKEditor
                             editor={ ClassicEditor }
                             data={content}
                             config={editorConfiguration}                                                                               
-                            onReady={ editor => {
-                                // You can store the "editor" and use when it is needed.
+                            onReady={ editor => {                                
                                 editor.editing.view.change(writer => {
                                     writer.setStyle(
                                       "height",
@@ -135,11 +153,11 @@ const CreateNoti = (props) => {
                                 const data = editor.getData();
                                 setContent(data)
                             } }                            
-                        />
-                        {/* <textarea className='form-control' rows='6' value={content} onChange={e => setContent(e.target.value)} placeholder='Write something here'></textarea> */}
+                        />                        
                     </div>
-                    <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Post</button>                    
-                                            
+                    <div style={{textAlign:'center'}}>
+                        <button disabled={btnState} className="btn btn-primary" style={{width: '50%'}}><RiSendPlaneFill size='18px' color='white'></RiSendPlaneFill> Post notice</button>                                            
+                    </div>
                 </form>
             </div>
         </div>

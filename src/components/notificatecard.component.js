@@ -5,6 +5,12 @@ import {Modal} from 'antd'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { useAlert } from 'react-alert';
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+const editorConfiguration = {
+    toolbar: [ 'heading', '|',"undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],        
+};
 
 const NotiCard = (props) => {    
     const [userData, getUserData] = useState()
@@ -18,7 +24,8 @@ const NotiCard = (props) => {
     const [editTitle, setEditTitle] = useState('')
     const [editDesc, setEditDesc] = useState('')
     const [editContent, setEditContent] = useState('')
-    
+    const [hoverState, setHoverState] = useState(false)
+
     const alert= useAlert()
 
     useEffect(() => {
@@ -120,6 +127,7 @@ const NotiCard = (props) => {
             console.error(e)
         })
     }
+    
 
     return(
         (deleteState)?(
@@ -127,7 +135,7 @@ const NotiCard = (props) => {
                 <div className='empty-text'>Deleted notification</div>
             </div>
         ):(      
-                <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: props.backgroundStyle}}>    
+                <div className='noti-card m-1' style={{borderLeft: props.borderStyle, backgroundColor: hoverState?'white':'rgba(248,248,248,255)'}} onMouseEnter={() => setHoverState(true)} onMouseLeave={() => setHoverState(false)}>    
                     <Modal title="Confirm to delete" visible={deleteModalState} onOk={handleDelOk} onCancel={handleDelCancel}>
                         Are you sure you want to delete this notification? <span style={{color:'red'}}>*There is no running back!</span>
                     </Modal>
@@ -144,47 +152,69 @@ const NotiCard = (props) => {
                                 <input className='form-control' value={props.falcutyname} disabled={true} placeholder='Faculty'></input>
                             </div>
                             <div className='form-group'>
-                                <textarea className='form-control' value={editContent} onChange={e => setEditContent(e.target.value)} placeholder='Content'></textarea>
+                                <CKEditor
+                                    editor={ ClassicEditor }
+                                    data={editContent}
+                                    config={editorConfiguration}                                                                               
+                                    onReady={ editor => {                                
+                                        editor.editing.view.change(writer => {
+                                            writer.setStyle(
+                                            "height",
+                                            "200px",
+                                            editor.editing.view.document.getRoot()
+                                            );
+                                        });
+                                    } }
+                                    onChange={ ( event, editor ) => {
+                                        const data = editor.getData();
+                                        setEditContent(data)
+                                    } }                            
+                                />                                
                             </div>
                         </div>
                     </Modal>
-
-                    <div className='row'>
-                    <div className='col-9'>
-                        <div className='noticard-header row pl-3'>
-                            <div style={{color:'gray', fontSize:'14px'}}>
-                                [{props.falcutyname}]
-                            </div>
-                                <div style={{color:'gray', fontSize:'14px', paddingLeft:'5px'}}>
-                                    {props.date}
+                    <div className='ml-3 p-1'>
+                        {
+                            hoverState?(
+                                <div className='row'>
+                                    <div className='col-9' onClick={props.seedetail}>
+                                        <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
+                                            {title}
+                                        </div>
+                                        <div style={{color:'gray'}}>
+                                            {desc}
+                                        </div>
+                                        <div style={{color:'lightgray', fontSize: '14px'}}>
+                                            {props.date}<span>/ {props.falcutyname}</span>                                        
+                                        </div>
+                                    </div>
+                                    <div className='col-3 mt-auto mb-auto' style={{textAlign:'right'}}>
+                                        {
+                                            (userData && userData.role !== 'student') && (
+                                                <div>
+                                                    <button className='btn btn-primary mr-1' style={{textAlign:'center'}}>
+                                                        <AiOutlineEdit onClick={showEditModal} size='17px' color='white'></AiOutlineEdit>                                    
+                                                    </button>    
+                                                    <button className='btn btn-danger mr-2' style={{textAlign:'center'}}>
+                                                        <ImBin onClick={showDelModal} size='15px' color='white'></ImBin>
+                                                    </button>
+                                                </div>
+                                            )
+                                        }                                                                                                                                              
+                                    </div>
                                 </div>
-                        </div>
-                        <div className='noticard-body'>
-                            <div className='noticard-title' style={{color:'black', fontWeight:'bold', fontSize:'16px'}}>
-                                {title}                
-                            </div>
-                            <div className='noticard-content' style={{color:'gray', fontSize:'15px'}}>
-                                {desc}
-                            </div>
-                            <div className="reading-link" onClick={props.seedetail}>Click to see detail</div>
-                        </div>
-                    </div>
-                    <div className='col-3'>
-                    {
-                        (userData && userData.role !== 'student') && (
-                            <div style={{marginTop:'20px', float:'right'}}>
-                                <div>
-                                    <AiOutlineEdit className='mr-1 clickable-icon' onClick={showEditModal} size='19px' color='gray'></AiOutlineEdit>
-                                </div>
-                                <div>
-                                    <ImBin className='mr-1 clickable-icon' onClick={showDelModal} size='17px' color='gray'></ImBin>
-                                </div>                                                                                                                                                                                
-                            </div>
-                        )
-                    }
-                    </div>
-                </div>                
-                                                    
+                            ):(                                
+                                    <div onClick={props.seedetail}>
+                                        <div style={{fontSize: '18px', color: props.textStyle, fontWeight: '500'}}>
+                                            {title}
+                                        </div>                                    
+                                        <div style={{color:'gray', fontSize: '14px'}}>
+                                            {props.date}<span>/ {props.falcutyname}</span>
+                                        </div>
+                                    </div>                                                                
+                            )
+                        }                                                                
+                    </div>                    
             </div>  
         )        
     )

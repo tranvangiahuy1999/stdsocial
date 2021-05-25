@@ -7,7 +7,7 @@ import useWindowDimensions from '../useWindowDimensions'
 import {connect} from 'react-redux'
 import { useAlert } from 'react-alert'
 import { io } from "socket.io-client";
-import { notification, Spin, Space } from 'antd';
+import { notification, Skeleton } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
 
@@ -26,6 +26,7 @@ const Newfeed = (props) =>  {
     const [hasMore, setHasMore] = useState(true)
 
     const [newcmt, setNewCmt] = useState()
+    const [newlike, setNewLike] = useState()
 
     const {width, height} = useWindowDimensions()
     const history = useHistory()
@@ -34,12 +35,19 @@ const Newfeed = (props) =>  {
 
     useEffect(() => {                
         getNotiData()
-        getUserData()
-        getNewfeed()        
+        getUserData()             
         
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 1000))
-        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 1000));
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
+        return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
     }, [])
+
+    useEffect(()=> {        
+        window.scrollTo(0, 0)
+        setLoading(true)
+        newfeeddata=[]
+        count = 1
+        getNewfeed()
+    }, [props.reloadNewsfeed])
 
     useEffect(() => {
         const socket = io.connect(`${process.env.REACT_APP_IP}`, { transports: ["websocket"], withCredentials: true});        
@@ -50,11 +58,15 @@ const Newfeed = (props) =>  {
         })
         socket.on('new_comment', (data) => {
             newCommentHandler(data)
+        })
 
+        socket.on('new_likelist', (data) =>{
+            newLikeHandler(data)
         })
         return () => {
             socket.off('new_notification');
             socket.off("new_comment");
+            socket.off('new_likelist');
         }
     }, [])
 
@@ -85,10 +97,13 @@ const Newfeed = (props) =>  {
         setNewCmt(data.data)        
     }
 
+    function newLikeHandler(data) {        
+        setNewLike(data.data)        
+    }
+
     function handleInfiniteOnLoad(){        
-        if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 100 && !loadingNewfeed){
-            setLoadingNewfeed(true)
-            count += 1                       
+        if (document.documentElement.scrollTop + window.innerHeight + 1 >= document.documentElement.scrollHeight){
+            setLoadingNewfeed(true)            
             getNewfeed()        
         }
     }    
@@ -107,7 +122,7 @@ const Newfeed = (props) =>  {
         .then(res => {            
             if(res.data.code === 0){                
                 notidata = res.data.data
-                setNotiData(res.data.data)                
+                setNotiData(res.data.data)
             }
             setLoadingNoti(false)
         })
@@ -135,15 +150,13 @@ const Newfeed = (props) =>  {
         })
     }
 
-    function getNewfeed(){
-        console.log(count)    
+    function getNewfeed(){         
         axios.get(`${process.env.REACT_APP_IP}/newfeed/${count}`, {
             headers: {
                 'Authorization' : 'Bearer ' + props.token
             }
         })
-        .then(res => {
-            console.log(res)              
+        .then(res => {                     
             if(res.data.code === 0){
                 newfeeddata = newfeeddata.concat(res.data.data)
                 setNewfeedData(newfeeddata)                    
@@ -152,9 +165,10 @@ const Newfeed = (props) =>  {
             }
             setLoading(false)
             setLoadingNewfeed(false)
+            count += 1
         })
         .catch(e => {
-            console.error(e)            
+            console.error(e)                 
         })          
     }
     
@@ -177,10 +191,11 @@ const Newfeed = (props) =>  {
                 <div className='post-data'>
                     {
                         (loading)?(
-                            <div style={{textAlign:'center', margin:'30px'}} >
-                                <Space size="middle">
-                                    <Spin size="large" />
-                                </Space>
+                            <div className='mt-4'>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>
+                                <Skeleton avatar active paragraph={4}></Skeleton>                      
                             </div>
                         ):(
                             (newfeedData && newfeedData.length > 0)?(
@@ -206,7 +221,8 @@ const Newfeed = (props) =>  {
                                                 type:'success'
                                         })}}
                                         role={(userData) && userData.role}
-                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}                                                                                                                                                   
+                                        newcmt={(newcmt && newcmt.id_post === value._id)?newcmt:''}
+                                        newlike={(newlike && newlike.like_post === value._id)?newlike:''}
                                     ></StatusCard>))
                             ):(
                             <div className='empty-data'>
@@ -215,21 +231,21 @@ const Newfeed = (props) =>  {
                             
                         )                                                                                                                                                                   
                     }
-                    {loadingNewfeed && hasMore && (
-                        <div style={{textAlign:'center', margin:'30px'}} >
-                        <Space size="middle">
-                            <Spin />
-                        </Space>
-                    </div>
-                    )}
-
-                    {
-                        !hasMore && (
-                            <div className='empty-data'>
-                                <div className='empty-text'>There are no posts left</div>
-                            </div>
-                        )
-                    }                          
+                    {(loadingNewfeed && hasMore) ? (
+                        <div className='mt-4'>
+                            <Skeleton avatar paragraph={{ rows: 3 }} active />                                            
+                        </div>                    
+                    ): (
+                        <div style={{height: '100px'}}>
+                            {
+                                (!hasMore) && (
+                                    <div className='empty-data'>
+                                        <div className='empty-text'>There are no posts left</div>
+                                    </div>
+                                )
+                            }                            
+                        </div>
+                    )}                                    
                 </div>
             </div>
             {

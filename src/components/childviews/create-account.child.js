@@ -6,8 +6,7 @@ import {
 
 import { Checkbox, Space, Spin } from 'antd';
 import axios from 'axios'
-// import AccManagerPage from './account-manager.child'
-import { RiSendPlaneFill } from "react-icons/ri";
+import { RiUserAddLine, RiUserSettingsLine } from "react-icons/ri";
 import {connect} from 'react-redux'
 import {useAlert} from 'react-alert'
 
@@ -125,13 +124,16 @@ const CreateAccountPage = (props) => {
     return(      
                     <div className='child-page'>
                         <h5 className='child-header'>
-                            CREATE ACCOUNT
-                        </h5>
+                            CREATE ACCOUNT 
+                            <div style={{textAlign:'right'}}>
+                            <button className='m-1 p-1 direct-btn' onClick={() => history.push(`${url}/accountmanager`)} style={{ borderRadius:'25px', fontSize: '16px', position:'relative'}}><RiUserSettingsLine size='18px'></RiUserSettingsLine> User management</button>
+                        </div>                                                                                   
+                        </h5>                        
                         <div className='child-body'>                            
-                            <div className='col-12' style={{margin:'auto'}}>                                
+                            <div className='col-12' style={{margin:'auto'}}>                                                              
                                 <form className='row' onSubmit={createAccount}>
                                     <div className='col-6' style={{borderRight:'1px solid lightgray'}}>
-                                        <h6>Create Faculty account</h6>
+                                        <h6>Create faculty account</h6>
                                         <div className='form-group'>
                                             <label>Username</label>
                                             <input autoComplete="off" value={username} onChange={v => setUsername(v.target.value)} className='form-control' placeholder='Enter username' required></input>
@@ -145,16 +147,12 @@ const CreateAccountPage = (props) => {
                                             <input autoComplete="off" type='password' value={repwd} onChange={v => setRePwd(v.target.value)} className='form-control' placeholder='Re-enter password' required></input>
                                         </div>
                                         <div className='form-group'>
-                                            <button disabled={btnState} className="btn btn-primary"><RiSendPlaneFill size='16px' color='white'></RiSendPlaneFill> Create</button>                                            
+                                            <button disabled={btnState} className="btn btn-primary"><RiUserAddLine size='16px' color='white'></RiUserAddLine> Create</button>                                            
                                         </div>
-                                        <div className='form-group'>
-                                            <div>Head to <span className='reading-link' onClick={() => history.push(`${url}/accountmanager`)}>Account management</span></div>                                            
-                                        </div>
-
                                     </div>
-                                    <div className='col-6 selectboxmap'>
+                                    <div className='col-6'>
                                         <h6>Choose faculty you want to add</h6>
-                                        <div>
+                                        <div className='selectboxmap'>
                                             <div className='p-2 ml-4' styles={{backgroundColor:'rgba(241,242,246,255)'}}>                                        
                                                 {
                                                     (loading)?(
@@ -170,7 +168,7 @@ const CreateAccountPage = (props) => {
                                                                 <Checkbox onChange={checkHandle} value={value.nameRole}>{value.nameRole}</Checkbox>                                                        
                                                             </div>
                                                         )):
-                                                        <div>No falcuty has shown</div>
+                                                        <div>No faculty has shown</div>
                                                     )
                                                 }
                                             </div>

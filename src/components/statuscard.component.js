@@ -10,13 +10,11 @@ import { MdInsertPhoto } from "react-icons/md";
 
 import { BiComment } from "react-icons/bi";
 import ReactPlayer from 'react-player/youtube'
-import { Menu, Dropdown, Modal, List, Skeleton } from 'antd';
+import { Menu, Dropdown, Modal } from 'antd';
 
 import CommentPost from './comment-post.component'
 import CommentChild from './comment-child.component'
 import axios from 'axios'
-
-const count = 3
 
 export default class StatusCard extends React.Component {
     constructor(){
@@ -55,8 +53,7 @@ export default class StatusCard extends React.Component {
         this.handleOk = this.handleOk.bind(this)
         this.handleCancel = this.handleCancel.bind(this)                
         this.showEditModal = this.showEditModal.bind(this)
-        this.handleEditCancel = this.handleEditCancel.bind(this)
-        this.handleEditOk = this.handleEditOk.bind(this)        
+        this.handleEditCancel = this.handleEditCancel.bind(this)          
 
         this.deleteImageHandle = this.deleteImageHandle.bind(this)
         this.imageBtnHandle = this.imageBtnHandle.bind(this)
@@ -67,7 +64,8 @@ export default class StatusCard extends React.Component {
         this.updateHandle = this.updateHandle.bind(this)
 
         this.onLoadMore  = this.onLoadMore.bind(this)  
-        this.updateList  = this.updateList.bind(this)
+        this.socketUpdateComment  = this.socketUpdateComment.bind(this)
+        this.socketUpdateLike  = this.socketUpdateLike.bind(this)
     }
 
     componentDidMount(){                
@@ -95,16 +93,37 @@ export default class StatusCard extends React.Component {
         if(this.props.newcmt && this.props.newcmt !== prevProps.newcmt) {
             let newcmtlist = this.state.cmtdata            
             newcmtlist.push(this.props.newcmt.cmt_data[0])            
-            this.updateList(newcmtlist)
+            this.socketUpdateComment(newcmtlist)
+        }
+
+        if(this.props.newlike && this.props.newlike !== prevProps.newlike) {            
+            this.socketUpdateLike(this.props.newlike)
         }
     }
 
-    updateList(newcmtlist){        
+    socketUpdateLike(newlikedata) {
+        if (newlikedata.like_list.some(e => e.id_user === this.props.user_id)) {
+            this.setState({
+                like: true
+            })
+        } else {
+            this.setState({
+                like: false
+            })
+        }
+
+
         this.setState({
-            cmtdata: newcmtlist,
-            commentcount: newcmtlist.length,
+            likecount: newlikedata.like_list.length,
+            likelist: newlikedata.like_list
         })
-        
+    }
+
+    socketUpdateComment(newcmtdata){        
+        this.setState({
+            cmtdata: newcmtdata,
+            commentcount: newcmtdata.length,
+        })        
     }
 
     showModal = () => {
@@ -126,29 +145,13 @@ export default class StatusCard extends React.Component {
         })        
     };
 
-    likeHandle(){        
+    likeHandle(){                
             axios.put(`${process.env.REACT_APP_IP}/newfeed/like/${this.props.post_id}`, {},{
                 headers: {
                     'Authorization' : 'Bearer ' + this.props.token
                 }
-            })
-            .then((res) => {
-                if(res.data.code === 0){
-                    if(this.state.like){
-                        this.setState({
-                            likecount: this.state.likecount -= 1
-                        })
-                    } else {
-                        this.setState({
-                            likecount: this.state.likecount += 1
-                        })
-                    }        
-                    this.setState({
-                        like: !this.state.like
-                    })
-                }
-            })
-            .catch(e => {
+            })            
+            .catch(e => {                
                 console.error(e)
             })                          
     }
@@ -195,11 +198,7 @@ export default class StatusCard extends React.Component {
         }
         
     }
-
-    handleEditOk(){
-        this.handleUpdate()
-    }
-
+    
     handleEditCancel(){
         this.setState({
             editStatusState:false,
@@ -342,10 +341,7 @@ export default class StatusCard extends React.Component {
     }
 
     onLoadMore() {
-        this.setState({
-            loading: true,
-            cmtlist: this.state.cmtdata.concat([...new Array(count)].map(() => ({ loading: true, name: {} }))),
-        });
+
     }
 
     render(){        
@@ -375,7 +371,7 @@ export default class StatusCard extends React.Component {
                             <div>Are you sure to delete this post?</div>
                         </Modal>
 
-                        <Modal title="Update status" visible={this.state.editStatusState} onOk={this.handleEditOk} onCancel={this.handleEditCancel}>
+                        <Modal title="Update status" visible={this.state.editStatusState} onOk={this.handleUpdate} onCancel={this.handleEditCancel}>
                             
                         <div className='stp-post' style={{width:'100%'}}>
                                 <textarea className='post-text p-2' rows='3' style={{width:'100%', border:'none', outline:'none'}} onChange={e => this.setState({edittext: e.target.value})} value={this.state.edittext} placeholder={`Wanna change something?`}></textarea>
@@ -409,7 +405,7 @@ export default class StatusCard extends React.Component {
                                 <img src={this.props.avatar} width='30px' height='30px'></img>
                             </div>
                             <div className='col-9' style={{margin:'auto'}}>
-                                <div className='text-primary username-direct ml-1' onClick={this.props.directToWall} style={{fontWeight:'bold', padding:'2px'}}>{this.props.username}</div>                                
+                                <div className='text-primary username-direct ml-1' onClick={this.props.directToWall}>{this.props.username}</div>                                
                                 <div className='row ml-0 ml-1'>
                                     <div style={{color:'gray', marginRight:'2px', fontSize:'14px'}}>{this.props.date}</div>
                                     <AiFillClockCircle style={{margin:'auto', marginLeft:'2px'}} size='13px' color='gray'></AiFillClockCircle>
@@ -458,10 +454,10 @@ export default class StatusCard extends React.Component {
                             }
                             <div className='row m-2 pt-2'>
                                 <div style={{width:'50%'}}>
-                                    <div style={{textAlign:'start', color:'gray', fontSize:'15px'}}>{this.state.likecount}<AiFillLike className="ml-2" style={{alignSelf:'center',padding:'2px', marginRight:'10px', backgroundColor:'rgb(0,138,216)', borderRadius:'50%'}} color='white' size='16px'></AiFillLike></div>
+                                    <div style={{textAlign:'start', color:'gray', fontSize:'15px'}}>{this.state.likecount}<AiFillLike className="ml-2" style={{alignSelf:'center',padding:'2px', marginRight:'10px', backgroundColor:'rgb(0,138,216)', borderRadius:'50%'}} color='white' size='18px'></AiFillLike></div>
                                 </div>
                                 <div style={{width:'50%'}}>
-                                    <div className='cmttab' onClick={this.cmtHandle} style={{textAlign:'end', color:'gray', cursor:'pointer', fontSize:'15px'}}>{this.state.commentcount} Comments</div>
+                                    <div className='cmttab' onClick={this.cmtHandle} style={{textAlign:'end', color:'gray', cursor:'pointer', fontSize:'15px'}}>{this.state.commentcount}{(this.state.commentcount > 1)?' Comments':' Comment'}</div>
                                 </div>
                             </div>
                         </div>

@@ -13,7 +13,6 @@ import { connect } from 'react-redux'
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { CgDanger } from "react-icons/cg";
-// import AlertTemplate from 'react-alert-template-basic'
 
 const options = {    
     position: positions.BOTTOM_CENTER,
