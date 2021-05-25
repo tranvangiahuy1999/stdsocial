@@ -385,7 +385,7 @@ const PersonalPage = (props) => {
                                 </div>                                                                                                   
                         </div>
                     </div>                                    
-                    <div className={width < 768?'col-12':'col-8'}>
+                    <div className={width < 768?'col-12 p-0':'col-8 p-0'}>
                         {
                             (isYour) && (
                                 <StatusPost

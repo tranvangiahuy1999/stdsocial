@@ -45,7 +45,8 @@ const Homepage = (props) => {
     let history = useHistory();    
 
     useEffect( () => {        
-        getCurrentUserData()          
+        getCurrentUserData()
+        console.log(props.token)        
     }, [props.token])    
 
     function setCompRoute(role){
