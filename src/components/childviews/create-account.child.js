@@ -31,6 +31,7 @@ const CreateAccountPage = (props) => {
     useEffect( async () => {
         //check status code
         getRole()
+        window.scrollTo(0, 0)
     }, [])
 
     async function getRole(){

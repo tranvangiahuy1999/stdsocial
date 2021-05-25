@@ -23,7 +23,7 @@ const NotiReader = (props) => {
     const alert = useAlert()
 
     useEffect(() => {
-
+        window.scrollTo(0, 0)
         axios.get(`${process.env.REACT_APP_IP}/notification/${id}` ,{
             headers: {
                 'Authorization' : 'Bearer ' + props.token

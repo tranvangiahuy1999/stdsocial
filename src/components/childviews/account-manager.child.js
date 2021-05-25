@@ -16,6 +16,7 @@ const AccManagerPage = (props) => {
 
     useEffect(() => {
         getAccountList()
+        window.scrollTo(0, 0)
     }, [])
 
     function getAccountList(){

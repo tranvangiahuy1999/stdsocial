@@ -46,6 +46,7 @@ const PersonalPage = (props) => {
     const {width, height} = useWindowDimensions()
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         getCurrentUserData()                   
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));      

@@ -36,7 +36,8 @@ const NotiPage = (props) => {
     let history = useHistory()
     const alert = useAlert()
 
-    useEffect(() => {        
+    useEffect(() => {
+        window.scrollTo(0, 0)      
         getRole()        
         getPage(currentPage)
     },[])

@@ -32,6 +32,7 @@ const CreateNoti = (props) => {
 
     useEffect(()=> {                 
         getCurrentUser()
+        window.scrollTo(0, 0)
     }, [])
 
     function getCurrentUser() {
