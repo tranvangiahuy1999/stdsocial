@@ -10,9 +10,10 @@ import { Modal, Avatar, Dropdown, Menu } from 'antd'
 import { useAlert } from 'react-alert';
 
 const UserCard = (props) => {
-    const [deleteModalState, setDeleteModalState] = useState(false);
+    const [deleteModalState, setDeleteModalState] = useState(false)
     const [deleteState, setDeleteState] = useState(props.deleted)
-    const [faculty, setFaculty] = useState([])
+    const [role, setRole] = useState(props.user_name)
+    // const [faculty, setFaculty] = useState()
     
     const [pwd, setPwd] = useState('')
     const [rePwd, setRePwd] = useState('')    
@@ -21,9 +22,9 @@ const UserCard = (props) => {
 
     const alert = useAlert()
 
-    useEffect(() => {
-        getRole()
-    }, [])    
+    // useEffect(() => {
+    //     getRole()
+    // }, [])    
 
     const showDelModal = () => {        
         setDeleteModalState(true);
@@ -52,25 +53,25 @@ const UserCard = (props) => {
         setEditModelState(false)
     }
 
-    function getRole(){
-        axios.get(`${process.env.REACT_APP_IP}/role`, {
-            headers: {
-                'Authorization' : 'Bearer ' + props.token
-            }
-        })
-        .then( res =>{
-            if(res.data.code === 0){
-                setFaculty(res.data.data)
-            } else {
-                alert.show(res.data.message, {
-                    type: 'error'
-                })                
-            }
-        })
-        .catch(e => {
-            console.error(e)
-        })        
-    }
+    // function getRole(){
+    //     axios.get(`${process.env.REACT_APP_IP}/role`, {
+    //         headers: {
+    //             'Authorization' : 'Bearer ' + props.token
+    //         }
+    //     })
+    //     .then( res =>{
+    //         if(res.data.code === 0){
+    //             setFaculty(res.data.data)
+    //         } else {
+    //             alert.show(res.data.message, {
+    //                 type: 'error'
+    //             })                
+    //         }
+    //     })
+    //     .catch(e => {
+    //         console.error(e)
+    //     })        
+    // }
 
     function deleteHandle(){
         axios.delete(`${process.env.REACT_APP_IP}/admin/user/${props.user_id}`, {
@@ -84,6 +85,7 @@ const UserCard = (props) => {
                     type:'success'
                 })
                 setDeleteState(true)
+                setRole('tài khoản không khả dụng')
             }
             else {
                 alert.show(res.data.message, {
@@ -135,7 +137,29 @@ const UserCard = (props) => {
     }
 
     function rerollAccount(){
-        // axios.get(`${process.env.REACT_APP_IP}/admin/`)
+        axios.get(`${process.env.REACT_APP_IP}/admin/rollback/user/${props.user_id}`, {
+            headers: {
+                'Authorization' : 'Bearer ' + props.token
+            }
+        })
+        .then(
+            (res) => {
+                if(res.data.code === 0){
+                    alert.show('Account has been reroll', {
+                        type: 'success'
+                    })
+                    setDeleteState(false)
+                    setRole('Tài khoản quản lý')
+                } else {
+                    alert.show(res.data.message, {
+                        type: 'error'
+                    })
+                }
+            }
+        )
+        .catch(e => {
+            console.log(e)
+        })
     }
 
     const menu = (                                
@@ -176,17 +200,12 @@ const UserCard = (props) => {
 
                 <div className='row user-card m-2' style={{backgroundColor: deleteState?'lightgray':'white'}}>
                     <div className='col-md-1 col-lg-1 col-2 p-1' style={{backgroundColor: deleteState?'gray':props.backgroundColor, textAlign:'center', borderTopLeftRadius:'10px', borderBottomLeftRadius:'10px'}}>
-                        <Avatar src={props.avatar}></Avatar>
+                        <Avatar className='mt-2' src={props.avatar}></Avatar>
                     </div>
                     <div className='col-md-10 col-lg-10 col-7 p-2'>
                         <div style={{color: deleteState?'gray':props.color, fontSize: '17px'}}>{props.user}</div>
                         <div style={{color: 'gray' ,fontSize:'14px'}}>
-                            {
-                                (deleteState)?                                
-                                    'tài khoản không khả dụng'
-                                :
-                                    props.user_name                            
-                            }
+                            {role}
                         </div>
                     </div>
                     <div className='col-md-1 col-lg-1 col-2 p-1' style={{textAlign:'right', margin:'auto'}}>
