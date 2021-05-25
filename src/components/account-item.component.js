@@ -13,6 +13,7 @@ const UserCard = (props) => {
     const [deleteModalState, setDeleteModalState] = useState(false)
     const [deleteState, setDeleteState] = useState(props.deleted)
     const [role, setRole] = useState(props.user_name)
+    const [avatarSrc, setAvatarSrc] = useState(props.avatar)
     // const [faculty, setFaculty] = useState()
     
     const [pwd, setPwd] = useState('')
@@ -85,6 +86,7 @@ const UserCard = (props) => {
                     type:'success'
                 })
                 setDeleteState(true)
+                setAvatarSrc('https://res.cloudinary.com/tdtimg/image/upload/v1621065055/kas5z5tfafnu1ypuwul6.png')
                 setRole('tài khoản không khả dụng')
             }
             else {
@@ -150,6 +152,7 @@ const UserCard = (props) => {
                     })
                     setDeleteState(false)
                     setRole('Tài khoản quản lý')
+                    setAvatarSrc('https://res.cloudinary.com/tdtimg/image/upload/v1619852102/wuib8yglnihou4zycrho.jpg')
                 } else {
                     alert.show(res.data.message, {
                         type: 'error'
@@ -200,7 +203,7 @@ const UserCard = (props) => {
 
                 <div className='row user-card m-2' style={{backgroundColor: deleteState?'lightgray':'white'}}>
                     <div className='col-md-1 col-lg-1 col-2 p-1' style={{backgroundColor: deleteState?'gray':props.backgroundColor, textAlign:'center', borderTopLeftRadius:'10px', borderBottomLeftRadius:'10px'}}>
-                        <Avatar className='mt-2' src={props.avatar}></Avatar>
+                        <Avatar className='mt-2' src={avatarSrc}></Avatar>
                     </div>
                     <div className='col-md-10 col-lg-10 col-7 p-2'>
                         <div style={{color: deleteState?'gray':props.color, fontSize: '17px'}}>{props.user}</div>
