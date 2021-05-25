@@ -72,8 +72,7 @@ const RegisterPage = (props) => {
 
         let now = new Date()
         let yearnow = now.getFullYear()
-
-        if(yearnow - datetime.getFullYear() < 18){
+        if(yearnow - datetime.split('-')[0] < 15){
             alert.show('Your age is not suitable', {
                 type:'error'
             })
