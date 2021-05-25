@@ -84,6 +84,16 @@ const NavBar = (props) =>  {
 
         return(
             <div className="navbar fixed-top">
+                <Modal title="Change your password" visible={isModalVisible} onOk={onSubmitPwd} onCancel={handleCancel}>
+                    <form>
+                        <div className='form-group'>
+                            <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setpwd(e.target.value)} placeholder='Enter new password'></input>
+                        </div>
+                        <div className='form-group'>
+                            <input autoComplete="off" className='form-control' type='password' value={repwd} onChange={e => setRepwd(e.target.value)} placeholder='Re-enter new password'></input>
+                        </div>
+                    </form>
+                </Modal>
                 <div className='row ml-1'>
                     {
                         width < 768?(
@@ -101,17 +111,7 @@ const NavBar = (props) =>  {
                     <Dropdown overlay={menu} placement="bottomRight" arrow>
                         <Button shape='circle'><BsCaretDownFill color='gray' size="16px"></BsCaretDownFill></Button>
                     </Dropdown>
-                </div>
-                <Modal title="Change your password" visible={isModalVisible} onOk={onSubmitPwd} onCancel={handleCancel}>
-                    <form>
-                        <div className='form-group'>
-                            <input autoComplete="off" className='form-control' type='password' value={pwd} onChange={e => setpwd(e.target.value)} placeholder='Enter new password'></input>
-                        </div>
-                        <div className='form-group'>
-                            <input autoComplete="off" className='form-control' type='password' value={repwd} onChange={e => setRepwd(e.target.value)} placeholder='Re-enter new password'></input>
-                        </div>
-                    </form>
-                </Modal>
+                </div>                
             </div>
         )
 }

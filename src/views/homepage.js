@@ -179,7 +179,7 @@ const Homepage = (props) => {
                             </Link>}
                             user_role={userData?userData.role:''}
                         ></NavBar>
-                    </div>                    
+                    </div>
                     <div className='row'>
                     {
                         width < 768?(

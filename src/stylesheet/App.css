@@ -489,8 +489,7 @@
 .userwall:hover {
   border-radius: 16px;
   background-color: lightgray;
-  cursor: pointer;
-  padding: 2px;
+  cursor: pointer;  
 }
 
 .link {
