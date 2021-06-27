@@ -8,7 +8,7 @@ We have deployed on Netlify
 
 ### Password: 491999
 
-### (Google login will work if you have TDTU student google account)
+### (Google login will work if you don't have TDTU student google account)
 
 # Getting Started with Create React App
 
