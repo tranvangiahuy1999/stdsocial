@@ -41,19 +41,19 @@ const CommentPost = (props) => {
             alert.show('Comment posted', {
               type: 'success'
             })
-
             setCmtText('')
           } else {
             alert.show('Fail to post comment', {
               type: 'error'
             })
           }
+          setSubmitting(false)
         })
         .catch(e => {
+          setSubmitting(false)
           console.error(e)
         })
-    }
-    setSubmitting(false)
+    }    
   }
 
   return (

@@ -95,8 +95,10 @@ const RegisterPage = () => {
                         type: 'error'
                     })
                 }
+                setBtnState(false)
             })
             .catch(e => {
+                setBtnState(false)
                 alert.show('something wrong', {
                     type: 'error'
                 })
@@ -104,8 +106,7 @@ const RegisterPage = () => {
                     sessionStorage.removeItem("token");
                     history.push('/login')
                 }
-            })
-        setBtnState(false)
+            })        
     }
     return (
         <div className="col-md-12 containerr" style={{ flex: 1 }}>

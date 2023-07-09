@@ -46,7 +46,7 @@ const CreateAccountPage = (props) => {
         setLoading(false)
     }
 
-    async function createAccount(e) {
+    function createAccount(e) {
         e.preventDefault();
 
         if (pwd !== repwd) {
@@ -62,7 +62,7 @@ const CreateAccountPage = (props) => {
         } else {
             setBtnState(true)
             const body = { 'user': username, 'password': pwd, 'faculty': falcutyChoose };
-            await axiosInstance.post(`/admin/adduser`, body)
+            axiosInstance.post(`/admin/adduser`, body)
                 .then(res => {
                     if (res.data.code === 0) {
                         alert.show('Create successfully!', {
@@ -79,12 +79,13 @@ const CreateAccountPage = (props) => {
                             type: 'error'
                         })
                     }
+                    setBtnState(false)
                 })
                 .catch(e => {
+                    setBtnState(false)
                     console.error(e)
                 })
-        }
-        setBtnState(false)
+        }        
     }
 
     function checkHandle(e) {

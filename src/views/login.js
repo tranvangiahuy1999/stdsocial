@@ -78,11 +78,12 @@ const LoginView = () => {
                 else {
                     message.error(res.data.message)
                 }
+                setLoginBtnState(false)
             })
             .catch(e => {
+                setLoginBtnState(false)
                 message.error('Check your username or password!')
             })
-        setLoginBtnState(false)
     }
     return (
         <div className="col-md-12 containerr" style={{ flex: 1 }}>

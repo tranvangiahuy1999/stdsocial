@@ -101,7 +101,6 @@ const NotiCard = (props) => {
                 }
             })
             .catch(e => console.error(e))
-
     }
 
     function getCurrentUser() {
