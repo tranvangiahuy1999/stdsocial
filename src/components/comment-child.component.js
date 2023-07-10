@@ -1,16 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Comment, Tooltip, Avatar, Menu, Dropdown, Modal } from 'antd';
 import { FaRegEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import { RiEditLine } from "react-icons/ri";
 import moment from 'moment';
-import axios from 'axios'
-import { connect } from 'react-redux'
-
+import axiosInstance from '../api/service';
 
 const CommentChild = (props) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [commentDeleteState, setCommentDeleteState] = useState(false)    
+    const [commentDeleteState, setCommentDeleteState] = useState(false)
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -29,19 +27,15 @@ const CommentChild = (props) => {
 
     }
 
-    function deleteCommentHandle(){        
-        if(props.cmt_id){            
-            axios.put(`${process.env.REACT_APP_IP}/newfeed/delete/comment/${props.cmt_id}`, {}, {
-                headers: {
-                    'Authorization' : 'Bearer ' + props.token
-                }
-            })
-            .then(res => {                
-                if(res.data.code === 0){
-                    setCommentDeleteState(true)
-                }
-            })
-            .catch(e => console.error(e))
+    function deleteCommentHandle() {
+        if (props.cmt_id) {
+            axiosInstance.put(`/newfeed/delete/comment/${props.cmt_id}`)
+                .then(res => {
+                    if (res.data.code === 0) {
+                        setCommentDeleteState(true)
+                    }
+                })
+                .catch(e => console.error(e))
         }
     }
 
@@ -50,62 +44,56 @@ const CommentChild = (props) => {
             {
                 ((props.user_id && props.user_cmt_id && props.user_role && (props.user_id === props.user_cmt_id || props.user_role !== 'admin'))) && (
                     <Menu.Item>
-                        <div style={{color:'gray'}} onClick={editHandle}><FaRegEdit className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></FaRegEdit> Edit</div>        
+                        <div style={{ color: 'gray' }} onClick={editHandle}><FaRegEdit className='mr-1' style={{ margin: 'auto' }} color='gray' size='16px'></FaRegEdit> Edit</div>
                     </Menu.Item>
                 )
-            }                   
+            }
             <Menu.Item>
-                <div style={{color:'gray'}} onClick={showModal}><ImBin className='mr-1' style={{margin:'auto'}} color='gray' size='16px'></ImBin> Delete</div> 
-            </Menu.Item>      
+                <div style={{ color: 'gray' }} onClick={showModal}><ImBin className='mr-1' style={{ margin: 'auto' }} color='gray' size='16px'></ImBin> Delete</div>
+            </Menu.Item>
         </Menu>
     )
-    return(
-        (commentDeleteState)?(
+    return (
+        (commentDeleteState) ? (
             <div className='empty-data'>
                 <div className='empty-text'>Comment has been deleted</div>
             </div>
-        ):(
-                <div className='row'>
+        ) : (
+            <div className='row'>
                 <Modal title="Confirm" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <div>Are you sure to delete this comment?</div>
                 </Modal>
                 <div className='col-10'>
-                    <Comment            
-                    author={<a>{props.user_name}</a>}
-                    avatar={
-                        <Avatar
-                        src={props.avatar}
-                        alt="avatar"
-                        />
-                    }
-                    content={
-                        <p>
-                            {props.content}
-                        </p>
-                    }
-                    datetime={
-                        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                            <span>{props.datetime}</span>
-                        </Tooltip>
-                    }
+                    <Comment
+                        author={<a>{props.user_name}</a>}
+                        avatar={
+                            <Avatar
+                                src={props.avatar}
+                                alt="avatar"
+                            />
+                        }
+                        content={
+                            <p>
+                                {props.content}
+                            </p>
+                        }
+                        datetime={
+                            <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                                <span>{props.datetime}</span>
+                            </Tooltip>
+                        }
                     />
                 </div>
-                    {
-                        (props.user_cmt_id && props.user_id && props.user_role && (props.user_cmt_id === props.user_id || props.user_role ==='admin')) && (
-                            <Dropdown className='mt-auto mb-auto ml-4' overlay={menu} placement="bottomRight" arrow>
-                                <RiEditLine className='clickable-icon ml-2' size='20px' color='gray'></RiEditLine>
-                            </Dropdown>
-                        )
-                    }                                      
-            </div>      
-        )  
+                {
+                    (props.user_cmt_id && props.user_id && props.user_role && (props.user_cmt_id === props.user_id || props.user_role === 'admin')) && (
+                        <Dropdown className='mt-auto mb-auto ml-4' overlay={menu} placement="bottomRight" arrow>
+                            <RiEditLine className='clickable-icon ml-2' size='20px' color='gray'></RiEditLine>
+                        </Dropdown>
+                    )
+                }
+            </div>
+        )
     )
 }
 
-function mapStateToProps(state) {
-    return {
-        token: state.token
-    };
-}
-
-export default connect(mapStateToProps)(CommentChild)
+export default CommentChild

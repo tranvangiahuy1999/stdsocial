@@ -6,15 +6,14 @@ import { AiOutlineSetting } from "react-icons/ai";
 import { Menu, Dropdown, Button } from 'antd';
 import useWindowDimensions from './useWindowDimensions'
 import { Modal } from 'antd';
-import axios from 'axios'
-import {connect} from 'react-redux'
+import axiosInstance from '../api/service';
 import { useAlert } from 'react-alert';
 
 const NavBar = (props) =>  {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [pwd, setpwd] = useState('');
     const [repwd, setRepwd] = useState('');
-    const {width, height} = useWindowDimensions()
+    const {width} = useWindowDimensions()
     const alert = useAlert()   
 
     const showModal = () => {
@@ -43,14 +42,10 @@ const NavBar = (props) =>  {
             })                 
             return
         }
-
-        axios.put(`${process.env.REACT_APP_IP}/account/repassword`, {
+        const body = {
             repassword: pwd
-        }, {
-            headers: {
-                'Authorization' : 'Bearer ' + props.token
-            }
-        })
+        }
+        axiosInstance.put(`/account/repassword`, body)
         .then(res => {            
             if(res.data.code === 0){
                 alert.show('Password has changed', {
@@ -116,10 +111,4 @@ const NavBar = (props) =>  {
         )
 }
 
-function mapStateToProps(state) {
-    return {
-        token: state.token
-    };
-}
-
-export default connect(mapStateToProps)(NavBar)
+export default NavBar
