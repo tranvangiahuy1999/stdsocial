@@ -4,7 +4,7 @@ import logo from "../resources/logo-tdtu.png";
 import { FaGooglePlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import useWindowDimensions from "../components/useWindowDimensions";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from "@react-oauth/google";
 import { message, Checkbox } from "antd";
 import axiosInstance from "../api/service";
 
@@ -27,29 +27,24 @@ const LoginView = () => {
     setChecked(!checked);
   }
 
-  const responseSuccessGoogle = (response) => {
-    // let emailtail = response.profileObj.email.split('@')[1]
+  const responseSuccessGoogle = async (response) => {
+    const tokenId = response?.credential;
 
-    // if (emailtail !== 'student.tdtu.edu.vn') {
-    //     message.error('This account is not suitable!')
-    //     return
-    // }
-
-    axiosInstance
-      .post(`/api/googlelogin`, {
-        tokenId: response.tokenId,
-      })
-      .then((res) => {
-        if (res.data.code === 0) {
-          sessionStorage.setItem("token", res.data.token);
+    try {
+      const { data } = await axiosInstance.post(`/api/googlelogin`, {
+        tokenId: tokenId,
+      });
+      if (data) {
+        if (data.code === 0) {
+          sessionStorage.setItem("token", data.token);
           history.push("/home");
         } else {
-          message.error(res.data.message);
+          message.error(data.message);
         }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   async function submitHandle(e) {
@@ -145,7 +140,7 @@ const LoginView = () => {
             >
               Or sign in to student account
             </div>
-            <GoogleLogin
+            {/* <GoogleLogin
               clientId={googleToken}
               render={(renderProps) => (
                 <Button
@@ -165,6 +160,11 @@ const LoginView = () => {
                 message.error("Something wrong with google login")
               }
               cookiePolicy={"single_host_origin"}
+            /> */}
+            <GoogleLogin
+              onSuccess={responseSuccessGoogle}
+              onError={() => message.error("Something wrong with google login")}
+              text="Sign in with Student account"
             />
           </Form>
         </div>
