@@ -39,6 +39,7 @@ const PersonalPage = (props) => {
     useEffect(() => {
         window.scrollTo(0, 0)
         getCurrentUserData()
+        getPersonalNewfeed(count)
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
     }, [])
@@ -133,7 +134,6 @@ const PersonalPage = (props) => {
         } else {
             userid = id
         }
-
         axiosInstance.get(`/newfeed/yourfeed/${userid}/${page}`)
             .then((res) => {
                 if (res.data.code === 0) {

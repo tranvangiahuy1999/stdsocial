@@ -3,10 +3,9 @@ import ScrollableChat from "./scrollable-chat.component";
 import { connect } from "react-redux";
 import { getSender } from "../utils/ChatLogic";
 import { AiOutlineSend } from "react-icons/ai";
-import axios from "axios";
 import { Skeleton } from "antd";
 import io from "socket.io-client";
-import Lottie from "react-lottie";
+import axiosInstance from "../api/service";
 import animationData from "../animations/typing.json";
 import { getSelectedChat } from "../actions";
 
@@ -61,23 +60,11 @@ const SingleChat = ({
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
-    console.log(selectedChat);
-
     try {
-      const config = {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-
-          Authorization: `Bearer ${token}`,
-        },
-      };
       setLoading(true);
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/message/${selectedChat?._id}`,
-        config
+      const { data } = await axiosInstance.get(
+        `/message/${selectedChat?._id}`
       );
-
       setMessages(data.data);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
@@ -109,21 +96,12 @@ const SingleChat = ({
     if (newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        const config = {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const { data } = await axios.post(
-          `${process.env.REACT_APP_API}/message`,
+        const { data } = await axiosInstance.post(
+          `/message`,
           {
             content: newMessage,
             chatId: selectedChat._id,
-          },
-          config
+          }
         );
         setNewMessage("");
         // console.log(data);

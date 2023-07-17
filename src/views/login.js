@@ -4,11 +4,11 @@ import logo from "../resources/logo-tdtu.png";
 import { FaGooglePlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import useWindowDimensions from "../components/useWindowDimensions";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { message, Checkbox } from "antd";
 import axiosInstance from "../api/service";
 
-const rememberme = JSON.parse(sessionStorage.getItem("rememberuser"));
+const rememberme = JSON.parse(localStorage.getItem("rememberuser"));
 
 const LoginView = () => {
   const [user, setUser] = useState(rememberme ? rememberme.username : "");
@@ -19,7 +19,6 @@ const LoginView = () => {
 
   const [checked, setChecked] = useState(rememberme ? true : false);
   const { width } = useWindowDimensions();
-  const googleToken = process.env.REACT_APP_GG_TOKEN;
 
   let history = useHistory();
 
@@ -27,9 +26,10 @@ const LoginView = () => {
     setChecked(!checked);
   }
 
-  const responseSuccessGoogle = async (response) => {
-    const tokenId = response?.credential;
-
+  const gooogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const tokenId = tokenResponse?.access_token;
+      debugger
     try {
       const { data } = await axiosInstance.post(`/api/googlelogin`, {
         tokenId: tokenId,
@@ -45,13 +45,14 @@ const LoginView = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+    }
+  })
 
   async function submitHandle(e) {
     e.preventDefault();
 
     if (user.length === 0 && password.length === 0) {
-      message.error("Dont let username and password empty!");
+      message.error("Don't let username and password empty!");
       return;
     }
 
@@ -66,9 +67,9 @@ const LoginView = () => {
         if (res.data.code === 0) {
           if (checked) {
             let data = { username: user, password: password };
-            sessionStorage.setItem("rememberuser", JSON.stringify(data));
+            localStorage.setItem("rememberuser", JSON.stringify(data));
           } else {
-            sessionStorage.setItem("rememberuser", null);
+            localStorage.setItem("rememberuser", null);
           }
           sessionStorage.setItem("token", res.data.token);
           history.push("/home");
@@ -140,32 +141,15 @@ const LoginView = () => {
             >
               Or sign in to student account
             </div>
-            {/* <GoogleLogin
-              clientId={googleToken}
-              render={(renderProps) => (
-                <Button
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  className="btn col-md-12 mt-2"
-                  type="button"
-                  variant="danger"
-                >
-                  <FaGooglePlus color="white" size="22px" /> Login with Google
-                  Account
-                </Button>
-              )}
-              buttonText="Login"
-              onSuccess={responseSuccessGoogle}
-              onFailure={() =>
-                message.error("Something wrong with google login")
-              }
-              cookiePolicy={"single_host_origin"}
-            /> */}
-            <GoogleLogin
-              onSuccess={responseSuccessGoogle}
-              onError={() => message.error("Something wrong with google login")}
-              text="Sign in with Student account"
-            />
+            <Button
+              onClick={() => gooogleLogin()}
+              className="btn col-md-12 mt-2"
+              type="button"
+              variant="danger"
+            >
+              <FaGooglePlus color="white" size="22px" /> Login with Google
+              Account
+            </Button>
           </Form>
         </div>
       </div>

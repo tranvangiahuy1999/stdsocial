@@ -17,7 +17,7 @@ import CreateAccountPage from '../components/childviews/create-account.child'
 import PersonalPage from '../components/childviews/personal-page.child'
 import useWindowDimensions from '../components/useWindowDimensions'
 import axiosInstance from '../api/service';
-import { connect } from 'react-redux';
+import { googleLogout } from '@react-oauth/google';
 import {
     Avatar,
     message,
@@ -122,6 +122,7 @@ const Homepage = (props) => {
             .catch(e => {
                 console.error(e)
                 if (e.response.status === 401) {
+                    googleLogout();
                     sessionStorage.removeItem("token");
                     history.push('/login')
                 }
@@ -133,6 +134,7 @@ const Homepage = (props) => {
     }
 
     function logOutHandle() {
+        googleLogout();
         sessionStorage.removeItem("token");
         history.push('/login')
     }
