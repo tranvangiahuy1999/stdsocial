@@ -19,7 +19,6 @@ const LoginView = () => {
 
   const [checked, setChecked] = useState(rememberme ? true : false);
   const { width } = useWindowDimensions();
-  const googleToken = process.env.REACT_APP_GG_TOKEN;
 
   let history = useHistory();
 

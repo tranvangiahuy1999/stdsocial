@@ -6,6 +6,7 @@ import { message } from "antd";
 import { getSender, getSenderInfo } from "../utils/ChatLogic";
 import { getSelectedChat } from "../actions/index";
 import ChatItem from "./chat-item.component";
+import axiosInstance from "../api/service";
 
 const MyChats = (props) => {
   const [loggedUser, setLoggedUser] = useState({});
@@ -24,14 +25,9 @@ const MyChats = (props) => {
     }
     try {
       setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/account/users?search=${search}`,
-        config
+
+      const { data } = await axiosInstance.get(
+        `/account/users?search=${search}`
       );
 
       setLoading(false);
@@ -52,11 +48,7 @@ const MyChats = (props) => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_API}/chat`,
-        { userId },
-        config
-      );
+      const { data } = await axiosInstance.post("/chat");
       const result = data.data;
       // console.log(result);
       if (!chats.find((c) => c._id === result._id))
@@ -72,16 +64,7 @@ const MyChats = (props) => {
 
   const fetchChats = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/chat`,
-        config
-      );
+      const { data } = await axiosInstance.get("/chat");
       setChats(data);
       // console.log(data);
     } catch (error) {
@@ -98,7 +81,7 @@ const MyChats = (props) => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search by name or email"
+          placeholder="Tìm kiếm người dùng"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

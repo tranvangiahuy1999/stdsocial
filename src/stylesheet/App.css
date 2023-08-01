@@ -575,3 +575,178 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   border-radius: 10px;
 }
+
+/* chat page */
+
+.chat-page {
+  display: flex;
+  justify-content: flex-start;
+  /* height: 100vh; */
+  margin-top: 60px;
+  padding: 15px 15px;
+}
+
+/* my chat section */
+.my-chat {
+  flex: 1;
+  padding: 10px;
+  /* width: 35%; */
+}
+
+.search-container {
+  display: flex;
+
+
+}
+
+.search-container input {
+  flex: 2;
+  border: 1px solid #28313b;
+  outline: none;
+  padding: 4px 6px;
+  border-radius: 5px;
+  /* margin-right: 10px; */
+}
+
+.search-container button {
+  outline: none;
+  border: none;
+  padding: 8px 10px;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* .chat-item__avatar {
+ 
+} */
+
+.chat-item__avatar img {
+   width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: contain;
+  overflow: hidden;
+}
+
+.chat-item__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.content__sender-name {
+  font-size: 16px;
+}
+
+
+
+
+/* chat box section */
+.chat-box {
+  flex: 2;
+  border-left: 1px solid #9ba2a8;
+}
+
+.single-chat {
+  height: 80vh;
+  max-height: 80vh;
+}
+
+.no-chat {
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.no-chat span {
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.messages__friend-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #6d7277;
+  padding-left: 10px;
+}
+
+.friend-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.friend-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+.messages__container {
+  height: 80%;
+}
+
+.messages {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding-left: 10px;
+  /* scrollbar-width: none; */
+}
+
+.message__sender-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+.send-message {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  padding: 0 5px;
+}
+
+.input-msg {
+  flex: 2;
+  border: 1px solid #485461;
+  outline: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.send-message__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-send-message {
+  margin-left: 5px;
+  overflow: none;
+  border: none;
+  padding: 5px;
+  font-size: 24px;
+  text-align: center;
+  background-color: #fff;
+}
+
+
+
+
+

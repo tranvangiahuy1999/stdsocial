@@ -14,7 +14,14 @@ const ScrollableChat = ({ currentUser, messages }) => {
     <ScrollableFeed className="srcoll-feed">
       {messages &&
         messages.map((mess, i) => (
-          <div style={{ display: "flex" }} key={mess._id}>
+          <div
+            style={{
+              display: "flex",
+              // alignItems: "center",
+              flexDirection: mess.photo ? "column" : "row",
+            }}
+            key={mess._id}
+          >
             {(isSameSender(messages, mess, i, currentUser._id) ||
               isLastMessage(messages, i, currentUser._id)) && (
               <Tooltip title={mess.sender.user_name}>
@@ -27,27 +34,60 @@ const ScrollableChat = ({ currentUser, messages }) => {
               </Tooltip>
             )}
 
-            <span
-              style={{
-                backgroundColor: `${
-                  mess.sender._id === currentUser._id ? "#BEE3F8" : "#B9F5D0"
-                }`,
-                marginLeft: isSameSenderMargin(
-                  messages,
-                  mess,
-                  i,
-                  currentUser._id
-                ),
-                marginTop: isSameUser(messages, mess, i, currentUser._id)
-                  ? 3
-                  : 10,
-                borderRadius: "20px",
-                padding: "5px 15px",
-                maxWidth: "75%",
-              }}
-            >
-              {mess.content}
-            </span>
+            {mess.content.length > 0 && (
+              <span
+                style={{
+                  backgroundColor: `${
+                    mess.sender._id === currentUser._id ? "#BEE3F8" : "#B9F5D0"
+                  }`,
+                  marginLeft: isSameSenderMargin(
+                    messages,
+                    mess,
+                    i,
+                    currentUser._id
+                  ),
+                  marginTop: isSameUser(messages, mess, i, currentUser._id)
+                    ? 3
+                    : 5,
+                  borderRadius: "20px",
+                  padding: "5px 15px",
+                  maxWidth: "75%",
+                }}
+              >
+                {mess.content}
+              </span>
+            )}
+            {mess.photo && (
+              <div
+                style={{
+                  marginLeft: isSameSenderMargin(
+                    messages,
+                    mess,
+                    i,
+                    currentUser._id
+                  ),
+                  marginTop: isSameUser(messages, mess, i, currentUser._id)
+                    ? 3
+                    : 5,
+
+                  padding: "5px 10px",
+                  maxWidth: "75%",
+                  backgroundSize: "contain",
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={mess.photo.link}
+                  alt="msg photo"
+                  style={{
+                    maxHeight: "125px",
+
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
+            )}
           </div>
         ))}
     </ScrollableFeed>

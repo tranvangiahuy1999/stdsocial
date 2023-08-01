@@ -3,15 +3,19 @@ import ScrollableChat from "./scrollable-chat.component";
 import { connect } from "react-redux";
 import { getSender } from "../utils/ChatLogic";
 import { AiOutlineSend } from "react-icons/ai";
+import { MdInsertPhoto } from "react-icons/md";
+import { ImCancelCircle } from "react-icons/im";
+
 import axios from "axios";
 import { Skeleton } from "antd";
 import io from "socket.io-client";
-import Lottie from "react-lottie";
+// import Lottie from "react-lottie";
 import animationData from "../animations/typing.json";
 import { getSelectedChat } from "../actions";
+import axiosInstance from "../api/service";
 
 var selectedChatCompare, socket;
-const ENDPOINT = process.env.REACT_APP_API;
+const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 const SingleChat = ({
   currentUser,
@@ -31,6 +35,10 @@ const SingleChat = ({
   const [notifications, setNotifications] = useState([]);
   const [arrivalMsg, setArrivalMsg] = useState(null);
 
+  const [fileInput, setFileInput] = useState(null);
+  const [previewFile, setPreviewFile] = useState(null);
+  const [base64String, setBase64String] = useState("");
+
   const senderInfo = selectedChat?.users.filter(
     (user) => user._id !== currentUser._id
   )[0];
@@ -48,8 +56,11 @@ const SingleChat = ({
     socket = io(ENDPOINT);
     socket.on("message received", (newMessageReceived) => {
       setArrivalMsg(newMessageReceived);
-      // setFetchAgain(!fetchAgain);
     });
+
+    return () => {
+      socket.off("message received");
+    };
   }, []);
 
   useEffect(() => {
@@ -57,6 +68,11 @@ const SingleChat = ({
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
+    return () => {
+      socket.off("connected");
+      socket.off("typing");
+      socket.off("stop typing");
+    };
   }, [currentUser]);
 
   const fetchMessages = async () => {
@@ -64,19 +80,8 @@ const SingleChat = ({
     console.log(selectedChat);
 
     try {
-      const config = {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-
-          Authorization: `Bearer ${token}`,
-        },
-      };
       setLoading(true);
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/message/${selectedChat?._id}`,
-        config
-      );
+      const { data } = await axiosInstance.get(`/message/${selectedChat?._id}`);
 
       setMessages(data.data);
       setLoading(false);
@@ -95,41 +100,73 @@ const SingleChat = ({
     const isIncluded = selectedChat?.users.some(
       (user) => user._id === arrivalMsg?.sender._id
     );
-    console.log(isIncluded);
+    // console.log(isIncluded);
     if (arrivalMsg && isIncluded) {
       setMessages((prev) => [...prev, arrivalMsg]);
+
+      console.log(selectedChat);
     } else {
-      console.log("something wrong");
+      console.log("No new msg");
     }
     setFetchAgain(!fetchAgain);
   }, [arrivalMsg, selectedChat]);
 
+  function _previewFile(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewFile(reader.result);
+    };
+  }
+
+  async function _handleChange(e) {
+    const file = e.target.files[0];
+    setFileInput(file);
+    _previewFile(file);
+    const base64 = await getBase64(file);
+    if (base64) setBase64String(base64);
+  }
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  function _inputImageBtn() {
+    const input = document.getElementById("input-msgImg");
+    if (input) {
+      input.click();
+    }
+  }
+
+  function _deleteImageBtn() {
+    setFileInput(null);
+    setPreviewFile(null);
+  }
+
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (newMessage) {
+
+    if (newMessage || fileInput) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        const config = {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const { data } = await axios.post(
-          `${process.env.REACT_APP_API}/message`,
-          {
-            content: newMessage,
-            chatId: selectedChat._id,
-          },
-          config
-        );
+        const { data } = await axiosInstance.post(`/message`, {
+          content: newMessage,
+          chatId: selectedChat._id,
+          photo: base64String,
+        });
         setNewMessage("");
-        // console.log(data);
+        setFileInput(null);
+        setPreviewFile(null);
         socket.emit("new message", data);
         setMessages([...messages, data]);
-
+        console.log(data);
         setFetchAgain(!fetchAgain);
       } catch (error) {
         console.log(error);
@@ -166,13 +203,13 @@ const SingleChat = ({
     <>
       {selectedChat ? (
         <div className="single-chat">
-          <div className="messages__sender-info">
-            <img src={senderInfo?.avatar} alt="" className="sender-avatar" />
-            <div className="sender-name">
+          <div className="messages__friend-info">
+            <img src={senderInfo?.avatar} alt="" className="friend-avatar" />
+            <div className="friend-name">
               <span>{getSender(currentUser, selectedChat.users)}</span>
             </div>
           </div>
-          <div className="message__container">
+          <div className="messages__container">
             {loading ? (
               <Skeleton active paragraph={2}></Skeleton>
             ) : (
@@ -180,8 +217,9 @@ const SingleChat = ({
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <div className="send-message" onKeyDown={handleKeyDown}>
-              {/* {isTyping ? (
+            <form onSubmit={sendMessage}>
+              <div className="send-message" onKeyDown={handleKeyDown}>
+                {/* {isTyping ? (
                 <div>
                   <Lottie
                     options={defaultOptions}
@@ -189,25 +227,66 @@ const SingleChat = ({
                     width={40}
                     style={{ marginBottom: 15, marginLeft: 0 }}
                   />
+                  </div>
+                ) : (
+                  <></>
+                )} */}
+                <div className="stp-preview row ml-2">
+                  {previewFile && (
+                    <div>
+                      <img
+                        className="ml-3"
+                        src={previewFile}
+                        alt="chosen"
+                        style={{ height: "100px", borderRadius: "4px" }}
+                      />
+                      <ImCancelCircle
+                        className="ml-2 clickable-icon"
+                        color="gray"
+                        size="22px"
+                        onClick={_deleteImageBtn}
+                      ></ImCancelCircle>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <></>
-              )} */}
-              <input
-                type="text"
-                variant="filled"
-                placeholder="Enter a message..."
-                value={newMessage}
-                onChange={typingHandler}
-              />
-              <button onClick={sendMessage} className="btn-send-message">
-                <AiOutlineSend />
-              </button>
-            </div>
+                <div className="send-message__actions">
+                  <input
+                    className="input-msg"
+                    type="text"
+                    variant="filled"
+                    placeholder="Enter a message..."
+                    value={newMessage}
+                    onChange={typingHandler}
+                  />
+                  <div>
+                    <MdInsertPhoto
+                      className="clickable-icon ml-3"
+                      color="rgb(2, 136, 209)"
+                      size="32px"
+                      onClick={_inputImageBtn}
+                    ></MdInsertPhoto>
+                    <input
+                      id="input-msgImg"
+                      type="file"
+                      name="image"
+                      onChange={_handleChange}
+                      style={{ display: "none" }}
+                      accept="image/png, image/jpeg"
+                    />
+                  </div>
+
+                  <div style={{ textAlign: "center" }}>
+                    <button type="submit" className="btn-send-message">
+                      <AiOutlineSend />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       ) : (
-        <div>
+        <div className="no-chat">
           <span>Chọn người dùng để bắt đầu trò chuyện</span>
         </div>
       )}
