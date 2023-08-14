@@ -25,7 +25,6 @@ const MyChats = (props) => {
     }
     try {
       setLoading(true);
-
       const { data } = await axiosInstance.get(
         `/account/users?search=${search}`
       );
@@ -40,17 +39,11 @@ const MyChats = (props) => {
   const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
-      const config = {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axiosInstance.post("/chat");
+      const { data } = await axiosInstance.post(
+        `/chat`,
+        { userId }
+      );
       const result = data.data;
-      // console.log(result);
       if (!chats.find((c) => c._id === result._id))
         setChats([result, ...chats]);
       getSelectedChat(result);
@@ -66,7 +59,6 @@ const MyChats = (props) => {
     try {
       const { data } = await axiosInstance.get("/chat");
       setChats(data);
-      // console.log(data);
     } catch (error) {
       console.log(error);
     }

@@ -8,18 +8,21 @@ import {
 } from "react-router-dom";
 import logo from "../resources/logo-tdtu.png";
 import Sidebar from "react-sidebar";
-import NavBar from "../components/navbar.component";
-import SideBar from "../components/sidebar.component";
-import Newfeed from "../components/childviews/newfeed.child";
-import NotiPage from "../components/childviews/notification.child";
-import CreateNoti from "../components/childviews/create-notification.child";
-import CreateAccountPage from "../components/childviews/create-account.child";
-import PersonalPage from "../components/childviews/personal-page.child";
-import ChatPage from "../components/childviews/chat-page.child";
-import useWindowDimensions from "../components/useWindowDimensions";
-import axiosInstance from "../api/service";
-import { connect } from "react-redux";
-import { Avatar, message, Skeleton } from "antd";
+import NavBar from '../components/navbar.component'
+import SideBar from "../components/sidebar.component"
+import Newfeed from '../components/childviews/newfeed.child'
+import NotiPage from '../components/childviews/notification.child'
+import CreateNoti from '../components/childviews/create-notification.child'
+import CreateAccountPage from '../components/childviews/create-account.child'
+import PersonalPage from '../components/childviews/personal-page.child'
+import useWindowDimensions from '../components/useWindowDimensions'
+import axiosInstance from '../api/service';
+import { googleLogout } from '@react-oauth/google';
+import {
+    Avatar,
+    message,
+    Skeleton
+} from 'antd';
 import { FaHome, FaUserPlus } from "react-icons/fa";
 import { AiFillMessage } from "react-icons/ai";
 import {
@@ -29,6 +32,8 @@ import {
 import NotiReader from "../components/childviews/notification-reader.child";
 import AccManagerPage from "../components/childviews/account-manager.child";
 import { getUser } from "../actions";
+import { connect } from "react-redux";
+import ChatPage from "../components/childviews/chat-page.child";
 
 const Homepage = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -5,14 +5,11 @@ import { getSender } from "../utils/ChatLogic";
 import { AiOutlineSend } from "react-icons/ai";
 import { MdInsertPhoto } from "react-icons/md";
 import { ImCancelCircle } from "react-icons/im";
-
-import axios from "axios";
 import { Skeleton } from "antd";
 import io from "socket.io-client";
-// import Lottie from "react-lottie";
+import axiosInstance from "../api/service";
 import animationData from "../animations/typing.json";
 import { getSelectedChat } from "../actions";
-import axiosInstance from "../api/service";
 
 var selectedChatCompare, socket;
 const ENDPOINT = process.env.REACT_APP_BASE_URL;
@@ -77,8 +74,6 @@ const SingleChat = ({
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
-    console.log(selectedChat);
-
     try {
       setLoading(true);
       const { data } = await axiosInstance.get(`/message/${selectedChat?._id}`);

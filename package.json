@@ -33,7 +33,7 @@
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "dev": "set PORT=9000 && react-scripts --openssl-legacy-provider start",
+    "dev": "set PORT=9000 && react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -57,5 +57,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-error-overlay": "^6.0.9"
   }
 }
