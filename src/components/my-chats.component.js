@@ -36,13 +36,15 @@ const MyChats = (props) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    e.key === "Enter" && handleSearch();
+  };
+
   const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
-      const { data } = await axiosInstance.post(
-        `/chat`,
-        { userId }
-      );
+
+      const { data } = await axiosInstance.post("/chat", { userId });
       const result = data.data;
       if (!chats.find((c) => c._id === result._id))
         setChats([result, ...chats]);
@@ -70,7 +72,7 @@ const MyChats = (props) => {
 
   return (
     <div className="my-chat">
-      <div className="search-container">
+      <div className="search-container" onKeyDown={handleKeyDown}>
         <input
           type="text"
           placeholder="Tìm kiếm người dùng"
@@ -81,22 +83,28 @@ const MyChats = (props) => {
           <AiOutlineSearch />
         </button>
       </div>
-      {searchResult &&
-        searchResult.length > 0 &&
-        searchResult.map((user) => (
-          <div
-            className="search-results__item"
-            key={user._id}
-            onClick={() => accessChat(user._id)}
-          >
-            {user.user_name}
-          </div>
-        ))}
-      {chats.map((chat) => (
-        <div key={chat._id} onClick={() => getSelectedChat(chat)}>
-          <ChatItem chat={chat} currentUser={currentUser} />
-        </div>
-      ))}
+      {search && searchResult
+        ? searchResult.map((user) => (
+            <div
+              className="search-results__item"
+              key={user._id}
+              onClick={() => accessChat(user._id)}
+            >
+              <img
+                src={user.avatar}
+                alt=""
+                className="search-results__item-avatar"
+              />
+              <span className="search-results__item-name">
+                {user.user_name}
+              </span>
+            </div>
+          ))
+        : chats.map((chat) => (
+            <div key={chat._id} onClick={() => getSelectedChat(chat)}>
+              <ChatItem chat={chat} currentUser={currentUser} />
+            </div>
+          ))}
     </div>
   );
 };
