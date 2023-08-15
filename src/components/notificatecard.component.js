@@ -6,6 +6,7 @@ import axiosInstance from "../api/service";
 import { useAlert } from "react-alert";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { BASE_URL } from "../constants";
 
 const editorConfiguration = {
   toolbar: [
@@ -105,7 +106,7 @@ const NotiCard = (props) => {
     };
     axiosInstance
       .put(
-        `${process.env.REACT_APP_BASE_URL}/notification/update/${props.noti_id}`,
+        `${BASE_URL}/notification/update/${props.noti_id}`,
         body
       )
       .then((res) => {

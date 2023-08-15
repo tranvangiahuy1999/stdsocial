@@ -27,9 +27,9 @@ const ChatItem = ({ chat, currentUser, currentChat }) => {
 
           {chat.latestMessage?.photo
             ? "Đã gửi một ảnh"
-            : chat.latestMessage?.content.length > 50
-            ? chat.latestMessage.content.substring(0, 21) + "..."
-            : chat.latestMessage.content}
+            : chat?.latestMessage?.content.length > 50
+            ? chat?.latestMessage?.content.substring(0, 21) + "..."
+            : chat?.latestMessage?.content}
         </span>
       </div>
     </div>

@@ -136,7 +136,7 @@ const NavBar = (props) => {
       </div>
       <div className="row mr-1">
         {props.usersession}
-        <Dropdown menu={menu} placement="bottomRight" arrow>
+        <Dropdown overlay={menu} placement="bottomRight" arrow>
           <Button shape="circle">
             <BsCaretDownFill color="gray" size="16px"></BsCaretDownFill>
           </Button>

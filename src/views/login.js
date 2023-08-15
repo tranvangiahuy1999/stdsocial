@@ -4,10 +4,9 @@ import logo from "../resources/logo-tdtu.png";
 import { FaGooglePlus } from "react-icons/fa";
 import { useHistory, useLocation } from "react-router-dom";
 import useWindowDimensions from "../components/useWindowDimensions";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { message, Checkbox } from "antd";
 import axiosInstance from "../api/service";
-// import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const rememberme = JSON.parse(localStorage.getItem("rememberuser"));
 
@@ -55,33 +54,16 @@ const LoginView = () => {
 
   const loginWithGG = useGoogleLogin({
     onSuccess: responseSuccess,
-    onError: (error) => console.log("Login Failed:", error),
+    onError: (error) => message.error("Có lỗi xảy ra khi kết nối tới dịch vụ Google!"),
   });
-
-  // const responseSuccessGoogle = async (response) => {
-  //   const tokenId = response?.credential;
-  //   try {
-  //     const { data } = await axiosInstance.post(`/api/googlelogin`, {
-  //       tokenId: tokenId,
-  //     });
-
-  //     sessionStorage.setItem("token", data.token);
-  //     history.push("/home");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   async function submitHandle(e) {
     e.preventDefault();
-
     if (user.length === 0 && password.length === 0) {
       message.error("Don't let username and password empty!");
       return;
     }
-
     setLoginBtnState(true);
-
     axiosInstance
       .post(`/account/login`, {
         user: user,
@@ -165,32 +147,6 @@ const LoginView = () => {
             >
               Or sign in to student account
             </div>
-            {/* <GoogleLogin
-              clientId={googleToken}
-              render={(renderProps) => (
-                <Button
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  className="btn col-md-12 mt-2"
-                  type="button"
-                  variant="danger"
-                >
-                  <FaGooglePlus color="white" size="22px" /> Login with Google
-                  Account
-                </Button>
-              )}
-              buttonText="Login"
-              onSuccess={responseSuccessGoogle}
-              onFailure={() =>
-                message.error("Something wrong with google login")
-              }
-              cookiePolicy={"single_host_origin"}
-            /> */}
-            {/* <GoogleLogin
-              onSuccess={responseSuccessGoogle}
-              onError={() => message.error("Something wrong with google login")}
-              text="Sign in with Student account"
-            /> */}
             <Button
               onClick={loginWithGG}
               className="btn col-md-12 mt-2"

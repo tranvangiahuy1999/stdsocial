@@ -58,12 +58,12 @@ const MyChats = (props) => {
   };
 
   const fetchChats = async () => {
-    try {
+    // try {
       const { data } = await axiosInstance.get("/chat");
       setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   useEffect(() => {

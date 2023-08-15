@@ -148,6 +148,7 @@ const Homepage = (props) => {
         if (e.response.status === 401) {
           sessionStorage.removeItem("token");
           history.push("/login");
+          googleLogout();
         }
       });
   }

@@ -12,6 +12,7 @@ import { FaRegEdit, FaRegSave } from "react-icons/fa";
 import { AiFillCamera, AiOutlineCheck, AiOutlineClose, AiOutlineUser } from "react-icons/ai";
 import { BiCake, BiPhone } from "react-icons/bi";
 import { IoTransgenderSharp } from "react-icons/io5";
+import { BASE_URL } from '../../constants';
 
 const PersonalPage = (props) => {
     const [userData, setUserData] = useState()
@@ -53,7 +54,7 @@ const PersonalPage = (props) => {
     }, [userData])
 
     useEffect(() => {
-        const socket = io.connect(`${process.env.REACT_APP_BASE_URL}`, { transports: ["websocket"], withCredentials: true });
+        const socket = io.connect(`${BASE_URL}`, { transports: ["websocket"], withCredentials: true });
         socket.on('new_comment', (data) => {
             newCommentHandler(data)
         })

@@ -9,6 +9,7 @@ import { io } from "socket.io-client";
 import { notification, Skeleton } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router'
+import { BASE_URL } from '../../constants'
 
 const Newfeed = (props) => {
     const [userData, setUserData] = useState()
@@ -44,7 +45,7 @@ const Newfeed = (props) => {
     }, [props.reloadNewsfeed])
 
     useEffect(() => {
-        const socket = io.connect(`${process.env.REACT_APP_BASE_URL}`, { transports: ["websocket"], withCredentials: true });
+        const socket = io.connect(`${BASE_URL}`, { transports: ["websocket"], withCredentials: true });
         socket.on('new_notification', (data) => {
             if (userdata && notidata && userdata.faculty.includes(data.role) && userdata.role === 'student') {
                 popNoti(data)

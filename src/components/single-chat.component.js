@@ -12,7 +12,6 @@ import animationData from "../animations/typing.json";
 import { getSelectedChat } from "../actions";
 
 var selectedChatCompare, socket;
-const ENDPOINT = process.env.REACT_APP_BASE_URL;
 
 const SingleChat = ({
   currentUser,
@@ -50,7 +49,7 @@ const SingleChat = ({
   };
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(`https://stdsocial.onrender.com`);
     socket.on("message received", (newMessageReceived) => {
       setArrivalMsg(newMessageReceived);
     });
