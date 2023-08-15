@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import logo from "../resources/logo-tdtu.png";
 import { FaGooglePlus } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import useWindowDimensions from "../components/useWindowDimensions";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { message, Checkbox } from "antd";
 import axiosInstance from "../api/service";
+// import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const rememberme = JSON.parse(sessionStorage.getItem("rememberuser"));
 
@@ -21,30 +22,55 @@ const LoginView = () => {
   const { width } = useWindowDimensions();
 
   let history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/home" } };
 
   function checkHandle() {
     setChecked(!checked);
   }
 
-  const responseSuccessGoogle = async (response) => {
-    const tokenId = response?.credential;
-
-    try {
-      const { data } = await axiosInstance.post(`/api/googlelogin`, {
-        tokenId: tokenId,
-      });
-      if (data) {
+  const responseSuccess = async (response) => {
+    const res = await axiosInstance.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${response.access_token}`
+    );
+    if (res.data) {
+      if (res.data.hd !== "student.tdtu.edu.vn") {
+        message.error("Tài khoản không phù hợp, vui lòng thử lại");
+      } else {
+        const { data } = await axiosInstance.post(`/api/googlelogin`, {
+          name: res.data.name,
+          email: res.data.email,
+          picture: res.data.picture,
+          verified_email: res.data.verified_email,
+        });
         if (data.code === 0) {
+          console.log(from);
+          console.log(location);
           sessionStorage.setItem("token", data.token);
-          history.push("/home");
-        } else {
-          message.error(data.message);
+          history.replace(from);
         }
       }
-    } catch (error) {
-      console.log(error);
     }
   };
+
+  const loginWithGG = useGoogleLogin({
+    onSuccess: responseSuccess,
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  // const responseSuccessGoogle = async (response) => {
+  //   const tokenId = response?.credential;
+  //   try {
+  //     const { data } = await axiosInstance.post(`/api/googlelogin`, {
+  //       tokenId: tokenId,
+  //     });
+
+  //     sessionStorage.setItem("token", data.token);
+  //     history.push("/home");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   async function submitHandle(e) {
     e.preventDefault();
@@ -160,11 +186,20 @@ const LoginView = () => {
               }
               cookiePolicy={"single_host_origin"}
             /> */}
-            <GoogleLogin
+            {/* <GoogleLogin
               onSuccess={responseSuccessGoogle}
               onError={() => message.error("Something wrong with google login")}
               text="Sign in with Student account"
-            />
+            /> */}
+            <Button
+              onClick={loginWithGG}
+              className="btn col-md-12 mt-2"
+              type="button"
+              variant="danger"
+            >
+              <FaGooglePlus color="white" size="22px" /> Login with Google
+              Account
+            </Button>
           </Form>
         </div>
       </div>
