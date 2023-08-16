@@ -7,10 +7,12 @@ import useWindowDimensions from "../components/useWindowDimensions";
 import { useGoogleLogin } from "@react-oauth/google";
 import { message, Checkbox } from "antd";
 import axiosInstance from "../api/service";
+import { getToken } from "../actions";
+import { connect } from "react-redux";
 
 const rememberme = JSON.parse(localStorage.getItem("rememberuser"));
 
-const LoginView = () => {
+const LoginView = (props) => {
   const [user, setUser] = useState(rememberme ? rememberme.username : "");
   const [password, setPassword] = useState(
     rememberme ? rememberme.password : ""
@@ -43,18 +45,18 @@ const LoginView = () => {
           verified_email: res.data.verified_email,
         });
         if (data.code === 0) {
-          console.log(from);
-          console.log(location);
           sessionStorage.setItem("token", data.token);
-          history.replace(from);
+          props.setToken(data.token);
+          history.push("/home");
         }
       }
     }
-  }
+  };
 
   const loginWithGG = useGoogleLogin({
     onSuccess: responseSuccess,
-    onError: (error) => message.error("Có lỗi xảy ra khi kết nối tới dịch vụ Google!"),
+    onError: (error) =>
+      message.error("Có lỗi xảy ra khi kết nối tới dịch vụ Google!"),
   });
 
   async function submitHandle(e) {
@@ -78,6 +80,8 @@ const LoginView = () => {
             localStorage.setItem("rememberuser", null);
           }
           sessionStorage.setItem("token", res.data.token);
+          props.setToken(res.data.token);
+
           history.push("/home");
         } else {
           message.error(res.data.message);
@@ -163,4 +167,10 @@ const LoginView = () => {
   );
 };
 
-export default LoginView;
+function mapDispatchToProps(dispatch) {
+  return {
+    setToken: (token) => dispatch(getToken(token)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(LoginView);

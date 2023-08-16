@@ -10,6 +10,7 @@ import io from "socket.io-client";
 import axiosInstance from "../api/service";
 import animationData from "../animations/typing.json";
 import { getSelectedChat } from "../actions";
+import { BASE_URL } from "../constants";
 
 var selectedChatCompare, socket;
 
@@ -49,7 +50,7 @@ const SingleChat = ({
   };
 
   useEffect(() => {
-    socket = io(`https://stdsocial.onrender.com`);
+    socket = io(BASE_URL);
     socket.on("message received", (newMessageReceived) => {
       setArrivalMsg(newMessageReceived);
     });
@@ -158,12 +159,18 @@ const SingleChat = ({
         setNewMessage("");
         setFileInput(null);
         setPreviewFile(null);
+        setBase64String("");
         socket.emit("new message", data);
         setMessages([...messages, data]);
         console.log(data);
         setFetchAgain(!fetchAgain);
       } catch (error) {
         console.log(error);
+      } finally {
+        setNewMessage("");
+        setFileInput(null);
+        setPreviewFile(null);
+        setBase64String("");
       }
     }
   };

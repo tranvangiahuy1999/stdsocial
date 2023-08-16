@@ -1,36 +1,45 @@
-import axios from 'axios';
-import { BASE_URL } from '../constants';
+import axios from "axios";
+import { BASE_URL } from "../constants";
 
 const axiosInstance = axios.create({
-    baseURL: BASE_URL
+  baseURL: BASE_URL,
 });
 
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(
+  (config) => {
     // handle before request is sent
     const uploadImagePath = "/newfeed/add/image";
     const updatePostPath = "/newfeed/update";
-    
+
     const token = sessionStorage.getItem("token");
     if (token) {
-        config.headers['Authorization'] = 'Bearer ' + token;
+      config.headers["Authorization"] = "Bearer " + token;
     }
-    if (config.url?.includes(uploadImagePath) || config.url?.includes(updatePostPath)) {
-        config.headers['Content-Type'] = 'multipart/form-data';
+    if (
+      config.url?.includes(uploadImagePath) ||
+      config.url?.includes(updatePostPath)
+    ) {
+      config.headers["Content-Type"] = "multipart/form-data";
     }
     return config;
-}, (error) => {
+  },
+  (error) => {
     // handle request error
     return Promise.reject(error);
-});
+  }
+);
 
-axiosInstance.interceptors.response.use((response) => {
+axiosInstance.interceptors.response.use(
+  (response) => {
     // handle response data
     return response;
-}, (error) => {
-    if (error.response.status === 401) {
-        // Error handling
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Error handling
     }
     return Promise.reject(error);
-});
+  }
+);
 
 export default axiosInstance;
