@@ -181,19 +181,19 @@ const Newfeed = (props) => {
                                 newfeedData.map((value, index) => (
                                     <StatusCard
                                         directToWall={() => history.push(`/home/personalwall/${value.user._id}`)}
-                                        key={value._id}
-                                        avatar={value.user.avatar}
-                                        current_avatar={userData ? userData.avatar : ''}
-                                        username={value.user.user_name}
+                                        key={value?._id || ""}
+                                        avatar={value?.user?.avatar || ""}
+                                        current_avatar={userData?.avatar || ""}
+                                        username={value?.user?.user_name}
                                         date={value.date.split('T')[0]}
-                                        textcontent={value.content}
-                                        linkyoutube={value.linkyoutube}
-                                        imgcontent={value.image}
-                                        likelist={value.likelist}
-                                        commentlist={value.commentlist}
-                                        user_id={userData ? userData._id : ''}
-                                        user_post_id={value.user._id}
-                                        post_id={value._id}
+                                        textcontent={value?.content}
+                                        linkyoutube={value?.linkyoutube}
+                                        imgcontent={value?.image}
+                                        likelist={value?.likelist}
+                                        commentlist={value?.commentlist}
+                                        user_id={userData?._id || ""}
+                                        user_post_id={value?.user?._id || ""}
+                                        post_id={value?._id || ""}
                                         token={token}
                                         alertshow={() => {
                                             alert.show('Deleted success!', {

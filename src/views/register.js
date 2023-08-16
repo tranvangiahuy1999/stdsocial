@@ -132,15 +132,8 @@ const RegisterPage = () => {
                             <Select className='form-control' placeholder='Faculty' onChange={value => setFaculty(value)}>
                                 {
                                     (falcutyData && falcutyData.length > 0) ? (
-                                        falcutyData.map((value, index) => (
-                                            (value.nameRole.split(' ')[0] === 'Khoa') && (
-                                                <Select.Option key={index} value={value.nameRole}>{value.nameRole}</Select.Option>
-                                            )
-
-                                        ))
-                                    ) : (
-                                        <></>
-                                    )
+                                        falcutyData.map((value, index) => <Select.Option key={index} value={value._id}>{value.nameRole}</Select.Option>)
+                                    ) : <></>
                                 }
                             </Select>
                         </Form.Item>

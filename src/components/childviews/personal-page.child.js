@@ -34,20 +34,23 @@ const PersonalPage = (props) => {
     const alert = useAlert()
     let newfeeddata = [], count = 1
     let { id } = useParams()
-    const { width } = useWindowDimensions()
+    const { width } = useWindowDimensions();
+    const [falcutyData, setFalcutyData] = useState(null)
     const token = sessionStorage.getItem("token");
 
     useEffect(() => {
-        window.scrollTo(0, 0)
-        getCurrentUserData()
-        getPersonalNewfeed(count)
-        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000))
+        window.scrollTo(0, 0);
+        getCurrentUserData();
+        getPersonalNewfeed(count);
+        getRole()
+        window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
     }, [])
 
     useEffect(() => {
         if (userData) {
             if (id === userData._id) {
+                getUserInformation();
                 setIsYour(true)
             }
         }
@@ -120,11 +123,20 @@ const PersonalPage = (props) => {
         axiosInstance.get(`/account/current`)
             .then(res => {
                 if (res.data.code === 0) {
-                    setUserData(res.data.data)
+                    setUserData(res.data.data);
                 }
             })
             .catch(e => {
                 console.error(e)
+            })
+    }
+
+    function getRole() {
+        axiosInstance.get(`/role`)
+            .then(res => {
+                if (res.data.code === 0) {
+                    setFalcutyData(res.data.data)
+                }
             })
     }
 
@@ -321,7 +333,7 @@ const PersonalPage = (props) => {
                                         <div>
                                             <div>Faculty</div>
                                             <div>
-                                                <div style={{ color: 'gray', fontWeight: '500' }}>{(personalInfo && personalInfo.faculty[0]) ? personalInfo.faculty[0] : `Not set`}</div>
+                                                <div style={{ color: 'gray', fontWeight: '500' }}>{!!personalInfo?.faculty.length ? falcutyData?.find(falcuty => falcuty?._id === personalInfo.faculty[0])?.nameRole : "Note set"}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -331,7 +343,7 @@ const PersonalPage = (props) => {
                                         <div>
                                             <div>Birthday</div>
                                             <div>
-                                                <div style={{ color: 'gray', fontWeight: '500' }}>{(personalInfo && personalInfo.birth) ? personalInfo.birth : `Not set`}</div>
+                                                <div style={{ color: 'gray', fontWeight: '500' }}>{personalInfo?.birth || `Not set`}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -341,7 +353,7 @@ const PersonalPage = (props) => {
                                         <div>
                                             <div>Gender</div>
                                             <div>
-                                                <div style={{ color: 'gray', fontWeight: '500' }}>{(personalInfo && personalInfo.gender) ? personalInfo.gender : `Not set`}</div>
+                                                <div style={{ color: 'gray', fontWeight: '500' }}>{personalInfo?.gender || `Not set`}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -351,7 +363,7 @@ const PersonalPage = (props) => {
                                         <div>
                                             <div>Phone</div>
                                             <div>
-                                                <div style={{ color: 'gray', fontWeight: '500' }}>{(personalInfo && personalInfo.phone) ? personalInfo.phone : `Not set`}</div>
+                                                <div style={{ color: 'gray', fontWeight: '500' }}>{personalInfo?.phone || `Not set`}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -381,28 +393,29 @@ const PersonalPage = (props) => {
                                     (newfeedData && newfeedData.length > 0) ? (
                                         newfeedData.map((value, index) => (
                                             <StatusCard
-                                                key={value._id}
-                                                avatar={value.user.avatar}
-                                                current_avatar={userData ? userData.avatar : ''}
-                                                username={value.user.user_name}
-                                                date={value.date.split('T')[0]}
-                                                textcontent={value.content}
-                                                linkyoutube={value.linkyoutube}
-                                                imgcontent={value.image}
-                                                likelist={value.likelist ? value.likelist : []}
-                                                commentlist={value.commentlist ? value.commentlist : []}
-                                                user_id={userData ? userData._id : ''}
-                                                user_post_id={value.user._id}
-                                                post_id={value._id}
+                                                key={value?._id}
+                                                current_avatar={userData?.avatar || ''}
+                                                user_id={userData?._id || ''}
+                                                role={userData?.role || ""}
+                                                avatar={value?.user.avatar}
+                                                username={value?.user.user_name}
+                                                date={value?.date.split('T')[0]}
+                                                textcontent={value?.content}
+                                                linkyoutube={value?.linkyoutube}
+                                                imgcontent={value?.image}
+                                                likelist={value?.likelist || []}
+                                                commentlist={value?.commentlist || []}
+                                                
+                                                user_post_id={value?.user._id}
+                                                post_id={value?._id}
                                                 token={token}
                                                 alertshow={() => {
                                                     alert.show('Deleted success!', {
                                                         type: 'success'
                                                     })
                                                 }}
-                                                role={(userData) && userData.role}
-                                                newcmt={(newcmt && newcmt.id_post === value._id) ? newcmt : ''}
-                                                newlike={(newlike && newlike.like_post === value._id) ? newlike : ''}
+                                                newcmt={newcmt?.id_post === value?._id ? newcmt : ''}
+                                                newlike={newlike?.like_post === value?._id ? newlike : ''}
                                             ></StatusCard>))
                                     )
                                         : (

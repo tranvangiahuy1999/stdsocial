@@ -5,13 +5,9 @@ import { useAlert } from 'react-alert'
 import { Select } from 'antd';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const { Option } = Select;
-
-const editorConfiguration = {
-    toolbar: ['heading', '|', "undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],
-};
 
 const CreateNoti = (props) => {
     const [title, setTitle] = useState('')
@@ -21,6 +17,19 @@ const CreateNoti = (props) => {
     const [falcuty, setFalcuty] = useState()
     const [btnState, setBtnState] = useState(false)
     const alert = useAlert()
+
+    const token = sessionStorage.getItem("token");
+
+    const editorConfiguration = {
+        toolbar: ['heading', '|', "undo", "redo", "bold", "italic", "blockQuote", "uploadImage", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"],
+        ckfinder: {
+            uploadUrl: 'https://stdsocial.onrender.com/newfeed/add/image',
+            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    };
 
     useEffect(() => {
         getCurrentUser()
