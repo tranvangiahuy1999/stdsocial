@@ -57,13 +57,22 @@ const MyChats = (props) => {
     }
   };
 
+  const handleClick = async (chat) => {
+    if (!chat.seen) {
+      const { data } = await axiosInstance.put(`/chat/${chat._id}`);
+      getSelectedChat(data.data);
+    } else {
+      getSelectedChat(chat);
+    }
+  };
+
   const fetchChats = async () => {
-    // try {
+    try {
       const { data } = await axiosInstance.get("/chat");
       setChats(data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -101,7 +110,7 @@ const MyChats = (props) => {
             </div>
           ))
         : chats.map((chat) => (
-            <div key={chat._id} onClick={() => getSelectedChat(chat)}>
+            <div key={chat._id} onClick={() => handleClick(chat)}>
               <ChatItem chat={chat} currentUser={currentUser} />
             </div>
           ))}
