@@ -16,7 +16,10 @@ const ChatItem = ({ chat, currentUser, currentChat }) => {
       <div className="chat-item__avatar">
         <img src={getSenderInfo(currentUser, chat.users)?.avatar} alt="" />
       </div>
-      <div className="chat-item__content">
+      <div
+        className="chat-item__content"
+        style={{ fontWeight: chat.seen ? "400" : "bold" }}
+      >
         <span className="content__sender-name">
           {!chat.isGroupChat
             ? getSender(currentUser, chat.users)
