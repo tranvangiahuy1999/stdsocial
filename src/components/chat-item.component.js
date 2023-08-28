@@ -8,10 +8,10 @@ const ChatItem = ({ chat, currentUser, currentChat }) => {
     <div
       className="chat-item"
       style={{
-        backgroundColor: currentChat?._id === chat._id ? "#f5f5f5" : "#FFFFFF",
+        backgroundColor: currentChat?._id === chat?._id ? "#f5f5f5" : "#FFFFFF",
         // color: selectedChat === chat ? "white" : "black",
       }}
-      key={chat._id}
+      key={chat?._id}
     >
       <div className="chat-item__avatar">
         <img src={getSenderInfo(currentUser, chat.users)?.avatar} alt="" />
@@ -26,7 +26,7 @@ const ChatItem = ({ chat, currentUser, currentChat }) => {
             : chat.chatName}
         </span>
         <span className="content__latestmessage">
-          {chat.latestMessage?.sender._id === currentUser._id ? "Bạn: " : ""}
+          {chat.latestMessage?.sender?._id === currentUser?._id ? "Bạn: " : ""}
 
           {chat.latestMessage?.photo
             ? "Đã gửi một ảnh"
