@@ -14,8 +14,7 @@ import { BiCake, BiPhone } from "react-icons/bi";
 import { IoTransgenderSharp } from "react-icons/io5";
 import { BASE_URL } from '../../constants';
 
-const PersonalPage = (props) => {
-    const [userData, setUserData] = useState()
+const PersonalPage = () => {
     const [newfeedData, setNewfeedData] = useState([])
     const [avatar, setAvatar] = useState('')
     const [username, setUsername] = useState('')
@@ -32,7 +31,7 @@ const PersonalPage = (props) => {
     const [loadingNewfeed, setLoadingNewfeed] = useState(false)
     const [hasMore, setHasMore] = useState(true)
     const alert = useAlert()
-    let newfeeddata = [], count = 1
+    let count = 1, previousCount = 0;
     let { id } = useParams()
     const { width } = useWindowDimensions();
     const [falcutyData, setFalcutyData] = useState(null)
@@ -40,21 +39,20 @@ const PersonalPage = (props) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        getCurrentUserData();
+        previousCount = 0;
+        count = 1;
+        getUserInformation();
         getPersonalNewfeed(count);
         getRole()
         window.addEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
         return () => window.removeEventListener('scroll', debounce(handleInfiniteOnLoad, 2000));
-    }, [])
+    }, [id])
 
     useEffect(() => {
-        if (userData) {
-            if (id === userData._id) {
-                getUserInformation();
-                setIsYour(true)
-            }
+        if (personalInfo) {
+            getCurrentUserData();
         }
-    }, [userData])
+    }, [personalInfo])
 
     useEffect(() => {
         const socket = io.connect(`${BASE_URL}`, { transports: ["websocket"], withCredentials: true });
@@ -68,7 +66,19 @@ const PersonalPage = (props) => {
             socket.off("new_comment");
             socket.off('new_likelist');
         }
-    }, [])
+    }, []);
+
+    function getCurrentUserData() {
+        axiosInstance.get(`/account/current`)
+            .then(res => {
+                if (res.data.code === 0) {
+                    setIsYour(res.data.data._id === personalInfo._id);
+                }
+            })
+            .catch(e => {
+                console.error(e)
+            })
+    }
 
     const debounce = (func, delay) => {
         let inDebounce;
@@ -96,15 +106,7 @@ const PersonalPage = (props) => {
     }
 
     function getUserInformation() {
-        let userid = undefined
-
-        if (isYour) {
-            userid = userData._id
-        } else {
-            userid = id
-        }
-
-        axiosInstance.get(`/account/user/${userid}`)
+        axiosInstance.get(`/account/user/${id}`)
             .then(res => {
                 if (res.data.code === 0) {
                     setPersonalInfo(res.data.data)
@@ -113,18 +115,7 @@ const PersonalPage = (props) => {
                 } else {
                     setUserPageExist(false)
                 }
-            })
-            .catch(e => {
-                console.error(e)
-            })
-    }
 
-    function getCurrentUserData() {
-        axiosInstance.get(`/account/current`)
-            .then(res => {
-                if (res.data.code === 0) {
-                    setUserData(res.data.data);
-                }
             })
             .catch(e => {
                 console.error(e)
@@ -141,28 +132,29 @@ const PersonalPage = (props) => {
     }
 
     async function getPersonalNewfeed(page) {
-        let userid = undefined
-        if (isYour) {
-            userid = userData._id
-        } else {
-            userid = id
+        if (previousCount !== count) {
+            axiosInstance.get(`/newfeed/yourfeed/${id}/${page}`)
+                .then((res) => {
+                    let fetchNewfeedData = [];
+                    if (count > 1) {
+                        fetchNewfeedData = newfeedData;
+                    }
+                    if (res.data.code === 0) {
+                        fetchNewfeedData = fetchNewfeedData.concat(res.data.data);
+                    }
+                    else {
+                        setHasMore(false);
+                    }
+                    setNewfeedData(fetchNewfeedData);
+                    setLoading(false);
+                    setLoadingNewfeed(false)
+                    previousCount = count;
+                    count += 1
+                })
+                .catch(e => {
+                    console.error(e)
+                })
         }
-        axiosInstance.get(`/newfeed/yourfeed/${userid}/${page}`)
-            .then((res) => {
-                if (res.data.code === 0) {
-                    newfeeddata = newfeeddata.concat(res.data.data)
-                    setNewfeedData(newfeeddata)
-                }
-                else {
-                    setHasMore(false)
-                }
-                setLoading(false)
-                setLoadingNewfeed(false)
-                count += 1
-            })
-            .catch(e => {
-                console.error(e)
-            })
     }
 
     function changeAvatarHandler() {
@@ -394,9 +386,9 @@ const PersonalPage = (props) => {
                                         newfeedData.map((value, index) => (
                                             <StatusCard
                                                 key={value?._id}
-                                                current_avatar={userData?.avatar || ''}
-                                                user_id={userData?._id || ''}
-                                                role={userData?.role || ""}
+                                                // current_avatar={userData?.avatar || ''}
+                                                // user_id={userData?._id || ''}
+                                                // role={userData?.role || ""}
                                                 avatar={value?.user.avatar}
                                                 username={value?.user.user_name}
                                                 date={value?.date.split('T')[0]}
