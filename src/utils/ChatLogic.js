@@ -1,49 +1,59 @@
 export const getSender = (loggedUser, users) => {
-  return users[0]._id === loggedUser._id
+  try {
+    return users[0]._id === loggedUser._id
     ? users[1]?.user_name
     : users[0]?.user_name;
+  } catch (error) {}
 };
 
 export const getSenderInfo = (loggedUser, users) => {
-  return users[0]._id === loggedUser._id ? users[1] : users[0];
+  try {
+    return users[0]._id === loggedUser._id ? users[1] : users[0];
+  } catch (error) {}
 };
 
 export const isSameSender = (messages, m, i, userId) => {
-  return (
-    i < messages.length - 1 &&
-    (messages[i + 1].sender._id !== m.sender._id ||
-      messages[i + 1].sender._id === undefined) &&
-    messages[i].sender._id !== userId
-  );
+  try {
+    return (
+      i < messages.length - 1 &&
+      (messages[i + 1].sender._id !== m.sender._id ||
+        messages[i + 1].sender._id === undefined) &&
+      messages[i].sender._id !== userId
+    );
+  } catch (error) {}
 };
 
 export const isLastMessage = (messages, i, userId) => {
-  return (
-    i === messages.length - 1 &&
-    messages[messages.length - 1].sender._id !== userId &&
-    messages[messages.length - 1].sender._id
-  );
+  try {
+    return (
+      i === messages.length - 1 &&
+      messages[messages.length - 1].sender._id !== userId &&
+      messages[messages.length - 1].sender._id
+    );
+  } catch (error) {}
 };
 
 export const isSameSenderMargin = (messages, m, i, userId) => {
-  // console.log(i === messages.length - 1);
-
-  if (
-    i < messages.length - 1 &&
-    messages[i + 1].sender._id === m.sender._id &&
-    messages[i].sender._id !== userId
-  )
-    return 33;
-  else if (
-    (i < messages.length - 1 &&
-      messages[i + 1].sender._id !== m.sender._id &&
-      messages[i].sender._id !== userId) ||
-    (i === messages.length - 1 && messages[i].sender._id !== userId)
-  )
-    return 0;
-  else return "auto";
+  try {
+    if (
+      i < messages.length - 1 &&
+      messages[i + 1].sender._id === m.sender._id &&
+      messages[i].sender._id !== userId
+    )
+      return 33;
+    else if (
+      (i < messages.length - 1 &&
+        messages[i + 1].sender._id !== m.sender._id &&
+        messages[i].sender._id !== userId) ||
+      (i === messages.length - 1 && messages[i].sender._id !== userId)
+    )
+      return 0;
+    else return "auto";
+  } catch (error) {}
 };
 
 export const isSameUser = (messages, m, i) => {
-  return i > 0 && messages[i - 1].sender._id === m.sender._id;
+  try {
+    return i > 0 && messages[i - 1].sender._id === m.sender._id;
+  } catch (error) {}
 };
